@@ -7,17 +7,17 @@ import Pool from './Pool.js';
  * @extends Pool
  */
 export default class Vec3Pool extends Pool {
- constructor() {
-     super();
-     this.type = Vec3;
- }
+    constructor() {
+        super();
+        this.type = Vec3;
+    }
 
- /**
-  * Construct a vector
-  * @method constructObject
-  * @return {Vec3}
-  */
- constructObject() {
-     return new Vec3();
- }
+    /**
+     * Construct a vector
+     * @method constructObject
+     * @return {Vec3}
+     */
+    constructObject() {
+        return new Vec3();
+    }
 }

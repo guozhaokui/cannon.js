@@ -15,23 +15,23 @@ export default class Quaternion {
         /**
          * @property {Number} x
          */
-        this.x = x!==undefined ? x : 0;
+        this.x = x !== undefined ? x : 0;
 
         /**
          * @property {Number} y
          */
-        this.y = y!==undefined ? y : 0;
+        this.y = y !== undefined ? y : 0;
 
         /**
          * @property {Number} z
          */
-        this.z = z!==undefined ? z : 0;
+        this.z = z !== undefined ? z : 0;
 
         /**
          * The multiplier of the real quaternion basis vector.
          * @property {Number} w
          */
-        this.w = w!==undefined ? w : 1;
+        this.w = w !== undefined ? w : 1;
     }
 
     /**
@@ -74,12 +74,12 @@ export default class Quaternion {
      * @param {Vec3} axis
      * @param {Number} angle in radians
      */
-    setFromAxisAngle({x, y, z}, angle) {
-        const s = Math.sin(angle*0.5);
+    setFromAxisAngle({ x, y, z }, angle) {
+        const s = Math.sin(angle * 0.5);
         this.x = x * s;
         this.y = y * s;
         this.z = z * s;
-        this.w = Math.cos(angle*0.5);
+        this.w = Math.cos(angle * 0.5);
         return this;
     }
 
@@ -92,7 +92,7 @@ export default class Quaternion {
     toAxisAngle(targetAxis = new Vec3()) {
         this.normalize(); // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
         const angle = 2 * Math.acos(this.w);
-        const s = Math.sqrt(1-this.w*this.w); // assuming quaternion normalised then w is less than 1, so term always positive.
+        const s = Math.sqrt(1 - this.w * this.w); // assuming quaternion normalised then w is less than 1, so term always positive.
         if (s < 0.001) { // test to avoid divide by zero, s is always positive due to sqrt
             // if s close to zero then direction of axis not important
             targetAxis.x = this.x; // if it is important that axis is normalised then replace with x=1; y=z=0;
@@ -103,7 +103,7 @@ export default class Quaternion {
             targetAxis.y = this.y / s;
             targetAxis.z = this.z / s;
         }
-        return [targetAxis,angle];
+        return [targetAxis, angle];
     }
 
     /**
@@ -113,12 +113,12 @@ export default class Quaternion {
      * @param {Vec3} v
      */
     setFromVectors(u, v) {
-        if(u.isAntiparallelTo(v)){
+        if (u.isAntiparallelTo(v)) {
             const t1 = sfv_t1;
             const t2 = sfv_t2;
 
-            u.tangents(t1,t2);
-            this.setFromAxisAngle(t1,Math.PI);
+            u.tangents(t1, t2);
+            this.setFromAxisAngle(t1, Math.PI);
         } else {
             const a = u.cross(v);
             this.x = a.x;
@@ -130,7 +130,7 @@ export default class Quaternion {
         return this;
     }
 
-    mult({x, y, z, w}, target = new Quaternion()) {
+    mult({ x, y, z, w }, target = new Quaternion()) {
         const ax = this.x;
         const ay = this.y;
         const az = this.z;
@@ -162,7 +162,7 @@ export default class Quaternion {
         target = target || new Quaternion();
 
         this.conjugate(target);
-        const inorm2 = 1/(x*x + y*y + z*z + w*w);
+        const inorm2 = 1 / (x * x + y * y + z * z + w * w);
         target.x *= inorm2;
         target.y *= inorm2;
         target.z *= inorm2;
@@ -191,8 +191,8 @@ export default class Quaternion {
      * @method normalize
      */
     normalize() {
-        let l = Math.sqrt(this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w);
-        if ( l === 0 ) {
+        let l = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w);
+        if (l === 0) {
             this.x = 0;
             this.y = 0;
             this.z = 0;
@@ -214,8 +214,8 @@ export default class Quaternion {
      * @author unphased, https://github.com/unphased
      */
     normalizeFast() {
-        const f = (3.0-(this.x*this.x+this.y*this.y+this.z*this.z+this.w*this.w))/2.0;
-        if ( f === 0 ) {
+        const f = (3.0 - (this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w)) / 2.0;
+        if (f === 0) {
             this.x = 0;
             this.y = 0;
             this.z = 0;
@@ -246,10 +246,10 @@ export default class Quaternion {
         const qw = this.w;
 
         // q*v
-        const ix =  qw * x + qy * z - qz * y;
+        const ix = qw * x + qy * z - qz * y;
 
-        const iy =  qw * y + qz * x - qx * z;
-        const iz =  qw * z + qx * y - qy * x;
+        const iy = qw * y + qz * x - qx * z;
+        const iz = qw * z + qx * y - qy * x;
         const iw = -qx * x - qy * y - qz * z;
 
         target.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
@@ -265,7 +265,7 @@ export default class Quaternion {
      * @param {Quaternion} source
      * @return {Quaternion} this
      */
-    copy({x, y, z, w}) {
+    copy({ x, y, z, w }) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -288,30 +288,30 @@ export default class Quaternion {
         const z = this.z;
         const w = this.w;
 
-        switch(order){
-        case "YZX":
-            const test = x*y + z*w;
-            if (test > 0.499) { // singularity at north pole
-                heading = 2 * Math.atan2(x,w);
-                attitude = Math.PI/2;
-                bank = 0;
-            }
-            if (test < -0.499) { // singularity at south pole
-                heading = -2 * Math.atan2(x,w);
-                attitude = - Math.PI/2;
-                bank = 0;
-            }
-            if(isNaN(heading)){
-                const sqx = x*x;
-                const sqy = y*y;
-                const sqz = z*z;
-                heading = Math.atan2(2*y*w - 2*x*z , 1 - 2*sqy - 2*sqz); // Heading
-                attitude = Math.asin(2*test); // attitude
-                bank = Math.atan2(2*x*w - 2*y*z , 1 - 2*sqx - 2*sqz); // bank
-            }
-            break;
-        default:
-            throw new Error(`Euler order ${order} not supported yet.`);
+        switch (order) {
+            case "YZX":
+                const test = x * y + z * w;
+                if (test > 0.499) { // singularity at north pole
+                    heading = 2 * Math.atan2(x, w);
+                    attitude = Math.PI / 2;
+                    bank = 0;
+                }
+                if (test < -0.499) { // singularity at south pole
+                    heading = -2 * Math.atan2(x, w);
+                    attitude = - Math.PI / 2;
+                    bank = 0;
+                }
+                if (isNaN(heading)) {
+                    const sqx = x * x;
+                    const sqy = y * y;
+                    const sqz = z * z;
+                    heading = Math.atan2(2 * y * w - 2 * x * z, 1 - 2 * sqy - 2 * sqz); // Heading
+                    attitude = Math.asin(2 * test); // attitude
+                    bank = Math.atan2(2 * x * w - 2 * y * z, 1 - 2 * sqx - 2 * sqz); // bank
+                }
+                break;
+            default:
+                throw new Error(`Euler order ${order} not supported yet.`);
         }
 
         target.y = heading;
@@ -328,49 +328,49 @@ export default class Quaternion {
      * @param {String} order The order to apply angles: 'XYZ' or 'YXZ' or any other combination
      */
     setFromEuler(x, y, z, order = "XYZ") {
-        const c1 = Math.cos( x / 2 );
-        const c2 = Math.cos( y / 2 );
-        const c3 = Math.cos( z / 2 );
-        const s1 = Math.sin( x / 2 );
-        const s2 = Math.sin( y / 2 );
-        const s3 = Math.sin( z / 2 );
+        const c1 = Math.cos(x / 2);
+        const c2 = Math.cos(y / 2);
+        const c3 = Math.cos(z / 2);
+        const s1 = Math.sin(x / 2);
+        const s2 = Math.sin(y / 2);
+        const s3 = Math.sin(z / 2);
 
-        if ( order === 'XYZ' ) {
+        if (order === 'XYZ') {
 
             this.x = s1 * c2 * c3 + c1 * s2 * s3;
             this.y = c1 * s2 * c3 - s1 * c2 * s3;
             this.z = c1 * c2 * s3 + s1 * s2 * c3;
             this.w = c1 * c2 * c3 - s1 * s2 * s3;
 
-        } else if ( order === 'YXZ' ) {
+        } else if (order === 'YXZ') {
 
             this.x = s1 * c2 * c3 + c1 * s2 * s3;
             this.y = c1 * s2 * c3 - s1 * c2 * s3;
             this.z = c1 * c2 * s3 - s1 * s2 * c3;
             this.w = c1 * c2 * c3 + s1 * s2 * s3;
 
-        } else if ( order === 'ZXY' ) {
+        } else if (order === 'ZXY') {
 
             this.x = s1 * c2 * c3 - c1 * s2 * s3;
             this.y = c1 * s2 * c3 + s1 * c2 * s3;
             this.z = c1 * c2 * s3 + s1 * s2 * c3;
             this.w = c1 * c2 * c3 - s1 * s2 * s3;
 
-        } else if ( order === 'ZYX' ) {
+        } else if (order === 'ZYX') {
 
             this.x = s1 * c2 * c3 - c1 * s2 * s3;
             this.y = c1 * s2 * c3 + s1 * c2 * s3;
             this.z = c1 * c2 * s3 - s1 * s2 * c3;
             this.w = c1 * c2 * c3 + s1 * s2 * s3;
 
-        } else if ( order === 'YZX' ) {
+        } else if (order === 'YZX') {
 
             this.x = s1 * c2 * c3 + c1 * s2 * s3;
             this.y = c1 * s2 * c3 + s1 * c2 * s3;
             this.z = c1 * c2 * s3 - s1 * s2 * c3;
             this.w = c1 * c2 * c3 - s1 * s2 * s3;
 
-        } else if ( order === 'XZY' ) {
+        } else if (order === 'XZY') {
 
             this.x = s1 * c2 * c3 - c1 * s2 * s3;
             this.y = c1 * s2 * c3 - s1 * c2 * s3;
@@ -399,7 +399,7 @@ export default class Quaternion {
      * @param {Quaternion} [target] A quaternion to store the result in. If not provided, a new one will be created.
      * @returns {Quaternion} The "target" object
      */
-    slerp({x, y, z, w}, t, target = new Quaternion()) {
+    slerp({ x, y, z, w }, t, target = new Quaternion()) {
         const ax = this.x;
         const ay = this.y;
         const az = this.z;
@@ -418,7 +418,7 @@ export default class Quaternion {
         cosom = ax * bx + ay * by + az * bz + aw * bw;
 
         // adjust signs (if necessary)
-        if ( cosom < 0.0 ) {
+        if (cosom < 0.0) {
             cosom = -cosom;
             bx = - bx;
             by = - by;
@@ -427,10 +427,10 @@ export default class Quaternion {
         }
 
         // calculate coefficients
-        if ( (1.0 - cosom) > 0.000001 ) {
+        if ((1.0 - cosom) > 0.000001) {
             // standard case (slerp)
-            omega  = Math.acos(cosom);
-            sinom  = Math.sin(omega);
+            omega = Math.acos(cosom);
+            sinom = Math.sin(omega);
             scale0 = Math.sin((1.0 - t) * omega) / sinom;
             scale1 = Math.sin(t * omega) / sinom;
         } else {
@@ -457,7 +457,7 @@ export default class Quaternion {
      * @param  {Quaternion} target
      * @return {Quaternion} The "target" object
      */
-    integrate(angularVelocity, dt, angularFactor, target=new Quaternion()){
+    integrate(angularVelocity, dt, angularFactor, target = new Quaternion()) {
         var ax = angularVelocity.x * angularFactor.x,
             ay = angularVelocity.y * angularFactor.y,
             az = angularVelocity.z * angularFactor.z,
@@ -465,14 +465,14 @@ export default class Quaternion {
             by = this.y,
             bz = this.z,
             bw = this.w;
-    
+
         var half_dt = dt * 0.5;
-    
+
         target.x += half_dt * (ax * bw + ay * bz - az * by);
         target.y += half_dt * (ay * bw + az * bx - ax * bz);
         target.z += half_dt * (az * bw + ax * by - ay * bx);
         target.w += half_dt * (- ax * bx - ay * by - az * bz);
-    
+
         return target;
     }
 }

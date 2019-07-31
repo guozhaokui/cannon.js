@@ -10,7 +10,7 @@ export default class TupleDictionary {
          * @property data
          * @type {Object}
          */
-        this.data = { keys:[] };
+        this.data = { keys: [] };
     }
 
     /**
@@ -44,7 +44,7 @@ export default class TupleDictionary {
         const key = `${i}-${j}`;
 
         // Check if key already exists
-        if(!this.get(i,j)){
+        if (!this.get(i, j)) {
             this.data.keys.push(key);
         }
 
@@ -57,7 +57,7 @@ export default class TupleDictionary {
     reset() {
         const data = this.data;
         const keys = data.keys;
-        while(keys.length > 0){
+        while (keys.length > 0) {
             const key = keys.pop();
             delete data[key];
         }

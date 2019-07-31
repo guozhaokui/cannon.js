@@ -23,8 +23,8 @@ export default class Plane extends Shape {
 
     computeWorldNormal(quat) {
         const n = this.worldNormal;
-        n.set(0,0,1);
-        quat.vmult(n,n);
+        n.set(0, 0, 1);
+        quat.vmult(n, n);
         this.worldNormalNeedsUpdate = false;
     }
 
@@ -36,21 +36,21 @@ export default class Plane extends Shape {
         return Number.MAX_VALUE; // The plane is infinite...
     }
 
-    calculateWorldAABB({x, y, z}, quat, min, max) {
+    calculateWorldAABB({ x, y, z }, quat, min, max) {
         // The plane AABB is infinite, except if the normal is pointing along any axis
-        tempNormal.set(0,0,1); // Default plane normal is z
-        quat.vmult(tempNormal,tempNormal);
+        tempNormal.set(0, 0, 1); // Default plane normal is z
+        quat.vmult(tempNormal, tempNormal);
         const maxVal = Number.MAX_VALUE;
         min.set(-maxVal, -maxVal, -maxVal);
         max.set(maxVal, maxVal, maxVal);
 
-        if(tempNormal.x === 1){ max.x = x; }
-        if(tempNormal.y === 1){ max.y = y; }
-        if(tempNormal.z === 1){ max.z = z; }
+        if (tempNormal.x === 1) { max.x = x; }
+        if (tempNormal.y === 1) { max.y = y; }
+        if (tempNormal.z === 1) { max.z = z; }
 
-        if(tempNormal.x === -1){ min.x = x; }
-        if(tempNormal.y === -1){ min.y = y; }
-        if(tempNormal.z === -1){ min.z = z; }
+        if (tempNormal.x === -1) { min.x = x; }
+        if (tempNormal.y === -1) { min.y = y; }
+        if (tempNormal.z === -1) { min.z = z; }
     }
 
     updateBoundingSphereRadius() {

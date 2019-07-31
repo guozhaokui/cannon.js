@@ -16,7 +16,7 @@ import WheelInfo from '../objects/WheelInfo.js';
  * @param {integer} [options.indexUpAxis]
  */
 export default class RaycastVehicle {
-    constructor({chassisBody, indexRightAxis, indexForwardAxis, indexUpAxis}) {
+    constructor({ chassisBody, indexRightAxis, indexForwardAxis, indexUpAxis }) {
 
         /**
          * @property {Body} chassisBody
@@ -45,21 +45,21 @@ export default class RaycastVehicle {
          * @property {integer} indexRightAxis
          * @default 1
          */
-        this.indexRightAxis = typeof(indexRightAxis) !== 'undefined' ? indexRightAxis : 1;
+        this.indexRightAxis = typeof (indexRightAxis) !== 'undefined' ? indexRightAxis : 1;
 
         /**
          * Index of the forward axis, 0=x, 1=y, 2=z
          * @property {integer} indexForwardAxis
          * @default 0
          */
-        this.indexForwardAxis = typeof(indexForwardAxis) !== 'undefined' ? indexForwardAxis : 0;
+        this.indexForwardAxis = typeof (indexForwardAxis) !== 'undefined' ? indexForwardAxis : 0;
 
         /**
          * Index of the up axis, 0=x, 1=y, 2=z
          * @property {integer} indexUpAxis
          * @default 2
          */
-        this.indexUpAxis = typeof(indexUpAxis) !== 'undefined' ? indexUpAxis : 2;
+        this.indexUpAxis = typeof (indexUpAxis) !== 'undefined' ? indexUpAxis : 2;
     }
 
     /**
@@ -152,7 +152,7 @@ export default class RaycastVehicle {
         const forwardWorld = new Vec3();
         this.getVehicleAxisWorld(this.indexForwardAxis, forwardWorld);
 
-        if (forwardWorld.dot(chassisBody.velocity) < 0){
+        if (forwardWorld.dot(chassisBody.velocity) < 0) {
             this.currentVehicleSpeedKmHour *= -1;
         }
 
@@ -181,7 +181,7 @@ export default class RaycastVehicle {
         this.updateFriction(timeStep);
 
         const hitNormalWorldScaledWithProj = new Vec3();
-        const fwd  = new Vec3();
+        const fwd = new Vec3();
         const vel = new Vec3();
         for (i = 0; i < numWheels; i++) {
             var wheel = wheelInfos[i];
@@ -191,10 +191,10 @@ export default class RaycastVehicle {
 
             // Hack to get the rotation in the correct direction
             let m = 1;
-            switch(this.indexUpAxis){
-            case 1:
-                m = -1;
-                break;
+            switch (this.indexUpAxis) {
+                case 1:
+                    m = -1;
+                    break;
             }
 
             if (wheel.isInContact) {
@@ -209,13 +209,13 @@ export default class RaycastVehicle {
                 wheel.deltaRotation = m * proj2 * timeStep / wheel.radius;
             }
 
-            if((wheel.sliding || !wheel.isInContact) && wheel.engineForce !== 0 && wheel.useCustomSlidingRotationalSpeed){
+            if ((wheel.sliding || !wheel.isInContact) && wheel.engineForce !== 0 && wheel.useCustomSlidingRotationalSpeed) {
                 // Apply custom rotation when accelerating and sliding
                 wheel.deltaRotation = (wheel.engineForce > 0 ? 1 : -1) * wheel.customSlidingRotationalSpeed * timeStep;
             }
 
             // Lock wheels
-            if(Math.abs(wheel.brake) > Math.abs(wheel.engineForce)){
+            if (Math.abs(wheel.brake) > Math.abs(wheel.engineForce)) {
                 wheel.deltaRotation = 0;
             }
 
@@ -230,10 +230,10 @@ export default class RaycastVehicle {
         const wheelInfos = this.wheelInfos;
         const numWheels = wheelInfos.length;
 
-        for (let w_it = 0; w_it < numWheels; w_it++){
+        for (let w_it = 0; w_it < numWheels; w_it++) {
             const wheel = wheelInfos[w_it];
 
-            if (wheel.isInContact){
+            if (wheel.isInContact) {
                 let force;
 
                 // Spring
@@ -308,7 +308,7 @@ export default class RaycastVehicle {
 
         if (object) {
             depth = raycastResult.distance;
-            wheel.raycastResult.hitNormalWorld  = raycastResult.hitNormalWorld;
+            wheel.raycastResult.hitNormalWorld = raycastResult.hitNormalWorld;
             wheel.isInContact = true;
 
             const hitDistance = raycastResult.distance;
@@ -330,7 +330,7 @@ export default class RaycastVehicle {
             const chassis_velocity_at_contactPoint = new Vec3();
             chassisBody.getVelocityAtWorldPoint(wheel.raycastResult.hitPointWorld, chassis_velocity_at_contactPoint);
 
-            const projVel = wheel.raycastResult.hitNormalWorld.dot( chassis_velocity_at_contactPoint );
+            const projVel = wheel.raycastResult.hitNormalWorld.dot(chassis_velocity_at_contactPoint);
 
             if (denominator >= -0.1) {
                 wheel.suspensionRelativeVelocity = 0;
@@ -429,21 +429,21 @@ export default class RaycastVehicle {
             var wheel = wheelInfos[i];
 
             var groundObject = wheel.raycastResult.body;
-            if (groundObject){
+            if (groundObject) {
                 numWheelsOnGround++;
             }
 
             wheel.sideImpulse = 0;
             wheel.forwardImpulse = 0;
-            if(!forwardWS[i]){
+            if (!forwardWS[i]) {
                 forwardWS[i] = new Vec3();
             }
-            if(!axle[i]){
+            if (!axle[i]) {
                 axle[i] = new Vec3();
             }
         }
 
-        for (var i = 0; i < numWheels; i++){
+        for (var i = 0; i < numWheels; i++) {
             var wheel = wheelInfos[i];
 
             var groundObject = wheel.raycastResult.body;
@@ -538,7 +538,7 @@ export default class RaycastVehicle {
             for (var i = 0; i < numWheels; i++) {
                 var wheel = wheelInfos[i];
                 if (wheel.sideImpulse !== 0) {
-                    if (wheel.skidInfo < 1){
+                    if (wheel.skidInfo < 1) {
                         wheel.forwardImpulse *= wheel.skidInfo;
                         wheel.sideImpulse *= wheel.skidInfo;
                     }
@@ -561,7 +561,7 @@ export default class RaycastVehicle {
                 chassisBody.applyImpulse(impulse, rel_pos);
             }
 
-            if (wheel.sideImpulse !== 0){
+            if (wheel.sideImpulse !== 0) {
                 var groundObject = wheel.raycastResult.body;
 
                 const rel_pos2 = new Vec3();
@@ -654,7 +654,7 @@ const computeImpulseDenominator_r0 = new Vec3();
 const computeImpulseDenominator_c0 = new Vec3();
 const computeImpulseDenominator_vec = new Vec3();
 const computeImpulseDenominator_m = new Vec3();
-function computeImpulseDenominator({position, invInertiaWorld, invMass}, pos, normal) {
+function computeImpulseDenominator({ position, invInertiaWorld, invMass }, pos, normal) {
     const r0 = computeImpulseDenominator_r0;
     const c0 = computeImpulseDenominator_c0;
     const vec = computeImpulseDenominator_vec;
@@ -674,9 +674,9 @@ const resolveSingleBilateral_vel2 = new Vec3();
 const resolveSingleBilateral_vel = new Vec3();
 
 //bilateral constraint between two dynamic objects
-function resolveSingleBilateral(body1, pos1, body2, pos2, normal, impulse){
+function resolveSingleBilateral(body1, pos1, body2, pos2, normal, impulse) {
     const normalLenSqr = normal.norm2();
-    if (normalLenSqr > 1.1){
+    if (normalLenSqr > 1.1) {
         return 0; // no impulse
     }
     // var rel_pos1 = new Vec3();

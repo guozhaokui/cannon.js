@@ -27,13 +27,13 @@ export default class OverlapKeeper {
         const key = this.getKey(i, j);
         const current = this.current;
         let index = 0;
-        while(key > current[index]){
+        while (key > current[index]) {
             index++;
         }
-        if(key === current[index]){
+        if (key === current[index]) {
             return; // Pair was already added
         }
-        for(var j=current.length-1; j>=index; j--){
+        for (var j = current.length - 1; j >= index; j--) {
             current[j + 1] = current[j];
         }
         current[index] = key;
@@ -60,16 +60,16 @@ export default class OverlapKeeper {
         const al = a.length;
         const bl = b.length;
 
-        let j=0;
+        let j = 0;
         for (var i = 0; i < al; i++) {
             var found = false;
             const keyA = a[i];
-            while(keyA > b[j]){
+            while (keyA > b[j]) {
                 j++;
             }
             found = keyA === b[j];
 
-            if(!found){
+            if (!found) {
                 unpackAndPush(additions, keyA);
             }
         }
@@ -77,18 +77,18 @@ export default class OverlapKeeper {
         for (var i = 0; i < bl; i++) {
             var found = false;
             const keyB = b[i];
-            while(keyB > a[j]){
+            while (keyB > a[j]) {
                 j++;
             }
             found = a[j] === keyB;
 
-            if(!found){
+            if (!found) {
                 unpackAndPush(removals, keyB);
             }
         }
     }
 }
 
-function unpackAndPush(array, key){
+function unpackAndPush(array, key) {
     array.push((key & 0xFFFF0000) >> 16, key & 0x0000FFFF);
 }

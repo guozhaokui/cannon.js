@@ -30,7 +30,7 @@ export default class ArrayCollisionMatrix {
             j = i;
             i = temp;
         }
-        return this.matrix[(i*(i + 1)>>1) + j-1];
+        return this.matrix[(i * (i + 1) >> 1) + j - 1];
     }
 
     /**
@@ -48,7 +48,7 @@ export default class ArrayCollisionMatrix {
             j = i;
             i = temp;
         }
-        this.matrix[(i*(i + 1)>>1) + j-1] = value ? 1 : 0;
+        this.matrix[(i * (i + 1) >> 1) + j - 1] = value ? 1 : 0;
     }
 
     /**
@@ -56,8 +56,8 @@ export default class ArrayCollisionMatrix {
      * @method reset
      */
     reset() {
-        for (let i=0, l=this.matrix.length; i!==l; i++) {
-            this.matrix[i]=0;
+        for (let i = 0, l = this.matrix.length; i !== l; i++) {
+            this.matrix[i] = 0;
         }
     }
 
@@ -67,6 +67,6 @@ export default class ArrayCollisionMatrix {
      * @param {Number} n
      */
     setNumObjects(n) {
-        this.matrix.length = n*(n-1)>>1;
+        this.matrix.length = n * (n - 1) >> 1;
     }
 }

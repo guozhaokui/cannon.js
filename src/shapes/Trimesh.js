@@ -152,7 +152,7 @@ export default class Trimesh extends Shape {
         const wasUniform = this.scale.x === this.scale.y === this.scale.z;
         const isUniform = scale.x === scale.y === scale.z;
 
-        if(!(wasUniform && isUniform)){
+        if (!(wasUniform && isUniform)) {
             // Non-uniform scaling. Need to update normals.
             this.updateNormals();
         }
@@ -170,7 +170,7 @@ export default class Trimesh extends Shape {
 
         // Generate normals
         const normals = this.normals;
-        for(let i=0; i < this.indices.length / 3; i++){
+        for (let i = 0; i < this.indices.length / 3; i++) {
             const i3 = i * 3;
 
             const a = this.indices[i3];
@@ -199,14 +199,14 @@ export default class Trimesh extends Shape {
             const key = a < b ? `${a}_${b}` : `${b}_${a}`;
             edges[key] = true;
         };
-        for(var i=0; i < this.indices.length / 3; i++){
+        for (var i = 0; i < this.indices.length / 3; i++) {
             const i3 = i * 3;
             var a = this.indices[i3];
             var b = this.indices[i3 + 1];
             const c = this.indices[i3 + 2];
-            add(a,b);
-            add(b,c);
-            add(c,a);
+            add(a, b);
+            add(b, c);
+            add(c, a);
         }
         const keys = Object.keys(edges);
         this.edges = new Int16Array(keys.length * 2);
@@ -337,9 +337,9 @@ export default class Trimesh extends Shape {
         const y = cli_aabb.upperBound.y - cli_aabb.lowerBound.y;
         const z = cli_aabb.upperBound.z - cli_aabb.lowerBound.z;
         return target.set(
-            1.0 / 12.0 * mass * ( 2*y*2*y + 2*z*2*z ),
-            1.0 / 12.0 * mass * ( 2*x*2*x + 2*z*2*z ),
-            1.0 / 12.0 * mass * ( 2*y*2*y + 2*x*2*x )
+            1.0 / 12.0 * mass * (2 * y * 2 * y + 2 * z * 2 * z),
+            1.0 / 12.0 * mass * (2 * x * 2 * x + 2 * z * 2 * z),
+            1.0 / 12.0 * mass * (2 * y * 2 * y + 2 * x * 2 * x)
         );
     }
 
@@ -348,7 +348,7 @@ export default class Trimesh extends Shape {
      * @method computeLocalAABB
      * @param  {AABB} aabb
      */
-    computeLocalAABB({lowerBound, upperBound}) {
+    computeLocalAABB({ lowerBound, upperBound }) {
         const l = lowerBound;
         const u = upperBound;
         const n = this.vertices.length;
@@ -359,24 +359,24 @@ export default class Trimesh extends Shape {
         l.copy(v);
         u.copy(v);
 
-        for(let i=0; i !== n; i++){
+        for (let i = 0; i !== n; i++) {
             this.getVertex(i, v);
 
-            if(v.x < l.x){
+            if (v.x < l.x) {
                 l.x = v.x;
-            } else if(v.x > u.x){
+            } else if (v.x > u.x) {
                 u.x = v.x;
             }
 
-            if(v.y < l.y){
+            if (v.y < l.y) {
                 l.y = v.y;
-            } else if(v.y > u.y){
+            } else if (v.y > u.y) {
                 u.y = v.y;
             }
 
-            if(v.z < l.z){
+            if (v.z < l.z) {
                 l.z = v.z;
-            } else if(v.z > u.z){
+            } else if (v.z > u.z) {
                 u.z = v.z;
             }
         }
@@ -399,10 +399,10 @@ export default class Trimesh extends Shape {
         let max2 = 0;
         const vertices = this.vertices;
         const v = new Vec3();
-        for(let i=0, N=vertices.length / 3; i !== N; i++) {
+        for (let i = 0, N = vertices.length / 3; i !== N; i++) {
             this.getVertex(i, v);
             const norm2 = v.norm2();
-            if(norm2 > max2){
+            if (norm2 > max2) {
                 max2 = norm2;
             }
         }
@@ -488,10 +488,10 @@ var getEdgeVector_vb = new Vec3();
 const cb = new Vec3();
 const ab = new Vec3();
 Trimesh.computeNormal = (va, vb, vc, target) => {
-    vb.vsub(va,ab);
-    vc.vsub(vb,cb);
-    cb.cross(ab,target);
-    if ( !target.isZero() ) {
+    vb.vsub(va, ab);
+    vc.vsub(vb, cb);
+    cb.cross(ab, target);
+    if (!target.isZero()) {
         target.normalize();
     }
 };
@@ -529,25 +529,25 @@ Trimesh.createTorus = (
     const vertices = [];
     const indices = [];
 
-    for ( var j = 0; j <= radialSegments; j ++ ) {
-        for ( var i = 0; i <= tubularSegments; i ++ ) {
+    for (var j = 0; j <= radialSegments; j++) {
+        for (var i = 0; i <= tubularSegments; i++) {
             const u = i / tubularSegments * arc;
             const v = j / radialSegments * Math.PI * 2;
 
-            const x = ( radius + tube * Math.cos( v ) ) * Math.cos( u );
-            const y = ( radius + tube * Math.cos( v ) ) * Math.sin( u );
-            const z = tube * Math.sin( v );
+            const x = (radius + tube * Math.cos(v)) * Math.cos(u);
+            const y = (radius + tube * Math.cos(v)) * Math.sin(u);
+            const z = tube * Math.sin(v);
 
-            vertices.push( x, y, z );
+            vertices.push(x, y, z);
         }
     }
 
-    for ( var j = 1; j <= radialSegments; j ++ ) {
-        for ( var i = 1; i <= tubularSegments; i ++ ) {
-            const a = ( tubularSegments + 1 ) * j + i - 1;
-            const b = ( tubularSegments + 1 ) * ( j - 1 ) + i - 1;
-            const c = ( tubularSegments + 1 ) * ( j - 1 ) + i;
-            const d = ( tubularSegments + 1 ) * j + i;
+    for (var j = 1; j <= radialSegments; j++) {
+        for (var i = 1; i <= tubularSegments; i++) {
+            const a = (tubularSegments + 1) * j + i - 1;
+            const b = (tubularSegments + 1) * (j - 1) + i - 1;
+            const c = (tubularSegments + 1) * (j - 1) + i;
+            const d = (tubularSegments + 1) * j + i;
 
             indices.push(a, b, d);
             indices.push(b, c, d);

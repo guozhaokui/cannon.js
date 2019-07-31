@@ -44,8 +44,8 @@ export default class Solver {
     removeEquation(eq) {
         const eqs = this.equations;
         const i = eqs.indexOf(eq);
-        if(i !== -1){
-            eqs.splice(i,1);
+        if (i !== -1) {
+            eqs.splice(i, 1);
         }
     }
 

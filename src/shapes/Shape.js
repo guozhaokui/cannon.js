@@ -13,53 +13,53 @@ import Vec3 from '../math/Vec3.js';
  * @param {number} [options.material=null]
  * @author schteppe
  */
-export default  class Shape {
+export default class Shape {
     constructor(options = {}) {
-     /**
-      * Identifyer of the Shape.
-      * @property {number} id
-      */
-     this.id = Shape.idCounter++;
+        /**
+         * Identifyer of the Shape.
+         * @property {number} id
+         */
+        this.id = Shape.idCounter++;
 
-     /**
-      * The type of this shape. Must be set to an int > 0 by subclasses.
-      * @property type
-      * @type {Number}
-      * @see Shape.types
-      */
-     this.type = options.type || 0;
+        /**
+         * The type of this shape. Must be set to an int > 0 by subclasses.
+         * @property type
+         * @type {Number}
+         * @see Shape.types
+         */
+        this.type = options.type || 0;
 
-     /**
-      * The local bounding sphere radius of this shape.
-      * @property {Number} boundingSphereRadius
-      */
-     this.boundingSphereRadius = 0;
+        /**
+         * The local bounding sphere radius of this shape.
+         * @property {Number} boundingSphereRadius
+         */
+        this.boundingSphereRadius = 0;
 
-     /**
-      * Whether to produce contact forces when in contact with other bodies. Note that contacts will be generated, but they will be disabled.
-      * @property {boolean} collisionResponse
-      */
-     this.collisionResponse = options.collisionResponse ? options.collisionResponse : true;
+        /**
+         * Whether to produce contact forces when in contact with other bodies. Note that contacts will be generated, but they will be disabled.
+         * @property {boolean} collisionResponse
+         */
+        this.collisionResponse = options.collisionResponse ? options.collisionResponse : true;
 
-     /**
-      * @property {Number} collisionFilterGroup
-      */
-     this.collisionFilterGroup = options.collisionFilterGroup !== undefined ? options.collisionFilterGroup : 1;
+        /**
+         * @property {Number} collisionFilterGroup
+         */
+        this.collisionFilterGroup = options.collisionFilterGroup !== undefined ? options.collisionFilterGroup : 1;
 
-     /**
-      * @property {Number} collisionFilterMask
-      */
-     this.collisionFilterMask = options.collisionFilterMask !== undefined ? options.collisionFilterMask : -1;
+        /**
+         * @property {Number} collisionFilterMask
+         */
+        this.collisionFilterMask = options.collisionFilterMask !== undefined ? options.collisionFilterMask : -1;
 
-     /**
-      * @property {Material} material
-      */
-     this.material = options.material ? options.material : null;
+        /**
+         * @property {Material} material
+         */
+        this.material = options.material ? options.material : null;
 
-     /**
-      * @property {Body} body
-      */
-     this.body = null;
+        /**
+         * @property {Body} body
+         */
+        this.body = null;
     }
 
     /**

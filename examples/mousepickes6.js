@@ -11,7 +11,7 @@ var world;
 var dt = 1 / 60;
 
 var constraintDown = false;
-var camera, scene, renderer, gplane=false, clickMarker=false;
+var camera, scene, renderer, gplane=false, clickMarker;
 var geometry, material, mesh;
 var controls,time = Date.now();
 var markerMaterial;
@@ -32,9 +32,7 @@ init();
 animate();
 
 function init() {
-
     projector = new THREE.Projector();
-
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
@@ -111,6 +109,8 @@ function init() {
     window.addEventListener("mousemove", onMouseMove, false );
     window.addEventListener("mousedown", onMouseDown, false );
     window.addEventListener("mouseup", onMouseUp, false );
+
+    //addBox(1,1,1,0,0,0);
 }
 
 function setClickMarker(x,y,z) {
@@ -249,6 +249,28 @@ function render() {
     renderer.render(scene, camera);
 }
 
+function addBox(sx,sy,sz,px,py,pz){
+    //phy
+    var body = new Body({mass:5});
+    var boxshape = new Box(new Vec3(0.5,0.5,0.5));
+    body.addShape(boxshape);
+    world.addBody(body);
+    bodies.push(body);
+    //render
+    var cubeGeo = new THREE.BoxGeometry( sx,sy,sz, 10, 10 );
+    var cubeMaterial = new THREE.MeshPhongMaterial( { color: 0x888888 } );
+    var cubeMesh = new THREE.Mesh(cubeGeo, cubeMaterial);
+    cubeMesh.castShadow = true;
+    meshes.push(cubeMesh);
+    scene.add(cubeMesh);
+
+    return body;
+}
+
+function addSphere(r, px,py,pz){
+
+}
+
 function initCannon(){
     // Setup our world
     world = new World();
@@ -282,7 +304,7 @@ function initCannon(){
     jointBody.addShape(shape);
     jointBody.collisionFilterGroup = 0;
     jointBody.collisionFilterMask = 0;
-    world.addBody(jointBody)
+    world.addBody(jointBody);
 }
 
 function addMouseConstraint(x,y,z,body) {

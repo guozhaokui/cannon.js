@@ -17,7 +17,7 @@ import Equation from './Equation.js';
  */
 export default class ConeEquation extends Equation {
     constructor(bodyA, bodyB, options = {}) {
-        const maxForce = typeof(options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
+        const maxForce = typeof (options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
 
         super(bodyA, bodyB, -maxForce, maxForce);
 
@@ -28,7 +28,7 @@ export default class ConeEquation extends Equation {
          * The cone angle to keep
          * @property {number} angle
          */
-        this.angle = typeof(options.angle) !== 'undefined' ? options.angle : 0;
+        this.angle = typeof (options.angle) !== 'undefined' ? options.angle : 0;
     }
 
     computeB(h) {

@@ -20,7 +20,7 @@ export default class Sphere extends Shape {
          */
         this.radius = radius !== undefined ? radius : 1.0;
 
-        if(this.radius < 0){
+        if (this.radius < 0) {
             throw new Error('The sphere radius cannot be negative.');
         }
 
@@ -28,7 +28,7 @@ export default class Sphere extends Shape {
     }
 
     calculateLocalInertia(mass, target = new Vec3()) {
-        const I = 2.0*mass*this.radius*this.radius/5.0;
+        const I = 2.0 * mass * this.radius * this.radius / 5.0;
         target.x = I;
         target.y = I;
         target.z = I;
@@ -45,8 +45,8 @@ export default class Sphere extends Shape {
 
     calculateWorldAABB(pos, quat, min, max) {
         const r = this.radius;
-        const axes = ['x','y','z'];
-        for(let i=0; i<axes.length; i++){
+        const axes = ['x', 'y', 'z'];
+        for (let i = 0; i < axes.length; i++) {
             const ax = axes[i];
             min[ax] = pos[ax] - r;
             max[ax] = pos[ax] + r;

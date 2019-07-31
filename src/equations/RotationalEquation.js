@@ -16,7 +16,7 @@ import Equation from './Equation.js';
  */
 export default class RotationalEquation extends Equation {
     constructor(bodyA, bodyB, options = {}) {
-        const maxForce = typeof(options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
+        const maxForce = typeof (options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
 
         super(bodyA, bodyB, -maxForce, maxForce);
 

@@ -50,28 +50,28 @@ export default class OctreeNode {
         level = level || 0;
 
         // Ignore objects that do not belong in this node
-        if (!this.aabb.contains(aabb)){
+        if (!this.aabb.contains(aabb)) {
             return false; // object cannot be added
         }
 
         const children = this.children;
 
-        if(level < (this.maxDepth || this.root.maxDepth)){
+        if (level < (this.maxDepth || this.root.maxDepth)) {
             // Subdivide if there are no children yet
             let subdivided = false;
-            if (!children.length){
+            if (!children.length) {
                 this.subdivide();
                 subdivided = true;
             }
 
             // add to whichever node will accept it
             for (let i = 0; i !== 8; i++) {
-                if (children[i].insert(aabb, elementData, level + 1)){
+                if (children[i].insert(aabb, elementData, level + 1)) {
                     return true;
                 }
             }
 
-            if(subdivided){
+            if (subdivided) {
                 // No children accepted! Might as well just remove em since they contain none
                 children.length = 0;
             }
@@ -95,14 +95,14 @@ export default class OctreeNode {
         const children = this.children;
 
         children.push(
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0,0,0) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1,0,0) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1,1,0) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1,1,1) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0,1,1) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0,0,1) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1,0,1) }) }),
-            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0,1,0) }) })
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0, 0, 0) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1, 0, 0) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1, 1, 0) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1, 1, 1) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0, 1, 1) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0, 0, 1) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(1, 0, 1) }) }),
+            new OctreeNode({ aabb: new AABB({ lowerBound: new Vec3(0, 1, 0) }) })
         );
 
         u.vsub(l, halfDiagonal);
@@ -160,7 +160,7 @@ export default class OctreeNode {
         const queue = [this];
         while (queue.length) {
             const node = queue.pop();
-            if (node.aabb.overlaps(aabb)){
+            if (node.aabb.overlaps(aabb)) {
                 Array.prototype.push.apply(result, node.data);
             }
             Array.prototype.push.apply(queue, node.children);
@@ -196,7 +196,7 @@ export default class OctreeNode {
         while (queue.length) {
             const node = queue.pop();
             for (let i = node.children.length - 1; i >= 0; i--) {
-                if(!node.children[i].data.length){
+                if (!node.children[i].data.length) {
                     node.children.splice(i, 1);
                 }
             }
@@ -222,7 +222,7 @@ class Octree extends OctreeNode {
          * Maximum subdivision depth
          * @property {number} maxDepth
          */
-        this.maxDepth = typeof(options.maxDepth) !== 'undefined' ? options.maxDepth : 8;
+        this.maxDepth = typeof (options.maxDepth) !== 'undefined' ? options.maxDepth : 8;
     }
 }
 

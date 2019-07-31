@@ -12,25 +12,25 @@ import Mat3 from './Mat3.js';
  *     var v = new Vec3(1, 2, 3);
  *     console.log('x=' + v.x); // x=1
  */
-export default  class Vec3 {
+export default class Vec3 {
     constructor(x, y, z) {
         /**
          * @property x
          * @type {Number}
          */
-        this.x = x||0.0;
+        this.x = x || 0.0;
 
         /**
          * @property y
          * @type {Number}
          */
-        this.y = y||0.0;
+        this.y = y || 0.0;
 
         /**
          * @property z
          * @type {Number}
          */
-        this.z = z||0.0;
+        this.z = z || 0.0;
     }
 
     /**
@@ -41,12 +41,12 @@ export default  class Vec3 {
      * @return {Vec3}
      */
     cross(v, target) {
-        const vx=v.x;
-        const vy=v.y;
-        const vz=v.z;
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
+        const vx = v.x;
+        const vy = v.y;
+        const vz = v.z;
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
         target = target || new Vec3();
 
         target.x = (y * vz) - (z * vy);
@@ -86,15 +86,15 @@ export default  class Vec3 {
      * @param {Vec3} target Optional.
      * @return {Vec3}
      */
-    vadd({x, y, z}, target) {
-        if(target){
+    vadd({ x, y, z }, target) {
+        if (target) {
             target.x = x + this.x;
             target.y = y + this.y;
             target.z = z + this.z;
         } else {
             return new Vec3(this.x + x,
-                                   this.y + y,
-                                   this.z + z);
+                this.y + y,
+                this.z + z);
         }
     }
 
@@ -105,15 +105,15 @@ export default  class Vec3 {
      * @param {Vec3} target Optional. Target to save in.
      * @return {Vec3}
      */
-    vsub({x, y, z}, target) {
-        if(target){
+    vsub({ x, y, z }, target) {
+        if (target) {
             target.x = this.x - x;
             target.y = this.y - y;
             target.z = this.z - z;
         } else {
-            return new Vec3(this.x-x,
-                                   this.y-y,
-                                   this.z-z);
+            return new Vec3(this.x - x,
+                this.y - y,
+                this.z - z);
         }
     }
 
@@ -124,9 +124,9 @@ export default  class Vec3 {
      * @return {Mat3}
      */
     crossmat() {
-        return new Mat3([     0,  -this.z,   this.y,
-                                this.z,        0,  -this.x,
-                               -this.y,   this.x,        0]);
+        return new Mat3([0, -this.z, this.y,
+            this.z, 0, -this.x,
+            -this.y, this.x, 0]);
     }
 
     /**
@@ -135,12 +135,12 @@ export default  class Vec3 {
      * @return {Number} Returns the norm of the vector
      */
     normalize() {
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
-        const n = Math.sqrt(x*x + y*y + z*z);
-        if(n>0.0){
-            const invN = 1/n;
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
+        const n = Math.sqrt(x * x + y * y + z * z);
+        if (n > 0.0) {
+            const invN = 1 / n;
             this.x *= invN;
             this.y *= invN;
             this.z *= invN;
@@ -160,12 +160,12 @@ export default  class Vec3 {
      * @return {Vec3} Returns the unit vector
      */
     unit(target = new Vec3()) {
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
-        let ninv = Math.sqrt(x*x + y*y + z*z);
-        if(ninv>0.0){
-            ninv = 1.0/ninv;
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
+        let ninv = Math.sqrt(x * x + y * y + z * z);
+        if (ninv > 0.0) {
+            ninv = 1.0 / ninv;
             target.x = x * ninv;
             target.y = y * ninv;
             target.z = z * ninv;
@@ -184,10 +184,10 @@ export default  class Vec3 {
      * @deprecated Use .length() instead
      */
     norm() {
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
-        return Math.sqrt(x*x + y*y + z*z);
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
@@ -207,15 +207,15 @@ export default  class Vec3 {
      * @return {Number}
      */
     distanceTo(p) {
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
-        const px=p.x;
-        const py=p.y;
-        const pz=p.z;
-        return Math.sqrt((px-x)*(px-x)+
-                         (py-y)*(py-y)+
-                         (pz-z)*(pz-z));
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
+        const px = p.x;
+        const py = p.y;
+        const pz = p.z;
+        return Math.sqrt((px - x) * (px - x) +
+            (py - y) * (py - y) +
+            (pz - z) * (pz - z));
     }
 
     /**
@@ -225,13 +225,13 @@ export default  class Vec3 {
      * @return {Number}
      */
     distanceSquared(p) {
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
-        const px=p.x;
-        const py=p.y;
-        const pz=p.z;
-        return (px-x)*(px-x) + (py-y)*(py-y) + (pz-z)*(pz-z);
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
+        const px = p.x;
+        const py = p.y;
+        const pz = p.z;
+        return (px - x) * (px - x) + (py - y) * (py - y) + (pz - z) * (pz - z);
     }
 
     /**
@@ -260,7 +260,7 @@ export default  class Vec3 {
      * @param {Vec3} target The vector to save the result in.
      * @return {Vec3}
      */
-    vmul({x, y, z}, target = new Vec3()) {
+    vmul({ x, y, z }, target = new Vec3()) {
         target.x = x * this.x;
         target.y = y * this.y;
         target.z = z * this.z;
@@ -275,7 +275,7 @@ export default  class Vec3 {
      * @param {Vec3} target The vector to save the result in.
      * @return {Vec3}
      */
-    addScaledVector(scalar, {x, y, z}, target = new Vec3()) {
+    addScaledVector(scalar, { x, y, z }, target = new Vec3()) {
         target.x = this.x + scalar * x;
         target.y = this.y + scalar * y;
         target.z = this.z + scalar * z;
@@ -288,7 +288,7 @@ export default  class Vec3 {
      * @param {Vec3} v
      * @return {Number}
      */
-    dot({x, y, z}) {
+    dot({ x, y, z }) {
         return this.x * x + this.y * y + this.z * z;
     }
 
@@ -297,7 +297,7 @@ export default  class Vec3 {
      * @return bool
      */
     isZero() {
-        return this.x===0 && this.y===0 && this.z===0;
+        return this.x === 0 && this.y === 0 && this.z === 0;
     }
 
     /**
@@ -315,19 +315,19 @@ export default  class Vec3 {
 
     tangents(t1, t2) {
         const norm = this.norm();
-        if(norm>0.0){
+        if (norm > 0.0) {
             const n = Vec3_tangents_n;
-            const inorm = 1/norm;
-            n.set(this.x*inorm,this.y*inorm,this.z*inorm);
+            const inorm = 1 / norm;
+            n.set(this.x * inorm, this.y * inorm, this.z * inorm);
             const randVec = Vec3_tangents_randVec;
-            if(Math.abs(n.x) < 0.9){
-                randVec.set(1,0,0);
-                n.cross(randVec,t1);
+            if (Math.abs(n.x) < 0.9) {
+                randVec.set(1, 0, 0);
+                n.cross(randVec, t1);
             } else {
-                randVec.set(0,1,0);
-                n.cross(randVec,t1);
+                randVec.set(0, 1, 0);
+                n.cross(randVec, t1);
             }
-            n.cross(t1,t2);
+            n.cross(t1, t2);
         } else {
             // The normal length is zero, make something up
             t1.set(1, 0, 0);
@@ -359,7 +359,7 @@ export default  class Vec3 {
      * @param {Vec3} source
      * @return {Vec3} this
      */
-    copy({x, y, z}) {
+    copy({ x, y, z }) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -374,12 +374,12 @@ export default  class Vec3 {
      * @param {Vec3} target
      */
     lerp(v, t, target) {
-        const x=this.x;
-        const y=this.y;
-        const z=this.z;
-        target.x = x + (v.x-x)*t;
-        target.y = y + (v.y-y)*t;
-        target.z = z + (v.z-z)*t;
+        const x = this.x;
+        const y = this.y;
+        const z = this.z;
+        target.x = x + (v.x - x) * t;
+        target.y = y + (v.y - y) * t;
+        target.z = z + (v.z - z) * t;
     }
 
     /**
@@ -389,13 +389,13 @@ export default  class Vec3 {
      * @param {Number} precision
      * @return bool
      */
-    almostEquals({x, y, z}, precision) {
-        if(precision===undefined){
+    almostEquals({ x, y, z }, precision) {
+        if (precision === undefined) {
             precision = 1e-6;
         }
-        if( Math.abs(this.x-x)>precision ||
-            Math.abs(this.y-y)>precision ||
-            Math.abs(this.z-z)>precision){
+        if (Math.abs(this.x - x) > precision ||
+            Math.abs(this.y - y) > precision ||
+            Math.abs(this.z - z) > precision) {
             return false;
         }
         return true;
@@ -407,12 +407,12 @@ export default  class Vec3 {
      * @param {Number} precision
      */
     almostZero(precision) {
-        if(precision===undefined){
+        if (precision === undefined) {
             precision = 1e-6;
         }
-        if( Math.abs(this.x)>precision ||
-            Math.abs(this.y)>precision ||
-            Math.abs(this.z)>precision){
+        if (Math.abs(this.x) > precision ||
+            Math.abs(this.y) > precision ||
+            Math.abs(this.z) > precision) {
             return false;
         }
         return true;
@@ -427,7 +427,7 @@ export default  class Vec3 {
      */
     isAntiparallelTo(v, precision) {
         this.negate(antip_neg);
-        return antip_neg.almostEquals(v,precision);
+        return antip_neg.almostEquals(v, precision);
     }
 
     /**

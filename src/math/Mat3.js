@@ -13,10 +13,10 @@ export default class Mat3 {
          * A vector of length 9, containing all matrix elements
          * @property {Array} elements
          */
-        if(elements){
+        if (elements) {
             this.elements = elements;
         } else {
-            this.elements = [0,0,0,0,0,0,0,0,0];
+            this.elements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         }
     }
 
@@ -63,7 +63,7 @@ export default class Mat3 {
      * @method setTrace
      * @param {Vec3} vec3
      */
-    setTrace({x, y, z}) {
+    setTrace({ x, y, z }) {
         const e = this.elements;
         e[0] = x;
         e[4] = y;
@@ -94,9 +94,9 @@ export default class Mat3 {
         const x = v.x;
         const y = v.y;
         const z = v.z;
-        target.x = e[0]*x + e[1]*y + e[2]*z;
-        target.y = e[3]*x + e[4]*y + e[5]*z;
-        target.z = e[6]*x + e[7]*y + e[8]*z;
+        target.x = e[0] * x + e[1] * y + e[2] * z;
+        target.y = e[3] * x + e[4] * y + e[5] * z;
+        target.z = e[6] * x + e[7] * y + e[8] * z;
 
         return target;
     }
@@ -107,7 +107,7 @@ export default class Mat3 {
      * @param {Number} s
      */
     smult(s) {
-        for(let i=0; i<this.elements.length; i++){
+        for (let i = 0; i < this.elements.length; i++) {
             this.elements[i] *= s;
         }
     }
@@ -118,15 +118,15 @@ export default class Mat3 {
      * @param {Mat3} m Matrix to multiply with from left side.
      * @return {Mat3} The result.
      */
-    mmult({elements}, target) {
+    mmult({ elements }, target) {
         const r = target || new Mat3();
-        for(let i=0; i<3; i++){
-            for(let j=0; j<3; j++){
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
                 let sum = 0.0;
-                for(let k=0; k<3; k++){
-                    sum += elements[i+k*3] * this.elements[k+j*3];
+                for (let k = 0; k < 3; k++) {
+                    sum += elements[i + k * 3] * this.elements[k + j * 3];
                 }
-                r.elements[i+j*3] = sum;
+                r.elements[i + j * 3] = sum;
             }
         }
         return r;
@@ -138,13 +138,13 @@ export default class Mat3 {
      * @param {Vec3} v
      * @return {Mat3} The result.
      */
-    scale({x, y, z}, target = new Mat3()) {
+    scale({ x, y, z }, target = new Mat3()) {
         const e = this.elements;
         const t = target.elements;
-        for(let i=0; i!==3; i++){
-            t[3*i + 0] = x * e[3*i + 0];
-            t[3*i + 1] = y * e[3*i + 1];
-            t[3*i + 2] = z * e[3*i + 2];
+        for (let i = 0; i !== 3; i++) {
+            t[3 * i + 0] = x * e[3 * i + 0];
+            t[3 * i + 1] = y * e[3 * i + 1];
+            t[3 * i + 2] = z * e[3 * i + 2];
         }
         return target;
     }
@@ -162,19 +162,19 @@ export default class Mat3 {
         const nr = 3; // num rows
         const nc = 4; // num cols
         const eqns = [];
-        for(var i=0; i<nr*nc; i++){
+        for (var i = 0; i < nr * nc; i++) {
             eqns.push(0);
         }
         var i;
         let j;
-        for(i=0; i<3; i++){
-            for(j=0; j<3; j++){
-                eqns[i+nc*j] = this.elements[i+3*j];
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 3; j++) {
+                eqns[i + nc * j] = this.elements[i + 3 * j];
             }
         }
-        eqns[3+4*0] = b.x;
-        eqns[3+4*1] = b.y;
-        eqns[3+4*2] = b.z;
+        eqns[3 + 4 * 0] = b.x;
+        eqns[3 + 4 * 1] = b.y;
+        eqns[3 + 4 * 2] = b.z;
 
         // Compute right upper triangular version of the matrix - Gauss elimination
         let n = 3;
@@ -186,37 +186,37 @@ export default class Mat3 {
         let els;
         do {
             i = k - n;
-            if (eqns[i+nc*i] === 0) {
+            if (eqns[i + nc * i] === 0) {
                 // the pivot is null, swap lines
                 for (j = i + 1; j < k; j++) {
-                    if (eqns[i+nc*j] !== 0) {
+                    if (eqns[i + nc * j] !== 0) {
                         np = kp;
                         do {  // do ligne( i ) = ligne( i ) + ligne( k )
                             p = kp - np;
-                            eqns[p+nc*i] += eqns[p+nc*j];
+                            eqns[p + nc * i] += eqns[p + nc * j];
                         } while (--np);
                         break;
                     }
                 }
             }
-            if (eqns[i+nc*i] !== 0) {
+            if (eqns[i + nc * i] !== 0) {
                 for (j = i + 1; j < k; j++) {
-                    const multiplier = eqns[i+nc*j] / eqns[i+nc*i];
+                    const multiplier = eqns[i + nc * j] / eqns[i + nc * i];
                     np = kp;
                     do {  // do ligne( k ) = ligne( k ) - multiplier * ligne( i )
                         p = kp - np;
-                        eqns[p+nc*j] = p <= i ? 0 : eqns[p+nc*j] - eqns[p+nc*i] * multiplier ;
+                        eqns[p + nc * j] = p <= i ? 0 : eqns[p + nc * j] - eqns[p + nc * i] * multiplier;
                     } while (--np);
                 }
             }
         } while (--n);
 
         // Get the solution
-        target.z = eqns[2*nc+3] / eqns[2*nc+2];
-        target.y = (eqns[1*nc+3] - eqns[1*nc+2]*target.z) / eqns[1*nc+1];
-        target.x = (eqns[0*nc+3] - eqns[0*nc+2]*target.z - eqns[0*nc+1]*target.y) / eqns[0*nc+0];
+        target.z = eqns[2 * nc + 3] / eqns[2 * nc + 2];
+        target.y = (eqns[1 * nc + 3] - eqns[1 * nc + 2] * target.z) / eqns[1 * nc + 1];
+        target.x = (eqns[0 * nc + 3] - eqns[0 * nc + 2] * target.z - eqns[0 * nc + 1] * target.y) / eqns[0 * nc + 0];
 
-        if(isNaN(target.x) || isNaN(target.y) || isNaN(target.z) || target.x===Infinity || target.y===Infinity || target.z===Infinity){
+        if (isNaN(target.x) || isNaN(target.y) || isNaN(target.z) || target.x === Infinity || target.y === Infinity || target.z === Infinity) {
             throw `Could not solve equation! Got x=[${target.toString()}], b=[${b.toString()}], A=[${this.toString()}]`;
         }
 
@@ -232,11 +232,11 @@ export default class Mat3 {
      * @return {Number}
      */
     e(row, column, value) {
-        if(value===undefined){
-            return this.elements[column+3*row];
+        if (value === undefined) {
+            return this.elements[column + 3 * row];
         } else {
             // Set value
-            this.elements[column+3*row] = value;
+            this.elements[column + 3 * row] = value;
         }
     }
 
@@ -246,8 +246,8 @@ export default class Mat3 {
      * @param {Mat3} source
      * @return {Mat3} this
      */
-    copy({elements}) {
-        for(let i=0; i < elements.length; i++){
+    copy({ elements }) {
+        for (let i = 0; i < elements.length; i++) {
             this.elements[i] = elements[i];
         }
         return this;
@@ -261,7 +261,7 @@ export default class Mat3 {
     toString() {
         let r = "";
         const sep = ",";
-        for(let i=0; i<9; i++){
+        for (let i = 0; i < 9; i++) {
             r += this.elements[i] + sep;
         }
         return r;
@@ -278,25 +278,25 @@ export default class Mat3 {
         const nr = 3; // num rows
         const nc = 6; // num cols
         const eqns = [];
-        for(var i=0; i<nr*nc; i++){
+        for (var i = 0; i < nr * nc; i++) {
             eqns.push(0);
         }
         var i;
         let j;
-        for(i=0; i<3; i++){
-            for(j=0; j<3; j++){
-                eqns[i+nc*j] = this.elements[i+3*j];
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 3; j++) {
+                eqns[i + nc * j] = this.elements[i + 3 * j];
             }
         }
-        eqns[3+6*0] = 1;
-        eqns[3+6*1] = 0;
-        eqns[3+6*2] = 0;
-        eqns[4+6*0] = 0;
-        eqns[4+6*1] = 1;
-        eqns[4+6*2] = 0;
-        eqns[5+6*0] = 0;
-        eqns[5+6*1] = 0;
-        eqns[5+6*2] = 1;
+        eqns[3 + 6 * 0] = 1;
+        eqns[3 + 6 * 1] = 0;
+        eqns[3 + 6 * 2] = 0;
+        eqns[4 + 6 * 0] = 0;
+        eqns[4 + 6 * 1] = 1;
+        eqns[4 + 6 * 2] = 0;
+        eqns[5 + 6 * 0] = 0;
+        eqns[5 + 6 * 1] = 0;
+        eqns[5 + 6 * 2] = 1;
 
         // Compute right upper triangular version of the matrix - Gauss elimination
         let n = 3;
@@ -307,26 +307,26 @@ export default class Mat3 {
         let p;
         do {
             i = k - n;
-            if (eqns[i+nc*i] === 0) {
+            if (eqns[i + nc * i] === 0) {
                 // the pivot is null, swap lines
                 for (j = i + 1; j < k; j++) {
-                    if (eqns[i+nc*j] !== 0) {
+                    if (eqns[i + nc * j] !== 0) {
                         np = kp;
                         do { // do line( i ) = line( i ) + line( k )
                             p = kp - np;
-                            eqns[p+nc*i] += eqns[p+nc*j];
+                            eqns[p + nc * i] += eqns[p + nc * j];
                         } while (--np);
                         break;
                     }
                 }
             }
-            if (eqns[i+nc*i] !== 0) {
+            if (eqns[i + nc * i] !== 0) {
                 for (j = i + 1; j < k; j++) {
-                    var multiplier = eqns[i+nc*j] / eqns[i+nc*i];
+                    var multiplier = eqns[i + nc * j] / eqns[i + nc * i];
                     np = kp;
                     do { // do line( k ) = line( k ) - multiplier * line( i )
                         p = kp - np;
-                        eqns[p+nc*j] = p <= i ? 0 : eqns[p+nc*j] - eqns[p+nc*i] * multiplier ;
+                        eqns[p + nc * j] = p <= i ? 0 : eqns[p + nc * j] - eqns[p + nc * i] * multiplier;
                     } while (--np);
                 }
             }
@@ -335,13 +335,13 @@ export default class Mat3 {
         // eliminate the upper left triangle of the matrix
         i = 2;
         do {
-            j = i-1;
+            j = i - 1;
             do {
-                var multiplier = eqns[i+nc*j] / eqns[i+nc*i];
+                var multiplier = eqns[i + nc * j] / eqns[i + nc * i];
                 np = nc;
                 do {
                     p = nc - np;
-                    eqns[p+nc*j] =  eqns[p+nc*j] - eqns[p+nc*i] * multiplier ;
+                    eqns[p + nc * j] = eqns[p + nc * j] - eqns[p + nc * i] * multiplier;
                 } while (--np);
             } while (j--);
         } while (--i);
@@ -349,11 +349,11 @@ export default class Mat3 {
         // operations on the diagonal
         i = 2;
         do {
-            var multiplier = 1 / eqns[i+nc*i];
+            var multiplier = 1 / eqns[i + nc * i];
             np = nc;
             do {
                 p = nc - np;
-                eqns[p+nc*i] = eqns[p+nc*i] * multiplier ;
+                eqns[p + nc * i] = eqns[p + nc * i] * multiplier;
             } while (--np);
         } while (i--);
 
@@ -361,11 +361,11 @@ export default class Mat3 {
         do {
             j = 2;
             do {
-                p = eqns[nr+j+nc*i];
-                if( isNaN( p ) || p ===Infinity ){
+                p = eqns[nr + j + nc * i];
+                if (isNaN(p) || p === Infinity) {
                     throw `Could not reverse! A=[${this.toString()}]`;
                 }
-                target.e( i , j , p );
+                target.e(i, j, p);
             } while (j--);
         } while (i--);
 
@@ -396,17 +396,17 @@ export default class Mat3 {
         const wz = w * z2;
         const e = this.elements;
 
-        e[3*0 + 0] = 1 - ( yy + zz );
-        e[3*0 + 1] = xy - wz;
-        e[3*0 + 2] = xz + wy;
+        e[3 * 0 + 0] = 1 - (yy + zz);
+        e[3 * 0 + 1] = xy - wz;
+        e[3 * 0 + 2] = xz + wy;
 
-        e[3*1 + 0] = xy + wz;
-        e[3*1 + 1] = 1 - ( xx + zz );
-        e[3*1 + 2] = yz - wx;
+        e[3 * 1 + 0] = xy + wz;
+        e[3 * 1 + 1] = 1 - (xx + zz);
+        e[3 * 1 + 2] = yz - wx;
 
-        e[3*2 + 0] = xz - wy;
-        e[3*2 + 1] = yz + wx;
-        e[3*2 + 2] = 1 - ( xx + yy );
+        e[3 * 2 + 0] = xz - wy;
+        e[3 * 2 + 1] = yz + wx;
+        e[3 * 2 + 2] = 1 - (xx + yy);
 
         return this;
     }
@@ -421,9 +421,9 @@ export default class Mat3 {
         const Mt = target.elements;
         const M = this.elements;
 
-        for(let i=0; i!==3; i++){
-            for(let j=0; j!==3; j++){
-                Mt[3*i + j] = M[3*j + i];
+        for (let i = 0; i !== 3; i++) {
+            for (let j = 0; j !== 3; j++) {
+                Mt[3 * i + j] = M[3 * j + i];
             }
         }
 

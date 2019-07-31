@@ -2,26 +2,27 @@ import Broadphase from './Broadphase.js';
 import Vec3 from '../math/Vec3.js';
 import Shape from '../shapes/Shape.js';
 
-/**
- * Axis aligned uniform grid broadphase.
- * @class GridBroadphase
- * @constructor
- * @extends Broadphase
- * @todo Needs support for more than just planes and spheres.
- * @param {Vec3} aabbMin
- * @param {Vec3} aabbMax
- * @param {Number} nx Number of boxes along x
- * @param {Number} ny Number of boxes along y
- * @param {Number} nz Number of boxes along z
- */
+
 export default class GridBroadphase extends Broadphase {
+    /**
+     * Axis aligned uniform grid broadphase.
+     * @class GridBroadphase
+     * @constructor
+     * @extends Broadphase
+     * @todo Needs support for more than just planes and spheres.
+     * @param {Vec3} aabbMin
+     * @param {Vec3} aabbMax
+     * @param {Number} nx Number of boxes along x
+     * @param {Number} ny Number of boxes along y
+     * @param {Number} nz Number of boxes along z
+     */
     constructor(aabbMin, aabbMax, nx, ny, nz) {
         Broadphase.apply(this);
         this.nx = nx || 10;
         this.ny = ny || 10;
         this.nz = nz || 10;
-        this.aabbMin = aabbMin || new Vec3(100,100,100);
-        this.aabbMax = aabbMax || new Vec3(-100,-100,-100);
+        this.aabbMin = aabbMin || new Vec3(100, 100, 100);
+        this.aabbMax = aabbMax || new Vec3(-100, -100, -100);
         const nbins = this.nx * this.ny * this.nz;
         if (nbins <= 0) {
             throw "GridBroadphase: Each dimension's n must be >0";
@@ -30,9 +31,9 @@ export default class GridBroadphase extends Broadphase {
         this.binLengths = []; //Rather than continually resizing arrays (thrashing the memory), just record length and allow them to grow
         this.bins.length = nbins;
         this.binLengths.length = nbins;
-        for (let i=0;i<nbins;i++) {
-            this.bins[i]=[];
-            this.binLengths[i]=0;
+        for (let i = 0; i < nbins; i++) {
+            this.bins[i] = [];
+            this.binLengths[i] = 0;
         }
     }
 
@@ -45,7 +46,7 @@ export default class GridBroadphase extends Broadphase {
         const ny = this.ny;
         const nz = this.nz;
 
-        const xstep = ny*nz;
+        const xstep = ny * nz;
         const ystep = nz;
         const zstep = 1;
 
@@ -55,27 +56,27 @@ export default class GridBroadphase extends Broadphase {
         const xmin = min.x;
         const ymin = min.y;
         const zmin = min.z;
-        const xmult = nx / (xmax-xmin);
-        const ymult = ny / (ymax-ymin);
-        const zmult = nz / (zmax-zmin);
+        const xmult = nx / (xmax - xmin);
+        const ymult = ny / (ymax - ymin);
+        const zmult = nz / (zmax - zmin);
         const binsizeX = (xmax - xmin) / nx;
         const binsizeY = (ymax - ymin) / ny;
         const binsizeZ = (zmax - zmin) / nz;
 
-        const binRadius = Math.sqrt(binsizeX*binsizeX + binsizeY*binsizeY + binsizeZ*binsizeZ) * 0.5;
+        const binRadius = Math.sqrt(binsizeX * binsizeX + binsizeY * binsizeY + binsizeZ * binsizeZ) * 0.5;
 
         const types = Shape.types;
-        const SPHERE =            types.SPHERE;
-        const PLANE =             types.PLANE;
-        const BOX =               types.BOX;
-        const COMPOUND =          types.COMPOUND;
-        const CONVEXPOLYHEDRON =  types.CONVEXPOLYHEDRON;
-        const bins=this.bins;
-        const binLengths=this.binLengths;
-        const Nbins=this.bins.length;
+        const SPHERE = types.SPHERE;
+        const PLANE = types.PLANE;
+        const BOX = types.BOX;
+        const COMPOUND = types.COMPOUND;
+        const CONVEXPOLYHEDRON = types.CONVEXPOLYHEDRON;
+        const bins = this.bins;
+        const binLengths = this.binLengths;
+        const Nbins = this.bins.length;
 
         // Reset bins
-        for(var i=0; i!==Nbins; i++){
+        for (var i = 0; i !== Nbins; i++) {
             binLengths[i] = 0;
         }
 
@@ -83,10 +84,10 @@ export default class GridBroadphase extends Broadphase {
         var min = Math.min;
         var max = Math.max;
 
-        function addBoxToBins(x0,y0,z0,x1,y1,z1,bi) {
-            let xoff0 = ((x0 - xmin) * xmult)|0;
-            let yoff0 = ((y0 - ymin) * ymult)|0;
-            let zoff0 = ((z0 - zmin) * zmult)|0;
+        function addBoxToBins(x0, y0, z0, x1, y1, z1, bi) {
+            let xoff0 = ((x0 - xmin) * xmult) | 0;
+            let yoff0 = ((y0 - ymin) * ymult) | 0;
+            let zoff0 = ((z0 - zmin) * zmult) | 0;
             let xoff1 = ceil((x1 - xmin) * xmult);
             let yoff1 = ceil((y1 - ymin) * ymult);
             let zoff1 = ceil((z1 - zmin) * zmult);
@@ -108,7 +109,7 @@ export default class GridBroadphase extends Broadphase {
             for (let xoff = xoff0; xoff <= xoff1; xoff += xstep) {
                 for (let yoff = yoff0; yoff <= yoff1; yoff += ystep) {
                     for (let zoff = zoff0; zoff <= zoff1; zoff += zstep) {
-                        const idx = xoff+yoff+zoff;
+                        const idx = xoff + yoff + zoff;
                         bins[idx][binLengths[idx]++] = bi;
                     }
                 }
@@ -116,82 +117,82 @@ export default class GridBroadphase extends Broadphase {
         }
 
         // Put all bodies into the bins
-        for(var i=0; i!==N; i++){
+        for (var i = 0; i !== N; i++) {
             var bi = bodies[i];
             const si = bi.shape;
 
-            switch(si.type){
-            case SPHERE:
-                // Put in bin
-                // check if overlap with other bins
-                const x = bi.position.x;
+            switch (si.type) {
+                case SPHERE:
+                    // Put in bin
+                    // check if overlap with other bins
+                    const x = bi.position.x;
 
-                const y = bi.position.y;
-                const z = bi.position.z;
-                const r = si.radius;
+                    const y = bi.position.y;
+                    const z = bi.position.z;
+                    const r = si.radius;
 
-                addBoxToBins(x-r, y-r, z-r, x+r, y+r, z+r, bi);
-                break;
+                    addBoxToBins(x - r, y - r, z - r, x + r, y + r, z + r, bi);
+                    break;
 
-            case PLANE:
-                if(si.worldNormalNeedsUpdate){
-                    si.computeWorldNormal(bi.quaternion);
-                }
-                const planeNormal = si.worldNormal;
+                case PLANE:
+                    if (si.worldNormalNeedsUpdate) {
+                        si.computeWorldNormal(bi.quaternion);
+                    }
+                    const planeNormal = si.worldNormal;
 
-                //Relative position from origin of plane object to the first bin
-                //Incremented as we iterate through the bins
-                const xreset = xmin + binsizeX*0.5 - bi.position.x;
+                    //Relative position from origin of plane object to the first bin
+                    //Incremented as we iterate through the bins
+                    const xreset = xmin + binsizeX * 0.5 - bi.position.x;
 
-                const yreset = ymin + binsizeY*0.5 - bi.position.y;
-                const zreset = zmin + binsizeZ*0.5 - bi.position.z;
+                    const yreset = ymin + binsizeY * 0.5 - bi.position.y;
+                    const zreset = zmin + binsizeZ * 0.5 - bi.position.z;
 
-                const d = GridBroadphase_collisionPairs_d;
-                d.set(xreset, yreset, zreset);
+                    const d = GridBroadphase_collisionPairs_d;
+                    d.set(xreset, yreset, zreset);
 
-                for (var xi = 0, xoff = 0; xi !== nx; xi++, xoff += xstep, d.y = yreset, d.x += binsizeX) {
-                    for (var yi = 0, yoff = 0; yi !== ny; yi++, yoff += ystep, d.z = zreset, d.y += binsizeY) {
-                        for (let zi = 0, zoff = 0; zi !== nz; zi++, zoff += zstep, d.z += binsizeZ) {
-                            if (d.dot(planeNormal) < binRadius) {
-                                const idx = xoff + yoff + zoff;
-                                bins[idx][binLengths[idx]++] = bi;
+                    for (var xi = 0, xoff = 0; xi !== nx; xi++ , xoff += xstep, d.y = yreset, d.x += binsizeX) {
+                        for (var yi = 0, yoff = 0; yi !== ny; yi++ , yoff += ystep, d.z = zreset, d.y += binsizeY) {
+                            for (let zi = 0, zoff = 0; zi !== nz; zi++ , zoff += zstep, d.z += binsizeZ) {
+                                if (d.dot(planeNormal) < binRadius) {
+                                    const idx = xoff + yoff + zoff;
+                                    bins[idx][binLengths[idx]++] = bi;
+                                }
                             }
                         }
                     }
-                }
-                break;
+                    break;
 
-            default:
-                if (bi.aabbNeedsUpdate) {
-                    bi.computeAABB();
-                }
+                default:
+                    if (bi.aabbNeedsUpdate) {
+                        bi.computeAABB();
+                    }
 
-                addBoxToBins(
-                    bi.aabb.lowerBound.x,
-                    bi.aabb.lowerBound.y,
-                    bi.aabb.lowerBound.z,
-                    bi.aabb.upperBound.x,
-                    bi.aabb.upperBound.y,
-                    bi.aabb.upperBound.z,
-                    bi);
-                break;
+                    addBoxToBins(
+                        bi.aabb.lowerBound.x,
+                        bi.aabb.lowerBound.y,
+                        bi.aabb.lowerBound.z,
+                        bi.aabb.upperBound.x,
+                        bi.aabb.upperBound.y,
+                        bi.aabb.upperBound.z,
+                        bi);
+                    break;
             }
         }
 
         // Check each bin
-        for(var i=0; i!==Nbins; i++){
+        for (var i = 0; i !== Nbins; i++) {
             const binLength = binLengths[i];
             //Skip bins with no potential collisions
             if (binLength > 1) {
                 const bin = bins[i];
 
                 // Do N^2 broadphase inside
-                for(var xi=0; xi!==binLength; xi++){
+                for (var xi = 0; xi !== binLength; xi++) {
                     var bi = bin[xi];
-                    for(var yi=0; yi!==xi; yi++){
+                    for (var yi = 0; yi !== xi; yi++) {
                         const bj = bin[yi];
-                        if(this.needBroadphaseCollision(bi,bj)){
-                            this.intersectionTest(bi,bj,pairs1,pairs2);
+                        if (this.needBroadphaseCollision(bi, bj)) {
+                            this.intersectionTest(bi, bj, pairs1, pairs2);
                         }
                     }
                 }
@@ -210,7 +211,7 @@ export default class GridBroadphase extends Broadphase {
         //		}
         //	}
 
-        this.makePairsUnique(pairs1,pairs2);
+        this.makePairsUnique(pairs1, pairs2);
     }
 }
 

@@ -33,7 +33,7 @@ export default class ConvexPolyhedron extends Shape {
          * @property vertices
          * @type {Array}
          */
-        this.vertices = points||[];
+        this.vertices = points || [];
 
         this.worldVertices = []; // World transformed version of .vertices
         this.worldVerticesNeedsUpdate = true;
@@ -43,7 +43,7 @@ export default class ConvexPolyhedron extends Shape {
          * @property faces
          * @type {Array}
          */
-        this.faces = faces||[];
+        this.faces = faces || [];
 
         /**
          * Array of Vec3
@@ -87,22 +87,22 @@ export default class ConvexPolyhedron extends Shape {
 
         const edge = computeEdges_tmpEdge;
 
-        for(let i=0; i !== faces.length; i++){
+        for (let i = 0; i !== faces.length; i++) {
             const face = faces[i];
             const numVertices = face.length;
-            for(let j = 0; j !== numVertices; j++){
-                const k = ( j+1 ) % numVertices;
+            for (let j = 0; j !== numVertices; j++) {
+                const k = (j + 1) % numVertices;
                 vertices[face[j]].vsub(vertices[face[k]], edge);
                 edge.normalize();
                 let found = false;
-                for(let p=0; p !== edges.length; p++){
-                    if (edges[p].almostEquals(edge) || edges[p].almostEquals(edge)){
+                for (let p = 0; p !== edges.length; p++) {
+                    if (edges[p].almostEquals(edge) || edges[p].almostEquals(edge)) {
                         found = true;
                         break;
                     }
                 }
 
-                if (!found){
+                if (!found) {
                     edges.push(edge.clone());
                 }
             }
@@ -117,23 +117,23 @@ export default class ConvexPolyhedron extends Shape {
         this.faceNormals.length = this.faces.length;
 
         // Generate normals
-        for(let i=0; i<this.faces.length; i++){
+        for (let i = 0; i < this.faces.length; i++) {
 
             // Check so all vertices exists for this face
-            for(var j=0; j<this.faces[i].length; j++){
-                if(!this.vertices[this.faces[i][j]]){
+            for (var j = 0; j < this.faces[i].length; j++) {
+                if (!this.vertices[this.faces[i][j]]) {
                     throw new Error(`Vertex ${this.faces[i][j]} not found!`);
                 }
             }
 
             const n = this.faceNormals[i] || new Vec3();
-            this.getFaceNormal(i,n);
+            this.getFaceNormal(i, n);
             n.negate(n);
             this.faceNormals[i] = n;
             const vertex = this.vertices[this.faces[i][0]];
-            if(n.dot(vertex) < 0){
+            if (n.dot(vertex) < 0) {
                 console.error(`.faceNormals[${i}] = Vec3(${n.toString()}) looks like it points into the shape? The vertices follow. Make sure they are ordered CCW around the normal, using the right hand rule.`);
-                for(var j=0; j<this.faces[i].length; j++){
+                for (var j = 0; j < this.faces[i].length; j++) {
                     console.warn(`.vertices[${this.faces[i][j]}] = Vec3(${this.vertices[this.faces[i][j]].toString()})`);
                 }
             }
@@ -151,13 +151,13 @@ export default class ConvexPolyhedron extends Shape {
         const va = this.vertices[f[0]];
         const vb = this.vertices[f[1]];
         const vc = this.vertices[f[2]];
-        return ConvexPolyhedron.computeNormal(va,vb,vc,target);
+        return ConvexPolyhedron.computeNormal(va, vb, vc, target);
     }
 
     clipAgainstHull(
         posA,
         quatA,
-        {faces, faceNormals, vertices},
+        { faces, faceNormals, vertices },
         posB,
         quatB,
         separatingNormal,
@@ -170,12 +170,12 @@ export default class ConvexPolyhedron extends Shape {
         const curMaxDist = maxDist;
         let closestFaceB = -1;
         let dmax = -Number.MAX_VALUE;
-        for(let face=0; face < faces.length; face++){
+        for (let face = 0; face < faces.length; face++) {
             WorldNormal.copy(faceNormals[face]);
-            quatB.vmult(WorldNormal,WorldNormal);
+            quatB.vmult(WorldNormal, WorldNormal);
             //posB.vadd(WorldNormal,WorldNormal);
             const d = WorldNormal.dot(separatingNormal);
-            if (d > dmax){
+            if (d > dmax) {
                 dmax = d;
                 closestFaceB = face;
             }
@@ -183,23 +183,23 @@ export default class ConvexPolyhedron extends Shape {
         const worldVertsB1 = [];
         const polyB = faces[closestFaceB];
         const numVertices = polyB.length;
-        for(let e0=0; e0<numVertices; e0++){
+        for (let e0 = 0; e0 < numVertices; e0++) {
             const b = vertices[polyB[e0]];
             const worldb = new Vec3();
             worldb.copy(b);
-            quatB.vmult(worldb,worldb);
-            posB.vadd(worldb,worldb);
+            quatB.vmult(worldb, worldb);
+            posB.vadd(worldb, worldb);
             worldVertsB1.push(worldb);
         }
 
-        if (closestFaceB>=0){
+        if (closestFaceB >= 0) {
             this.clipFaceAgainstHull(separatingNormal,
-                                     posA,
-                                     quatA,
-                                     worldVertsB1,
-                                     minDist,
-                                     maxDist,
-                                     result);
+                posA,
+                quatA,
+                worldVertsB1,
+                minDist,
+                maxDist,
+                result);
         }
     }
 
@@ -213,26 +213,26 @@ export default class ConvexPolyhedron extends Shape {
 
         let dmin = Number.MAX_VALUE;
         const hullA = this;
-        let curPlaneTests=0;
+        let curPlaneTests = 0;
 
-        if(!hullA.uniqueAxes){
+        if (!hullA.uniqueAxes) {
 
             const numFacesA = faceListA ? faceListA.length : hullA.faces.length;
 
             // Test face normals from hullA
-            for(var i=0; i<numFacesA; i++){
+            for (var i = 0; i < numFacesA; i++) {
                 var fi = faceListA ? faceListA[i] : i;
 
                 // Get world face normal
                 faceANormalWS3.copy(hullA.faceNormals[fi]);
-                quatA.vmult(faceANormalWS3,faceANormalWS3);
+                quatA.vmult(faceANormalWS3, faceANormalWS3);
 
                 var d = hullA.testSepAxis(faceANormalWS3, hullB, posA, quatA, posB, quatB);
-                if(d===false){
+                if (d === false) {
                     return false;
                 }
 
-                if(d<dmin){
+                if (d < dmin) {
                     dmin = d;
                     target.copy(faceANormalWS3);
                 }
@@ -241,40 +241,40 @@ export default class ConvexPolyhedron extends Shape {
         } else {
 
             // Test unique axes
-            for(var i = 0; i !== hullA.uniqueAxes.length; i++){
+            for (var i = 0; i !== hullA.uniqueAxes.length; i++) {
 
                 // Get world axis
-                quatA.vmult(hullA.uniqueAxes[i],faceANormalWS3);
+                quatA.vmult(hullA.uniqueAxes[i], faceANormalWS3);
 
                 var d = hullA.testSepAxis(faceANormalWS3, hullB, posA, quatA, posB, quatB);
-                if(d===false){
+                if (d === false) {
                     return false;
                 }
 
-                if(d<dmin){
+                if (d < dmin) {
                     dmin = d;
                     target.copy(faceANormalWS3);
                 }
             }
         }
 
-        if(!hullB.uniqueAxes){
+        if (!hullB.uniqueAxes) {
 
             // Test face normals from hullB
             const numFacesB = faceListB ? faceListB.length : hullB.faces.length;
-            for(var i=0;i<numFacesB;i++){
+            for (var i = 0; i < numFacesB; i++) {
 
                 var fi = faceListB ? faceListB[i] : i;
 
                 Worldnormal1.copy(hullB.faceNormals[fi]);
-                quatB.vmult(Worldnormal1,Worldnormal1);
+                quatB.vmult(Worldnormal1, Worldnormal1);
                 curPlaneTests++;
-                var d = hullA.testSepAxis(Worldnormal1, hullB,posA,quatA,posB,quatB);
-                if(d===false){
+                var d = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
+                if (d === false) {
                     return false;
                 }
 
-                if(d<dmin){
+                if (d < dmin) {
                     dmin = d;
                     target.copy(Worldnormal1);
                 }
@@ -282,16 +282,16 @@ export default class ConvexPolyhedron extends Shape {
         } else {
 
             // Test unique axes in B
-            for(var i = 0; i !== hullB.uniqueAxes.length; i++){
-                quatB.vmult(hullB.uniqueAxes[i],Worldnormal1);
+            for (var i = 0; i !== hullB.uniqueAxes.length; i++) {
+                quatB.vmult(hullB.uniqueAxes[i], Worldnormal1);
 
                 curPlaneTests++;
-                var d = hullA.testSepAxis(Worldnormal1, hullB,posA,quatA,posB,quatB);
-                if(d===false){
+                var d = hullA.testSepAxis(Worldnormal1, hullB, posA, quatA, posB, quatB);
+                if (d === false) {
                     return false;
                 }
 
-                if(d<dmin){
+                if (d < dmin) {
                     dmin = d;
                     target.copy(Worldnormal1);
                 }
@@ -299,24 +299,24 @@ export default class ConvexPolyhedron extends Shape {
         }
 
         // Test edges
-        for(let e0=0; e0 !== hullA.uniqueEdges.length; e0++){
+        for (let e0 = 0; e0 !== hullA.uniqueEdges.length; e0++) {
 
             // Get world edge
-            quatA.vmult(hullA.uniqueEdges[e0],worldEdge0);
+            quatA.vmult(hullA.uniqueEdges[e0], worldEdge0);
 
-            for(let e1=0; e1 !== hullB.uniqueEdges.length; e1++){
+            for (let e1 = 0; e1 !== hullB.uniqueEdges.length; e1++) {
 
                 // Get world edge 2
                 quatB.vmult(hullB.uniqueEdges[e1], worldEdge1);
-                worldEdge0.cross(worldEdge1,Cross);
+                worldEdge0.cross(worldEdge1, Cross);
 
-                if(!Cross.almostZero()){
+                if (!Cross.almostZero()) {
                     Cross.normalize();
                     const dist = hullA.testSepAxis(Cross, hullB, posA, quatA, posB, quatB);
-                    if(dist === false){
+                    if (dist === false) {
                         return false;
                     }
-                    if(dist < dmin){
+                    if (dist < dmin) {
                         dmin = dist;
                         target.copy(Cross);
                     }
@@ -324,8 +324,8 @@ export default class ConvexPolyhedron extends Shape {
             }
         }
 
-        posB.vsub(posA,deltaC);
-        if((deltaC.dot(target))>0.0){
+        posB.vsub(posA, deltaC);
+        if ((deltaC.dot(target)) > 0.0) {
             target.negate(target);
         }
 
@@ -344,19 +344,19 @@ export default class ConvexPolyhedron extends Shape {
      * @return {number} The overlap depth, or FALSE if no penetration.
      */
     testSepAxis(axis, hullB, posA, quatA, posB, quatB) {
-        const hullA=this;
+        const hullA = this;
         ConvexPolyhedron.project(hullA, axis, posA, quatA, maxminA);
         ConvexPolyhedron.project(hullB, axis, posB, quatB, maxminB);
         const maxA = maxminA[0];
         const minA = maxminA[1];
         const maxB = maxminB[0];
         const minB = maxminB[1];
-        if(maxA<minB || maxB<minA){
+        if (maxA < minB || maxB < minA) {
             return false; // Separated
         }
         const d0 = maxA - minB;
         const d1 = maxB - minA;
-        const depth = d0<d1 ? d0:d1;
+        const depth = d0 < d1 ? d0 : d1;
         return depth;
     }
 
@@ -368,13 +368,13 @@ export default class ConvexPolyhedron extends Shape {
     calculateLocalInertia(mass, target) {
         // Approximate with box inertia
         // Exact inertia calculation is overkill, but see http://geometrictools.com/Documentation/PolyhedralMassProperties.pdf for the correct way to do it
-        this.computeLocalAABB(cli_aabbmin,cli_aabbmax);
+        this.computeLocalAABB(cli_aabbmin, cli_aabbmax);
         const x = cli_aabbmax.x - cli_aabbmin.x;
         const y = cli_aabbmax.y - cli_aabbmin.y;
         const z = cli_aabbmax.z - cli_aabbmin.z;
-        target.x = 1.0 / 12.0 * mass * ( 2*y*2*y + 2*z*2*z );
-        target.y = 1.0 / 12.0 * mass * ( 2*x*2*x + 2*z*2*z );
-        target.z = 1.0 / 12.0 * mass * ( 2*y*2*y + 2*x*2*x );
+        target.x = 1.0 / 12.0 * mass * (2 * y * 2 * y + 2 * z * 2 * z);
+        target.y = 1.0 / 12.0 * mass * (2 * x * 2 * x + 2 * z * 2 * z);
+        target.z = 1.0 / 12.0 * mass * (2 * y * 2 * y + 2 * x * 2 * x);
     }
 
     /**
@@ -407,17 +407,17 @@ export default class ConvexPolyhedron extends Shape {
         // Find the face with normal closest to the separating axis
         let closestFaceA = -1;
         let dmin = Number.MAX_VALUE;
-        for(let face=0; face<hullA.faces.length; face++){
+        for (let face = 0; face < hullA.faces.length; face++) {
             faceANormalWS.copy(hullA.faceNormals[face]);
-            quatA.vmult(faceANormalWS,faceANormalWS);
+            quatA.vmult(faceANormalWS, faceANormalWS);
             //posA.vadd(faceANormalWS,faceANormalWS);
             const d = faceANormalWS.dot(separatingNormal);
-            if (d < dmin){
+            if (d < dmin) {
                 dmin = d;
                 closestFaceA = face;
             }
         }
-        if (closestFaceA < 0){
+        if (closestFaceA < 0) {
             // console.log("--- did not find any closest face... ---");
             return;
         }
@@ -425,9 +425,9 @@ export default class ConvexPolyhedron extends Shape {
         // Get the face and construct connected faces
         const polyA = hullA.faces[closestFaceA];
         polyA.connectedFaces = [];
-        for(var i=0; i<hullA.faces.length; i++){
-            for(let j=0; j<hullA.faces[i].length; j++){
-                if(polyA.includes(hullA.faces[i][j]) && i!==closestFaceA /* Not the one we are looking for connections from */ && !polyA.connectedFaces.includes(i) /* Not already added */ ){
+        for (var i = 0; i < hullA.faces.length; i++) {
+            for (let j = 0; j < hullA.faces[i].length; j++) {
+                if (polyA.includes(hullA.faces[i][j]) && i !== closestFaceA /* Not the one we are looking for connections from */ && !polyA.connectedFaces.includes(i) /* Not already added */) {
                     polyA.connectedFaces.push(i);
                 }
             }
@@ -436,33 +436,33 @@ export default class ConvexPolyhedron extends Shape {
         const numContacts = pVtxIn.length;
         const numVerticesA = polyA.length;
         const res = [];
-        for(let e0=0; e0<numVerticesA; e0++){
+        for (let e0 = 0; e0 < numVerticesA; e0++) {
             const a = hullA.vertices[polyA[e0]];
-            const b = hullA.vertices[polyA[(e0+1)%numVerticesA]];
-            a.vsub(b,edge0);
+            const b = hullA.vertices[polyA[(e0 + 1) % numVerticesA]];
+            a.vsub(b, edge0);
             WorldEdge0.copy(edge0);
-            quatA.vmult(WorldEdge0,WorldEdge0);
-            posA.vadd(WorldEdge0,WorldEdge0);
+            quatA.vmult(WorldEdge0, WorldEdge0);
+            posA.vadd(WorldEdge0, WorldEdge0);
             worldPlaneAnormal1.copy(this.faceNormals[closestFaceA]);//transA.getBasis()* btVector3(polyA.m_plane[0],polyA.m_plane[1],polyA.m_plane[2]);
-            quatA.vmult(worldPlaneAnormal1,worldPlaneAnormal1);
-            posA.vadd(worldPlaneAnormal1,worldPlaneAnormal1);
-            WorldEdge0.cross(worldPlaneAnormal1,planeNormalWS1);
+            quatA.vmult(worldPlaneAnormal1, worldPlaneAnormal1);
+            posA.vadd(worldPlaneAnormal1, worldPlaneAnormal1);
+            WorldEdge0.cross(worldPlaneAnormal1, planeNormalWS1);
             planeNormalWS1.negate(planeNormalWS1);
             worldA1.copy(a);
-            quatA.vmult(worldA1,worldA1);
-            posA.vadd(worldA1,worldA1);
+            quatA.vmult(worldA1, worldA1);
+            posA.vadd(worldA1, worldA1);
             const planeEqWS1 = -worldA1.dot(planeNormalWS1);
             var planeEqWS;
-            if(true){
+            if (true) {
                 const otherFace = polyA.connectedFaces[e0];
                 localPlaneNormal.copy(this.faceNormals[otherFace]);
                 var localPlaneEq = this.getPlaneConstantOfFace(otherFace);
 
                 planeNormalWS.copy(localPlaneNormal);
-                quatA.vmult(planeNormalWS,planeNormalWS);
+                quatA.vmult(planeNormalWS, planeNormalWS);
                 //posA.vadd(planeNormalWS,planeNormalWS);
                 var planeEqWS = localPlaneEq - planeNormalWS.dot(posA);
-            } else  {
+            } else {
                 planeNormalWS.copy(planeNormalWS1);
                 planeEqWS = planeEqWS1;
             }
@@ -471,10 +471,10 @@ export default class ConvexPolyhedron extends Shape {
             this.clipFaceAgainstPlane(pVtxIn, pVtxOut, planeNormalWS, planeEqWS);
 
             // Throw away all clipped points, but save the reamining until next clip
-            while(pVtxIn.length){
+            while (pVtxIn.length) {
                 pVtxIn.shift();
             }
-            while(pVtxOut.length){
+            while (pVtxOut.length) {
                 pVtxIn.push(pVtxOut.shift());
             }
         }
@@ -486,20 +486,20 @@ export default class ConvexPolyhedron extends Shape {
 
         var localPlaneEq = this.getPlaneConstantOfFace(closestFaceA);
         planeNormalWS.copy(localPlaneNormal);
-        quatA.vmult(planeNormalWS,planeNormalWS);
+        quatA.vmult(planeNormalWS, planeNormalWS);
 
         var planeEqWS = localPlaneEq - planeNormalWS.dot(posA);
-        for (var i=0; i<pVtxIn.length; i++){
+        for (var i = 0; i < pVtxIn.length; i++) {
             let depth = planeNormalWS.dot(pVtxIn[i]) + planeEqWS; //???
             /*console.log("depth calc from normal=",planeNormalWS.toString()," and constant "+planeEqWS+" and vertex ",pVtxIn[i].toString()," gives "+depth);*/
-            if (depth <=minDist){
+            if (depth <= minDist) {
                 console.log(`clamped: depth=${depth} to minDist=${minDist}`);
                 depth = minDist;
             }
 
-            if (depth <=maxDist){
+            if (depth <= maxDist) {
                 const point = pVtxIn[i];
-                if(depth<=0){
+                if (depth <= 0) {
                     /*console.log("Got contact point ",point.toString(),
                       ", depth=",depth,
                       "contact normal=",separatingNormal.toString(),
@@ -507,7 +507,7 @@ export default class ConvexPolyhedron extends Shape {
                       "planeConstant",planeEqWS);*/
                     const p = {
                         point,
-                        normal:planeNormalWS,
+                        normal: planeNormalWS,
                         depth,
                     };
                     result.push(p);
@@ -529,20 +529,20 @@ export default class ConvexPolyhedron extends Shape {
         let n_dot_last;
         const numVerts = inVertices.length;
 
-        if(numVerts < 2){
+        if (numVerts < 2) {
             return outVertices;
         }
 
-        let firstVertex = inVertices[inVertices.length-1];
-        let lastVertex =   inVertices[0];
+        let firstVertex = inVertices[inVertices.length - 1];
+        let lastVertex = inVertices[0];
 
         n_dot_first = planeNormal.dot(firstVertex) + planeConstant;
 
-        for(let vi = 0; vi < numVerts; vi++){
+        for (let vi = 0; vi < numVerts; vi++) {
             lastVertex = inVertices[vi];
             n_dot_last = planeNormal.dot(lastVertex) + planeConstant;
-            if(n_dot_first < 0){
-                if(n_dot_last < 0){
+            if (n_dot_first < 0) {
+                if (n_dot_last < 0) {
                     // Start < 0, end < 0, so output lastVertex
                     var newv = new Vec3();
                     newv.copy(lastVertex);
@@ -551,17 +551,17 @@ export default class ConvexPolyhedron extends Shape {
                     // Start < 0, end >= 0, so output intersection
                     var newv = new Vec3();
                     firstVertex.lerp(lastVertex,
-                                     n_dot_first / (n_dot_first - n_dot_last),
-                                     newv);
+                        n_dot_first / (n_dot_first - n_dot_last),
+                        newv);
                     outVertices.push(newv);
                 }
             } else {
-                if(n_dot_last<0){
+                if (n_dot_last < 0) {
                     // Start >= 0, end < 0 so output intersection and end
                     var newv = new Vec3();
                     firstVertex.lerp(lastVertex,
-                                     n_dot_first / (n_dot_first - n_dot_last),
-                                     newv);
+                        n_dot_first / (n_dot_first - n_dot_last),
+                        newv);
                     outVertices.push(newv);
                     outVertices.push(lastVertex);
                 }
@@ -575,15 +575,15 @@ export default class ConvexPolyhedron extends Shape {
     // Updates .worldVertices and sets .worldVerticesNeedsUpdate to false.
     computeWorldVertices(position, quat) {
         const N = this.vertices.length;
-        while(this.worldVertices.length < N){
-            this.worldVertices.push( new Vec3() );
+        while (this.worldVertices.length < N) {
+            this.worldVertices.push(new Vec3());
         }
 
         const verts = this.vertices;
         const worldVerts = this.worldVertices;
-        for(let i=0; i!==N; i++){
-            quat.vmult( verts[i] , worldVerts[i] );
-            position.vadd( worldVerts[i] , worldVerts[i] );
+        for (let i = 0; i !== N; i++) {
+            quat.vmult(verts[i], worldVerts[i]);
+            position.vadd(worldVerts[i], worldVerts[i]);
         }
 
         this.worldVerticesNeedsUpdate = false;
@@ -597,21 +597,21 @@ export default class ConvexPolyhedron extends Shape {
         aabbmin.set(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
         aabbmax.set(-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
 
-        for(let i=0; i<n; i++){
+        for (let i = 0; i < n; i++) {
             const v = vertices[i];
-            if     (v.x < aabbmin.x){
+            if (v.x < aabbmin.x) {
                 aabbmin.x = v.x;
-            } else if(v.x > aabbmax.x){
+            } else if (v.x > aabbmax.x) {
                 aabbmax.x = v.x;
             }
-            if     (v.y < aabbmin.y){
+            if (v.y < aabbmin.y) {
                 aabbmin.y = v.y;
-            } else if(v.y > aabbmax.y){
+            } else if (v.y > aabbmax.y) {
                 aabbmax.y = v.y;
             }
-            if     (v.z < aabbmin.z){
+            if (v.z < aabbmin.z) {
                 aabbmin.z = v.z;
-            } else if(v.z > aabbmax.z){
+            } else if (v.z > aabbmax.z) {
                 aabbmax.z = v.z;
             }
         }
@@ -624,14 +624,14 @@ export default class ConvexPolyhedron extends Shape {
      */
     computeWorldFaceNormals(quat) {
         const N = this.faceNormals.length;
-        while(this.worldFaceNormals.length < N){
-            this.worldFaceNormals.push( new Vec3() );
+        while (this.worldFaceNormals.length < N) {
+            this.worldFaceNormals.push(new Vec3());
         }
 
         const normals = this.faceNormals;
         const worldNormals = this.worldFaceNormals;
-        for(let i=0; i!==N; i++){
-            quat.vmult( normals[i] , worldNormals[i] );
+        for (let i = 0; i !== N; i++) {
+            quat.vmult(normals[i], worldNormals[i]);
         }
 
         this.worldFaceNormalsNeedsUpdate = false;
@@ -644,9 +644,9 @@ export default class ConvexPolyhedron extends Shape {
         // Assume points are distributed with local (0,0,0) as center
         let max2 = 0;
         const verts = this.vertices;
-        for(let i=0, N=verts.length; i!==N; i++) {
+        for (let i = 0, N = verts.length; i !== N; i++) {
             const norm2 = verts[i].norm2();
-            if(norm2 > max2){
+            if (norm2 > max2) {
                 max2 = norm2;
             }
         }
@@ -669,31 +669,31 @@ export default class ConvexPolyhedron extends Shape {
         let maxx;
         let maxy;
         let maxz;
-        for(let i=0; i<n; i++){
+        for (let i = 0; i < n; i++) {
             tempWorldVertex.copy(verts[i]);
-            quat.vmult(tempWorldVertex,tempWorldVertex);
-            pos.vadd(tempWorldVertex,tempWorldVertex);
+            quat.vmult(tempWorldVertex, tempWorldVertex);
+            pos.vadd(tempWorldVertex, tempWorldVertex);
             const v = tempWorldVertex;
-            if     (v.x < minx || minx===undefined){
+            if (v.x < minx || minx === undefined) {
                 minx = v.x;
-            } else if(v.x > maxx || maxx===undefined){
+            } else if (v.x > maxx || maxx === undefined) {
                 maxx = v.x;
             }
 
-            if     (v.y < miny || miny===undefined){
+            if (v.y < miny || miny === undefined) {
                 miny = v.y;
-            } else if(v.y > maxy || maxy===undefined){
+            } else if (v.y > maxy || maxy === undefined) {
                 maxy = v.y;
             }
 
-            if     (v.z < minz || minz===undefined){
+            if (v.z < minz || minz === undefined) {
                 minz = v.z;
-            } else if(v.z > maxz || maxz===undefined){
+            } else if (v.z > maxz || maxz === undefined) {
                 maxz = v.z;
             }
         }
-        min.set(minx,miny,minz);
-        max.set(maxx,maxy,maxz);
+        min.set(minx, miny, minz);
+        max.set(maxx, maxy, maxz);
     }
 
     /**
@@ -714,10 +714,10 @@ export default class ConvexPolyhedron extends Shape {
     getAveragePointLocal(target = new Vec3()) {
         const n = this.vertices.length;
         const verts = this.vertices;
-        for(let i=0; i<n; i++){
-            target.vadd(verts[i],target);
+        for (let i = 0; i < n; i++) {
+            target.vadd(verts[i], target);
         }
-        target.mult(1/n,target);
+        target.mult(1 / n, target);
         return target;
     }
 
@@ -732,16 +732,16 @@ export default class ConvexPolyhedron extends Shape {
         const verts = this.vertices;
 
         // Apply rotation
-        if(quat){
+        if (quat) {
             // Rotate vertices
-            for(var i=0; i<n; i++){
+            for (var i = 0; i < n; i++) {
                 var v = verts[i];
-                quat.vmult(v,v);
+                quat.vmult(v, v);
             }
             // Rotate face normals
-            for(var i=0; i<this.faceNormals.length; i++){
+            for (var i = 0; i < this.faceNormals.length; i++) {
                 var v = this.faceNormals[i];
-                quat.vmult(v,v);
+                quat.vmult(v, v);
             }
             /*
             // Rotate edges
@@ -752,10 +752,10 @@ export default class ConvexPolyhedron extends Shape {
         }
 
         // Apply offset
-        if(offset){
-            for(var i=0; i<n; i++){
+        if (offset) {
+            for (var i = 0; i < n; i++) {
                 var v = verts[i];
-                v.vadd(offset,v);
+                v.vadd(offset, v);
             }
         }
     }
@@ -769,21 +769,21 @@ export default class ConvexPolyhedron extends Shape {
         const N = this.faces.length;
         const pointInside = ConvexPolyhedron_pointIsInside;
         this.getAveragePointLocal(pointInside);
-        for(let i=0; i<N; i++){
+        for (let i = 0; i < N; i++) {
             const numVertices = this.faces[i].length;
             var n = normals[i];
             const v = verts[faces[i][0]]; // We only need one point in the face
 
             // This dot product determines which side of the edge the point is
             const vToP = ConvexPolyhedron_vToP;
-            p.vsub(v,vToP);
+            p.vsub(v, vToP);
             const r1 = n.dot(vToP);
 
             const vToPointInside = ConvexPolyhedron_vToPointInside;
-            pointInside.vsub(v,vToPointInside);
+            pointInside.vsub(v, vToPointInside);
             const r2 = n.dot(vToPointInside);
 
-            if((r1<0 && r2>0) || (r1>0 && r2<0)){
+            if ((r1 < 0 && r2 > 0) || (r1 > 0 && r2 < 0)) {
                 return false; // Encountered some other sign. Exit.
             } else {
             }
@@ -808,10 +808,10 @@ var computeEdges_tmpEdge = new Vec3();
 const cb = new Vec3();
 const ab = new Vec3();
 ConvexPolyhedron.computeNormal = (va, vb, vc, target) => {
-    vb.vsub(va,ab);
-    vc.vsub(vb,cb);
-    cb.cross(ab,target);
-    if ( !target.isZero() ) {
+    vb.vsub(va, ab);
+    vc.vsub(vb, cb);
+    cb.cross(ab, target);
+    if (!target.isZero()) {
         target.normalize();
     }
 };
@@ -849,8 +849,8 @@ var fsa_deltaC = new Vec3();
 var fsa_worldEdge0 = new Vec3();
 var fsa_worldEdge1 = new Vec3();
 var fsa_Cross = new Vec3();
-var maxminA=[];
-var maxminB=[];
+var maxminA = [];
+var maxminB = [];
 var cli_aabbmin = new Vec3();
 var cli_aabbmax = new Vec3();
 
@@ -902,7 +902,7 @@ var ConvexPolyhedron_vToPointInside = new Vec3();
 const project_worldVertex = new Vec3();
 const project_localAxis = new Vec3();
 const project_localOrigin = new Vec3();
-ConvexPolyhedron.project = ({vertices}, axis, pos, quat, result) => {
+ConvexPolyhedron.project = ({ vertices }, axis, pos, quat, result) => {
     const n = vertices.length;
     const worldVertex = project_worldVertex;
     const localAxis = project_localAxis;
@@ -920,14 +920,14 @@ ConvexPolyhedron.project = ({vertices}, axis, pos, quat, result) => {
 
     min = max = vs[0].dot(localAxis);
 
-    for(let i = 1; i < n; i++){
+    for (let i = 1; i < n; i++) {
         const val = vs[i].dot(localAxis);
 
-        if(val > max){
+        if (val > max) {
             max = val;
         }
 
-        if(val < min){
+        if (val < min) {
             min = val;
         }
     }
@@ -935,7 +935,7 @@ ConvexPolyhedron.project = ({vertices}, axis, pos, quat, result) => {
     min -= add;
     max -= add;
 
-    if(min > max){
+    if (min > max) {
         // Inconsistent - swap
         const temp = min;
         min = max;

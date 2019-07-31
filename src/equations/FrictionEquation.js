@@ -32,8 +32,8 @@ export default class FrictionEquation extends Equation {
         const t = this.t;
 
         // Caluclate cross products
-        ri.cross(t,rixt);
-        rj.cross(t,rjxt);
+        ri.cross(t, rixt);
+        rj.cross(t, rjxt);
 
         // G = [-t -rixt t rjxt]
         // And remember, this is a pure velocity constraint, g is always zero!

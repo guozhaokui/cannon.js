@@ -29,17 +29,17 @@ export default class NaiveBroadphase extends Broadphase {
         let bj;
 
         // Naive N^2 ftw!
-        for(i=0; i!==n; i++){
-            for(j=0; j!==i; j++){
+        for (i = 0; i !== n; i++) {
+            for (j = 0; j !== i; j++) {
 
                 bi = bodies[i];
                 bj = bodies[j];
 
-                if(!this.needBroadphaseCollision(bi,bj)){
+                if (!this.needBroadphaseCollision(bi, bj)) {
                     continue;
                 }
 
-                this.intersectionTest(bi,bj,pairs1,pairs2);
+                this.intersectionTest(bi, bj, pairs1, pairs2);
             }
         }
     }
@@ -52,16 +52,16 @@ export default class NaiveBroadphase extends Broadphase {
      * @param {array} result An array to store resulting bodies in.
      * @return {array}
      */
-    aabbQuery({bodies}, aabb, result = []) {
-        for(let i = 0; i < bodies.length; i++){
+    aabbQuery({ bodies }, aabb, result = []) {
+        for (let i = 0; i < bodies.length; i++) {
             const b = bodies[i];
 
-            if(b.aabbNeedsUpdate){
+            if (b.aabbNeedsUpdate) {
                 b.computeAABB();
             }
 
             // Ugly hack until Body gets aabb
-            if(b.aabb.overlaps(aabb)){
+            if (b.aabb.overlaps(aabb)) {
                 result.push(b);
             }
         }

@@ -11,21 +11,21 @@ import HingeConstraint from '../constraints/HingeConstraint.js';
  * @param {Body} [options.chassisBody]
  */
 export default class RigidVehicle {
-    constructor({coordinateSystem, chassisBody}) {
+    constructor({ coordinateSystem, chassisBody }) {
         this.wheelBodies = [];
 
         /**
          * @property coordinateSystem
          * @type {Vec3}
          */
-        this.coordinateSystem = typeof(coordinateSystem)==='undefined' ? new Vec3(1, 2, 3) : coordinateSystem.clone();
+        this.coordinateSystem = typeof (coordinateSystem) === 'undefined' ? new Vec3(1, 2, 3) : coordinateSystem.clone();
 
         /**
          * @property {Body} chassisBody
          */
         this.chassisBody = chassisBody;
 
-        if(!this.chassisBody){
+        if (!this.chassisBody) {
             // No chassis body given. Create it!
             const chassisShape = new Box(new Vec3(5, 2, 0.5));
             this.chassisBody = new Body(1, chassisShape);
@@ -53,15 +53,15 @@ export default class RigidVehicle {
      */
     addWheel(options = {}) {
         let wheelBody = options.body;
-        if(!wheelBody){
-            wheelBody =  new Body(1, new Sphere(1.2));
+        if (!wheelBody) {
+            wheelBody = new Body(1, new Sphere(1.2));
         }
         this.wheelBodies.push(wheelBody);
         this.wheelForces.push(0);
 
         // Position constrain wheels
         const zero = new Vec3();
-        const position = typeof(options.position) !== 'undefined' ? options.position.clone() : new Vec3();
+        const position = typeof (options.position) !== 'undefined' ? options.position.clone() : new Vec3();
 
         // Set position locally to the chassis
         const worldPosition = new Vec3();
@@ -69,7 +69,7 @@ export default class RigidVehicle {
         wheelBody.position.set(worldPosition.x, worldPosition.y, worldPosition.z);
 
         // Constrain wheel
-        const axis = typeof(options.axis) !== 'undefined' ? options.axis.clone() : new Vec3(0, 1, 0);
+        const axis = typeof (options.axis) !== 'undefined' ? options.axis.clone() : new Vec3(0, 1, 0);
         this.wheelAxes.push(axis);
 
         const hingeConstraint = new HingeConstraint(this.chassisBody, wheelBody, {
@@ -100,8 +100,8 @@ export default class RigidVehicle {
         const x = axis.x;
         const y = axis.y;
         this.constraints[wheelIndex].axisA.set(
-            c*x -s*y,
-            s*x +c*y,
+            c * x - s * y,
+            s * x + c * y,
             0
         );
     }

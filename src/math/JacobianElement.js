@@ -6,37 +6,37 @@ import Vec3 from './Vec3.js';
  * @constructor
  */
 export default class JacobianElement {
- constructor() {
+    constructor() {
 
-     /**
-      * @property {Vec3} spatial
-      */
-     this.spatial = new Vec3();
+        /**
+         * @property {Vec3} spatial
+         */
+        this.spatial = new Vec3();
 
-     /**
-      * @property {Vec3} rotational
-      */
-     this.rotational = new Vec3();
- }
+        /**
+         * @property {Vec3} rotational
+         */
+        this.rotational = new Vec3();
+    }
 
- /**
-  * Multiply with other JacobianElement
-  * @method multiplyElement
-  * @param  {JacobianElement} element
-  * @return {Number}
-  */
- multiplyElement({spatial, rotational}) {
-     return spatial.dot(this.spatial) + rotational.dot(this.rotational);
- }
+    /**
+     * Multiply with other JacobianElement
+     * @method multiplyElement
+     * @param  {JacobianElement} element
+     * @return {Number}
+     */
+    multiplyElement({ spatial, rotational }) {
+        return spatial.dot(this.spatial) + rotational.dot(this.rotational);
+    }
 
- /**
-  * Multiply with two vectors
-  * @method multiplyVectors
-  * @param  {Vec3} spatial
-  * @param  {Vec3} rotational
-  * @return {Number}
-  */
- multiplyVectors(spatial, rotational) {
-     return spatial.dot(this.spatial) + rotational.dot(this.rotational);
- }
+    /**
+     * Multiply with two vectors
+     * @method multiplyVectors
+     * @param  {Vec3} spatial
+     * @param  {Vec3} rotational
+     * @return {Number}
+     */
+    multiplyVectors(spatial, rotational) {
+        return spatial.dot(this.spatial) + rotational.dot(this.rotational);
+    }
 }

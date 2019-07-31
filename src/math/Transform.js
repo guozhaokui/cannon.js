@@ -11,7 +11,7 @@ export default class Transform {
          * @property {Vec3} position
          */
         this.position = new Vec3();
-        if(options.position){
+        if (options.position) {
             this.position.copy(options.position);
         }
 
@@ -19,7 +19,7 @@ export default class Transform {
          * @property {Quaternion} quaternion
          */
         this.quaternion = new Quaternion();
-        if(options.quaternion){
+        if (options.quaternion) {
             this.quaternion.copy(options.quaternion);
         }
     }

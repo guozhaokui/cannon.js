@@ -16,7 +16,7 @@ export default class AABB {
          * @type {Vec3}
          */
         this.lowerBound = new Vec3();
-        if(options.lowerBound){
+        if (options.lowerBound) {
             this.lowerBound.copy(options.lowerBound);
         }
 
@@ -26,7 +26,7 @@ export default class AABB {
          * @type {Vec3}
          */
         this.upperBound = new Vec3();
-        if(options.upperBound){
+        if (options.upperBound) {
             this.upperBound.copy(options.upperBound);
         }
     }
@@ -47,25 +47,25 @@ export default class AABB {
 
         // Set to the first point
         l.copy(points[0]);
-        if(q){
+        if (q) {
             q.vmult(l, l);
         }
         u.copy(l);
 
-        for(let i = 1; i<points.length; i++){
+        for (let i = 1; i < points.length; i++) {
             let p = points[i];
 
-            if(q){
+            if (q) {
                 q.vmult(p, tmp);
                 p = tmp;
             }
 
-            if(p.x > u.x){ u.x = p.x; }
-            if(p.x < l.x){ l.x = p.x; }
-            if(p.y > u.y){ u.y = p.y; }
-            if(p.y < l.y){ l.y = p.y; }
-            if(p.z > u.z){ u.z = p.z; }
-            if(p.z < l.z){ l.z = p.z; }
+            if (p.x > u.x) { u.x = p.x; }
+            if (p.x < l.x) { l.x = p.x; }
+            if (p.y > u.y) { u.y = p.y; }
+            if (p.y < l.y) { l.y = p.y; }
+            if (p.z > u.z) { u.z = p.z; }
+            if (p.z < l.z) { l.z = p.z; }
         }
 
         // Add offset
@@ -74,7 +74,7 @@ export default class AABB {
             position.vadd(u, u);
         }
 
-        if(skinSize){
+        if (skinSize) {
             l.x -= skinSize;
             l.y -= skinSize;
             l.z -= skinSize;
@@ -92,7 +92,7 @@ export default class AABB {
      * @param  {AABB} aabb Source to copy from
      * @return {AABB} The this object, for chainability
      */
-    copy({lowerBound, upperBound}) {
+    copy({ lowerBound, upperBound }) {
         this.lowerBound.copy(lowerBound);
         this.upperBound.copy(upperBound);
         return this;
@@ -111,7 +111,7 @@ export default class AABB {
      * @method extend
      * @param  {AABB} aabb
      */
-    extend({lowerBound, upperBound}) {
+    extend({ lowerBound, upperBound }) {
         this.lowerBound.x = Math.min(this.lowerBound.x, lowerBound.x);
         this.upperBound.x = Math.max(this.upperBound.x, upperBound.x);
         this.lowerBound.y = Math.min(this.lowerBound.y, lowerBound.y);
@@ -126,7 +126,7 @@ export default class AABB {
      * @param  {AABB} aabb
      * @return {Boolean}
      */
-    overlaps({lowerBound, upperBound}) {
+    overlaps({ lowerBound, upperBound }) {
         const l1 = this.lowerBound;
         const u1 = this.upperBound;
         const l2 = lowerBound;
@@ -157,7 +157,7 @@ export default class AABB {
      * @param {AABB} aabb
      * @return {Boolean}
      */
-    contains({lowerBound, upperBound}) {
+    contains({ lowerBound, upperBound }) {
         const l1 = this.lowerBound;
         const u1 = this.upperBound;
         const l2 = lowerBound;
@@ -191,12 +191,12 @@ export default class AABB {
         const u = this.upperBound;
 
         a.copy(l);
-        b.set( u.x, l.y, l.z );
-        c.set( u.x, u.y, l.z );
-        d.set( l.x, u.y, u.z );
-        e.set( u.x, l.y, l.z );
-        f.set( l.x, u.y, l.z );
-        g.set( l.x, l.y, u.z );
+        b.set(u.x, l.y, l.z);
+        c.set(u.x, u.y, l.z);
+        d.set(l.x, u.y, u.z);
+        e.set(u.x, l.y, l.z);
+        f.set(l.x, u.y, l.z);
+        g.set(l.x, l.y, u.z);
         h.copy(u);
     }
 
@@ -223,7 +223,7 @@ export default class AABB {
         this.getCorners(a, b, c, d, e, f, g, h);
 
         // Transform them to new local frame
-        for(let i=0; i !== 8; i++){
+        for (let i = 0; i !== 8; i++) {
             const corner = corners[i];
             frame.pointToLocal(corner, corner);
         }
@@ -254,7 +254,7 @@ export default class AABB {
         this.getCorners(a, b, c, d, e, f, g, h);
 
         // Transform them to new local frame
-        for(let i=0; i !== 8; i++){
+        for (let i = 0; i !== 8; i++) {
             const corner = corners[i];
             frame.pointToWorld(corner, corner);
         }
@@ -267,7 +267,7 @@ export default class AABB {
      * @param  {Ray} ray
      * @return {number}
      */
-    overlapsRay({_direction, from}) {
+    overlapsRay({ _direction, from }) {
         const t = 0;
 
         // ray.direction is unit direction vector of ray
@@ -289,13 +289,13 @@ export default class AABB {
         const tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
 
         // if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
-        if (tmax < 0){
+        if (tmax < 0) {
             //t = tmax;
             return false;
         }
 
         // if tmin > tmax, ray doesn't intersect AABB
-        if (tmin > tmax){
+        if (tmin > tmax) {
             //t = tmax;
             return false;
         }

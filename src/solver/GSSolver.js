@@ -32,7 +32,7 @@ export default class GSSolver extends Solver {
     solve(dt, world) {
         let iter = 0;
         const maxIter = this.iterations;
-        const tolSquared = this.tolerance*this.tolerance;
+        const tolSquared = this.tolerance * this.tolerance;
         const equations = this.equations;
         const Neq = equations.length;
         const bodies = world.bodies;
@@ -47,8 +47,8 @@ export default class GSSolver extends Solver {
         let lambdaj;
 
         // Update solve mass
-        if(Neq !== 0){
-            for(var i=0; i!==Nbodies; i++){
+        if (Neq !== 0) {
+            for (var i = 0; i !== Nbodies; i++) {
                 bodies[i].updateSolveMassProperties();
             }
         }
@@ -61,31 +61,31 @@ export default class GSSolver extends Solver {
         invCs.length = Neq;
         Bs.length = Neq;
         lambda.length = Neq;
-        for(var i=0; i!==Neq; i++){
+        for (var i = 0; i !== Neq; i++) {
             var c = equations[i];
             lambda[i] = 0.0;
             Bs[i] = c.computeB(h);
             invCs[i] = 1.0 / c.computeC();
         }
 
-        if(Neq !== 0){
+        if (Neq !== 0) {
 
             // Reset vlambda
-            for(var i=0; i!==Nbodies; i++){
-                var b=bodies[i];
-                const vlambda=b.vlambda;
-                const wlambda=b.wlambda;
-                vlambda.set(0,0,0);
-                wlambda.set(0,0,0);
+            for (var i = 0; i !== Nbodies; i++) {
+                var b = bodies[i];
+                const vlambda = b.vlambda;
+                const wlambda = b.wlambda;
+                vlambda.set(0, 0, 0);
+                wlambda.set(0, 0, 0);
             }
 
             // Iterate over equations
-            for(iter=0; iter!==maxIter; iter++){
+            for (iter = 0; iter !== maxIter; iter++) {
 
                 // Accumulate the total error for each iteration.
                 deltalambdaTot = 0.0;
 
-                for(let j=0; j!==Neq; j++){
+                for (let j = 0; j !== Neq; j++) {
 
                     var c = equations[j];
 
@@ -94,12 +94,12 @@ export default class GSSolver extends Solver {
                     invC = invCs[j];
                     lambdaj = lambda[j];
                     GWlambda = c.computeGWlambda();
-                    deltalambda = invC * ( B - GWlambda - c.eps * lambdaj );
+                    deltalambda = invC * (B - GWlambda - c.eps * lambdaj);
 
                     // Clamp if we are not within the min/max interval
-                    if(lambdaj + deltalambda < c.minForce){
+                    if (lambdaj + deltalambda < c.minForce) {
                         deltalambda = c.minForce - lambdaj;
-                    } else if(lambdaj + deltalambda > c.maxForce){
+                    } else if (lambdaj + deltalambda > c.maxForce) {
                         deltalambda = c.maxForce - lambdaj;
                     }
                     lambda[j] += deltalambda;
@@ -110,16 +110,16 @@ export default class GSSolver extends Solver {
                 }
 
                 // If the total error is small enough - stop iterate
-                if(deltalambdaTot*deltalambdaTot < tolSquared){
+                if (deltalambdaTot * deltalambdaTot < tolSquared) {
                     break;
                 }
             }
 
             // Add result to velocity
-            for(var i=0; i!==Nbodies; i++){
-                const b=bodies[i];
-                const v=b.velocity;
-                const w=b.angularVelocity;
+            for (var i = 0; i !== Nbodies; i++) {
+                const b = bodies[i];
+                const v = b.velocity;
+                const w = b.angularVelocity;
 
                 b.vlambda.vmul(b.linearFactor, b.vlambda);
                 v.vadd(b.vlambda, v);
@@ -131,7 +131,7 @@ export default class GSSolver extends Solver {
             // Set the .multiplier property of each equation
             let l = equations.length;
             const invDt = 1 / h;
-            while(l--){
+            while (l--) {
                 equations[l].multiplier = lambda[l] * invDt;
             }
         }

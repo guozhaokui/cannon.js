@@ -49,20 +49,20 @@ export default class Broadphase {
      * @param {Body} bodyB
      * @return {bool}
      */
-    needBroadphaseCollision(bodyA,bodyB){
+    needBroadphaseCollision(bodyA, bodyB) {
 
         // Check collision filter masks
-        if( (bodyA.collisionFilterGroup & bodyB.collisionFilterMask)===0 || (bodyB.collisionFilterGroup & bodyA.collisionFilterMask)===0){
+        if ((bodyA.collisionFilterGroup & bodyB.collisionFilterMask) === 0 || (bodyB.collisionFilterGroup & bodyA.collisionFilterMask) === 0) {
             return false;
         }
-    
+
         // Check types
-        if(((bodyA.type & Body.STATIC)!==0 || bodyA.sleepState === Body.SLEEPING) &&
-           ((bodyB.type & Body.STATIC)!==0 || bodyB.sleepState === Body.SLEEPING)) {
+        if (((bodyA.type & Body.STATIC) !== 0 || bodyA.sleepState === Body.SLEEPING) &&
+            ((bodyB.type & Body.STATIC) !== 0 || bodyB.sleepState === Body.SLEEPING)) {
             // Both bodies are static or sleeping. Skip.
             return false;
         }
-    
+
         return true;
     }
 
@@ -75,19 +75,19 @@ export default class Broadphase {
      * @param {array} pairs2
       */
     intersectionTest(bodyA, bodyB, pairs1, pairs2) {
-        if(this.useBoundingBoxes){
-            this.doBoundingBoxBroadphase(bodyA,bodyB,pairs1,pairs2);
+        if (this.useBoundingBoxes) {
+            this.doBoundingBoxBroadphase(bodyA, bodyB, pairs1, pairs2);
         } else {
-            this.doBoundingSphereBroadphase(bodyA,bodyB,pairs1,pairs2);
+            this.doBoundingSphereBroadphase(bodyA, bodyB, pairs1, pairs2);
         }
     }
 
     doBoundingSphereBroadphase(bodyA, bodyB, pairs1, pairs2) {
         const r = Broadphase_collisionPairs_r;
-        bodyB.position.vsub(bodyA.position,r);
+        bodyB.position.vsub(bodyA.position, r);
         const boundingRadiusSum2 = (bodyA.boundingRadius + bodyB.boundingRadius) ** 2;
         const norm2 = r.norm2();
-        if(norm2 < boundingRadiusSum2){
+        if (norm2 < boundingRadiusSum2) {
             pairs1.push(bodyA);
             pairs2.push(bodyB);
         }
@@ -102,15 +102,15 @@ export default class Broadphase {
      * @param {Array} pairs2
      */
     doBoundingBoxBroadphase(bodyA, bodyB, pairs1, pairs2) {
-        if(bodyA.aabbNeedsUpdate){
+        if (bodyA.aabbNeedsUpdate) {
             bodyA.computeAABB();
         }
-        if(bodyB.aabbNeedsUpdate){
+        if (bodyB.aabbNeedsUpdate) {
             bodyB.computeAABB();
         }
 
         // Check AABB / AABB
-        if(bodyA.aabb.overlaps(bodyB.aabb)){
+        if (bodyA.aabb.overlaps(bodyB.aabb)) {
             pairs1.push(bodyA);
             pairs2.push(bodyB);
         }
@@ -122,7 +122,7 @@ export default class Broadphase {
         const p2 = Broadphase_makePairsUnique_p2;
         const N = pairs1.length;
 
-        for(var i=0; i!==N; i++){
+        for (var i = 0; i !== N; i++) {
             p1[i] = pairs1[i];
             p2[i] = pairs2[i];
         }
@@ -130,15 +130,15 @@ export default class Broadphase {
         pairs1.length = 0;
         pairs2.length = 0;
 
-        for(var i=0; i!==N; i++){
+        for (var i = 0; i !== N; i++) {
             const id1 = p1[i].id;
             const id2 = p2[i].id;
-            var key = id1 < id2 ? `${id1},${id2}` :  `${id2},${id1}`;
+            var key = id1 < id2 ? `${id1},${id2}` : `${id2},${id1}`;
             t[key] = i;
             t.keys.push(key);
         }
 
-        for(var i=0; i!==t.keys.length; i++){
+        for (var i = 0; i !== t.keys.length; i++) {
             const key = t.keys.pop();
             const pairIndex = t[key];
             pairs1.push(p1[pairIndex]);
@@ -178,11 +178,11 @@ export default class Broadphase {
  * @param {Array} pairs2 bodyB is appended to this array if intersection
  */
 var // Temp objects
-Broadphase_collisionPairs_r = new Vec3();
+    Broadphase_collisionPairs_r = new Vec3();
 
-const Broadphase_collisionPairs_normal =  new Vec3();
-const Broadphase_collisionPairs_quat =  new Quaternion();
-const Broadphase_collisionPairs_relpos  =  new Vec3();
+const Broadphase_collisionPairs_normal = new Vec3();
+const Broadphase_collisionPairs_quat = new Quaternion();
+const Broadphase_collisionPairs_relpos = new Vec3();
 
 /**
  * Removes duplicate pairs from the pair arrays.
@@ -190,7 +190,7 @@ const Broadphase_collisionPairs_relpos  =  new Vec3();
  * @param {Array} pairs1
  * @param {Array} pairs2
  */
-var Broadphase_makePairsUnique_temp = { keys:[] };
+var Broadphase_makePairsUnique_temp = { keys: [] };
 
 var Broadphase_makePairsUnique_p1 = [];
 var Broadphase_makePairsUnique_p2 = [];
@@ -203,8 +203,8 @@ var Broadphase_makePairsUnique_p2 = [];
  * @return {boolean}
  */
 const bsc_dist = new Vec3();
-Broadphase.boundingSphereCheck = function(bodyA,bodyB){
+Broadphase.boundingSphereCheck = function (bodyA, bodyB) {
     var dist = bsc_dist;
-    bodyA.position.vsub(bodyB.position,dist);
-    return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius,2) > dist.norm2();
-}
+    bodyA.position.vsub(bodyB.position, dist);
+    return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius, 2) > dist.norm2();
+};

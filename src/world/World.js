@@ -2,21 +2,21 @@
 /* global performance */
 
 
-import Vec3 from'../math/Vec3.js';
-import Quaternion from'../math/Quaternion.js';
-import GSSolver from'../solver/GSSolver.js';
-import Narrowphase from'./Narrowphase.js';
-import EventTarget from'../utils/EventTarget.js';
-import ArrayCollisionMatrix from'../collision/ArrayCollisionMatrix.js';
-import OverlapKeeper from'../collision/OverlapKeeper.js';
-import Material from'../material/Material.js';
-import ContactMaterial from'../material/ContactMaterial.js';
-import Body from'../objects/Body.js';
-import TupleDictionary from'../utils/TupleDictionary.js';
-import RaycastResult from'../collision/RaycastResult.js';
-import AABB from'../collision/AABB.js';
-import Ray from'../collision/Ray.js';
-import NaiveBroadphase from'../collision/NaiveBroadphase.js';
+import Vec3 from '../math/Vec3.js';
+import Quaternion from '../math/Quaternion.js';
+import GSSolver from '../solver/GSSolver.js';
+import Narrowphase from './Narrowphase.js';
+import EventTarget from '../utils/EventTarget.js';
+import ArrayCollisionMatrix from '../collision/ArrayCollisionMatrix.js';
+import OverlapKeeper from '../collision/OverlapKeeper.js';
+import Material from '../material/Material.js';
+import ContactMaterial from '../material/ContactMaterial.js';
+import Body from '../objects/Body.js';
+import TupleDictionary from '../utils/TupleDictionary.js';
+import RaycastResult from '../collision/RaycastResult.js';
+import AABB from '../collision/AABB.js';
+import Ray from '../collision/Ray.js';
+import NaiveBroadphase from '../collision/NaiveBroadphase.js';
 
 /**
  * The physics world
@@ -31,7 +31,7 @@ import NaiveBroadphase from'../collision/NaiveBroadphase.js';
  * @param {boolean} [options.quatNormalizeFast]
  * @param {number} [options.quatNormalizeSkip]
  */
-export default  class World extends EventTarget {
+export default class World extends EventTarget {
     constructor(options) {
         super();
         options = options || {};

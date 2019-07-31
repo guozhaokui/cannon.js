@@ -1,4 +1,4 @@
-function Utils(){}
+function Utils() { }
 
 export default Utils;
 
@@ -11,8 +11,8 @@ export default Utils;
  * @return {object} The modified options object.
  */
 Utils.defaults = (options = {}, defaults) => {
-    for(const key in defaults){
-        if(!(key in options)){
+    for (const key in defaults) {
+        if (!(key in options)) {
             options[key] = defaults[key];
         }
     }

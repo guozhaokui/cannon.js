@@ -26,7 +26,7 @@ export default class Pool {
      */
     release(...args) {
         const Nargs = args.length;
-        for(let i=0; i!==Nargs; i++){
+        for (let i = 0; i !== Nargs; i++) {
             this.objects.push(args[i]);
         }
         return this;
@@ -38,7 +38,7 @@ export default class Pool {
      * @return {mixed}
      */
     get() {
-        if(this.objects.length===0){
+        if (this.objects.length === 0) {
             return this.constructObject();
         } else {
             return this.objects.pop();

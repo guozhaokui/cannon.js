@@ -16,11 +16,11 @@ export default class DistanceConstraint extends Constraint {
     constructor(bodyA, bodyB, distance, maxForce) {
         super(bodyA, bodyB);
 
-        if(typeof(distance)==="undefined") {
+        if (typeof (distance) === "undefined") {
             distance = bodyA.position.distanceTo(bodyB.position);
         }
 
-        if(typeof(maxForce)==="undefined") {
+        if (typeof (maxForce) === "undefined") {
             maxForce = 1e6;
         }
 
@@ -37,7 +37,7 @@ export default class DistanceConstraint extends Constraint {
 
         // Make it bidirectional
         eq.minForce = -maxForce;
-        eq.maxForce =  maxForce;
+        eq.maxForce = maxForce;
     }
 
     update() {
