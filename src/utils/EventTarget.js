@@ -3,14 +3,10 @@
  * @class EventTarget
  * @constructor
  */
-var EventTarget = function () {
+export default class EventTarget{
+    constructor(){
 
-};
-
-module.exports = EventTarget;
-
-EventTarget.prototype = {
-    constructor: EventTarget,
+    }
 
     /**
      * Add an event listener
@@ -19,17 +15,17 @@ EventTarget.prototype = {
      * @param  {Function} listener
      * @return {EventTarget} The self object, for chainability.
      */
-    addEventListener: function ( type, listener ) {
+    addEventListener(type, listener) {
         if ( this._listeners === undefined ){ this._listeners = {}; }
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         if ( listeners[ type ] === undefined ) {
             listeners[ type ] = [];
         }
-        if ( listeners[ type ].indexOf( listener ) === - 1 ) {
+        if ( !listeners[ type ].includes(listener) ) {
             listeners[ type ].push( listener );
         }
         return this;
-    },
+    }
 
     /**
      * Check if an event listener is added
@@ -38,14 +34,14 @@ EventTarget.prototype = {
      * @param  {Function} listener
      * @return {Boolean}
      */
-    hasEventListener: function ( type, listener ) {
+    hasEventListener(type, listener) {
         if ( this._listeners === undefined ){ return false; }
-        var listeners = this._listeners;
-        if ( listeners[ type ] !== undefined && listeners[ type ].indexOf( listener ) !== - 1 ) {
+        const listeners = this._listeners;
+        if ( listeners[ type ] !== undefined && listeners[ type ].includes(listener) ) {
             return true;
         }
         return false;
-    },
+    }
 
     /**
      * Check if any event listener of the given type is added
@@ -53,11 +49,11 @@ EventTarget.prototype = {
      * @param  {String} type
      * @return {Boolean}
      */
-    hasAnyEventListener: function ( type ) {
+    hasAnyEventListener(type) {
         if ( this._listeners === undefined ){ return false; }
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         return ( listeners[ type ] !== undefined );
-    },
+    }
 
     /**
      * Remove an event listener
@@ -66,16 +62,16 @@ EventTarget.prototype = {
      * @param  {Function} listener
      * @return {EventTarget} The self object, for chainability.
      */
-    removeEventListener: function ( type, listener ) {
+    removeEventListener(type, listener) {
         if ( this._listeners === undefined ){ return this; }
-        var listeners = this._listeners;
+        const listeners = this._listeners;
         if ( listeners[type] === undefined ){ return this; }
-        var index = listeners[ type ].indexOf( listener );
+        const index = listeners[ type ].indexOf( listener );
         if ( index !== - 1 ) {
             listeners[ type ].splice( index, 1 );
         }
         return this;
-    },
+    }
 
     /**
      * Emit an event.
@@ -84,16 +80,16 @@ EventTarget.prototype = {
      * @param  {String} event.type
      * @return {EventTarget} The self object, for chainability.
      */
-    dispatchEvent: function ( event ) {
+    dispatchEvent(event) {
         if ( this._listeners === undefined ){ return this; }
-        var listeners = this._listeners;
-        var listenerArray = listeners[ event.type ];
+        const listeners = this._listeners;
+        const listenerArray = listeners[ event.type ];
         if ( listenerArray !== undefined ) {
             event.target = this;
-            for ( var i = 0, l = listenerArray.length; i < l; i ++ ) {
+            for ( let i = 0, l = listenerArray.length; i < l; i ++ ) {
                 listenerArray[ i ].call( this, event );
             }
         }
         return this;
     }
-};
+}

@@ -29,5 +29,7 @@
     "shadow" : true,
     "globals": {
         "CANNON": true
-    }
+    },
+    "module": true,
+    "esversion": 6
 }

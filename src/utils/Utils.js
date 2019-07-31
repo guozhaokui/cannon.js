@@ -1,6 +1,6 @@
 function Utils(){}
 
-module.exports = Utils;
+export default Utils;
 
 /**
  * Extend an options object with default values.
@@ -10,10 +10,8 @@ module.exports = Utils;
  * @param  {object} defaults An object containing default values.
  * @return {object} The modified options object.
  */
-Utils.defaults = function(options, defaults){
-    options = options || {};
-
-    for(var key in defaults){
+Utils.defaults = (options = {}, defaults) => {
+    for(const key in defaults){
         if(!(key in options)){
             options[key] = defaults[key];
         }

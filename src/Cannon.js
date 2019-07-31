@@ -1,5 +1,5 @@
 // Export classes
-module.exports = {
+export default {
     version :                       require('../package.json').version,
 
     AABB :                          require('./collision/AABB'),
