@@ -363,7 +363,7 @@ export default class Body extends EventTarget {
     sleepTick(time) {
         if (this.allowSleep) {
             const sleepState = this.sleepState;
-            const speedSquared = this.velocity.norm2() + this.angularVelocity.norm2();
+            const speedSquared = this.velocity.lengthSquared() + this.angularVelocity.lengthSquared();
             const speedLimitSquared = this.sleepSpeedLimit ** 2;
             if (sleepState === Body.AWAKE && speedSquared < speedLimitSquared) {
                 this.sleepState = Body.SLEEPY; // Sleepy
@@ -493,7 +493,7 @@ export default class Body extends EventTarget {
         for (let i = 0; i !== N; i++) {
             const shape = shapes[i];
             shape.updateBoundingSphereRadius();
-            const offset = shapeOffsets[i].norm();
+            const offset = shapeOffsets[i].length();
             const r = shape.boundingSphereRadius;
             if (offset + r > radius) {
                 radius = offset + r;
@@ -607,7 +607,7 @@ export default class Body extends EventTarget {
         // Compute produced central impulse velocity
         const velo = Body_applyImpulse_velo;
         velo.copy(impulse);
-        velo.mult(this.invMass, velo);
+        velo.scale(this.invMass, velo);
 
         // Add linear impulse
         this.velocity.vadd(velo, this.velocity);

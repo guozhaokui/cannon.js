@@ -35,12 +35,10 @@ import Broadphase from '../collision/Broadphase.js';
 export default class World extends EventTarget {
     /**
      * Currently / last used timestep. Is set to -1 if not available. This value is updated before each internal step, which means that it is "fresh" inside event callbacks.
-     * @property {Number} dt
      */
     dt = -1;
     /**
      * Makes bodies go to sleep when they've been inactive
-     * @default false
      */
     allowSleep = false;
 
@@ -97,14 +95,9 @@ export default class World extends EventTarget {
 
     /**
      * @property constraints
-     * @type {Array}
      */
     constraints = [];
 
-    /**
-     * @property narrowphase
-     * @type {Narrowphase}
-     */
     narrowphase = new Narrowphase(this);
 
     /**
@@ -610,7 +603,7 @@ export default class World extends EventTarget {
             profilingStart,
             constraints = this.constraints,
             frictionEquationPool = World_step_frictionEquationPool,
-            gnorm = gravity.norm(),
+            gnorm = gravity.length(),
             gx = gravity.x,
             gy = gravity.y,
             gz = gravity.z,
@@ -872,11 +865,11 @@ export default class World extends EventTarget {
             if (bi.type & DYNAMIC) { // Only for dynamic bodies
                 var ld = pow(1.0 - bi.linearDamping, dt);
                 var v = bi.velocity;
-                v.mult(ld, v);
+                v.scale(ld, v);
                 var av = bi.angularVelocity;
                 if (av) {
                     var ad = pow(1.0 - bi.angularDamping, dt);
-                    av.mult(ad, av);
+                    av.scale(ad, av);
                 }
             }
         }
