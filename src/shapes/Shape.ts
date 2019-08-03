@@ -3,6 +3,7 @@
 import Vec3 from '../math/Vec3.js';
 import Body from '../objects/Body.js';
 import Material from '../material/Material.js';
+import Quaternion from '../math/Quaternion.js';
 
 /**
  * Base class for shapes
@@ -62,6 +63,8 @@ export default class Shape {
         throw `computeBoundingSphereRadius() not implemented for shape type ${this.type}`;
     }
 
+    calculateWorldAABB(pos: Vec3, quat: Quaternion, min: Vec3, max: Vec3){
+    }    
     /**
      * Get the volume of this shape
      */

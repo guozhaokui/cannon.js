@@ -124,7 +124,7 @@ function setClickMarker(x,y,z) {
 }
 
 function removeClickMarker(){
-    clickMarker.visible = false;
+    clickMarker && (clickMarker.visible = false);
 }
 
 function onMouseMove(e:MouseEvent){

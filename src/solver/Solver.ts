@@ -1,4 +1,5 @@
 import World from "../world/World";
+import Equation from "../equations/Equation";
 
 /**
  * Constraint equation solver base class.
@@ -6,7 +7,7 @@ import World from "../world/World";
  */
 export default class Solver {
     //All equations to be solved
-    equations = [];
+    equations:Equation[] = [];
     constructor() {
     }
 
@@ -18,23 +19,13 @@ export default class Solver {
         return 0;
     }
 
-    /**
-     * Add an equation
-     * @method addEquation
-     * @param {Equation} eq
-     */
-    addEquation(eq) {
+    addEquation(eq:Equation) {
         if (eq.enabled) {
             this.equations.push(eq);
         }
     }
 
-    /**
-     * Remove an equation
-     * @method removeEquation
-     * @param {Equation} eq
-     */
-    removeEquation(eq) {
+    removeEquation(eq:Equation) {
         const eqs = this.equations;
         const i = eqs.indexOf(eq);
         if (i !== -1) {
@@ -43,7 +34,7 @@ export default class Solver {
     }
 
     /**
-     * Add all equations
+     * remove all equations
      */
     removeAllEquations() {
         this.equations.length = 0;

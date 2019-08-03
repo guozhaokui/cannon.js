@@ -8,30 +8,29 @@ import AABB from '../collision/AABB.js';
 import Box from '../shapes/Box.js';
 import World from '../world/World.js';
 
+export interface BodyInitOptions{
+    position:Vec3;
+    velocity:Vec3;
+    angularVelocity:Vec3;
+    quaternion:Quaternion;
+    mass:number;
+    material:Material;
+    type:number;
+    linearDamping:number;//0.01;
+    angularDamping:number;//0.01;
+    allowSleep:boolean;//true;
+    sleepSpeedLimit:number;//0.1
+    sleepTimeLimit:number;//1
+    collisionFilterGroup:number;//1
+    collisionFilterMask:number;//-1
+    fixedRotation:boolean;//false;
+    linearFactor:Vec3;
+    angularFactor:Vec3;
+    shape:Shape;
+}
+
 /**
  * Base class for all body types.
- * @class Body
- * @constructor
- * @extends EventTarget
- * @param {object} [options]
- * @param {Vec3} [options.position]
- * @param {Vec3} [options.velocity]
- * @param {Vec3} [options.angularVelocity]
- * @param {Quaternion} [options.quaternion]
- * @param {number} [options.mass]
- * @param {Material} [options.material]
- * @param {number} [options.type]
- * @param {number} [options.linearDamping=0.01]
- * @param {number} [options.angularDamping=0.01]
- * @param {boolean} [options.allowSleep=true]
- * @param {number} [options.sleepSpeedLimit=0.1]
- * @param {number} [options.sleepTimeLimit=1]
- * @param {number} [options.collisionFilterGroup=1]
- * @param {number} [options.collisionFilterMask=-1]
- * @param {boolean} [options.fixedRotation=false]
- * @param {Vec3} [options.linearFactor]
- * @param {Vec3} [options.angularFactor]
- * @param {Shape} [options.shape]
  * @example
  *     var body = new Body({
  *         mass: 1
@@ -95,7 +94,7 @@ export default class Body extends EventTarget {
     };
 
     id = Body.idCounter++;
-    index=0;    //index in world bodies
+    index = 0;    //index in world bodies
 
     /**
      * Reference to the world the body is living in
@@ -104,7 +103,6 @@ export default class Body extends EventTarget {
 
     /**
      * Callback function that is used BEFORE stepping the system. Use it to apply forces, for example. Inside the function, "this" will refer to this Body object.
-     * @property preStep
      * @type {Function}
      * @deprecated Use World events instead
      */
@@ -112,7 +110,6 @@ export default class Body extends EventTarget {
 
     /**
      * Callback function that is used AFTER stepping the system. Inside the function, "this" will refer to this Body object.
-     * @property postStep
      * @type {Function}
      * @deprecated Use World events instead
      */
@@ -219,12 +216,12 @@ export default class Body extends EventTarget {
 
     initAngularVelocity = new Vec3();
 
-    shapes = [];
+    shapes: Shape[] = [];
 
     /**
      * Position of each Shape in the body, given in local Body space.
      */
-    shapeOffsets = [];
+    shapeOffsets: Vec3[] = [];
 
     /**
      * Orientation of each Shape, given in local Body space.
@@ -264,10 +261,6 @@ export default class Body extends EventTarget {
      * World space bounding box of the body and its shapes.
      */
     aabb = new AABB();
-
-    /**
-     * Indicates if the AABB needs to be updated before use.
-     */
     aabbNeedsUpdate = true;
 
     /**
@@ -277,7 +270,7 @@ export default class Body extends EventTarget {
 
     wlambda = new Vec3();
 
-    constructor(options) {
+    constructor(options?:BodyInitOptions) {
         super();
         this.collisionFilterGroup = typeof (options.collisionFilterGroup) === 'number' ? options.collisionFilterGroup : 1;
         this.collisionFilterMask = typeof (options.collisionFilterMask) === 'number' ? options.collisionFilterMask : -1;
@@ -357,10 +350,9 @@ export default class Body extends EventTarget {
 
     /**
      * Called every timestep to update internal sleep timer and change sleep state if needed.
-     * @method sleepTick
-     * @param {Number} time The world time in seconds
+     * @param time The world time in seconds
      */
-    sleepTick(time) {
+    sleepTick(time:number) {
         if (this.allowSleep) {
             const sleepState = this.sleepState;
             const speedSquared = this.velocity.lengthSquared() + this.angularVelocity.lengthSquared();
@@ -380,7 +372,6 @@ export default class Body extends EventTarget {
 
     /**
      * If the body is sleeping, it should be immovable / have infinite mass during solve. We solve it by having a separate "solve mass".
-     * @method updateSolveMassProperties
      */
     updateSolveMassProperties() {
         if (this.sleepState === Body.SLEEPING || this.type === Body.KINEMATIC) {
@@ -396,12 +387,8 @@ export default class Body extends EventTarget {
 
     /**
      * Convert a world point to local body frame.
-     * @method pointToLocalFrame
-     * @param  {Vec3} worldPoint
-     * @param  {Vec3} result
-     * @return {Vec3}
      */
-    pointToLocalFrame(worldPoint, result) {
+    pointToLocalFrame(worldPoint:Vec3, result:Vec3) {
         var result = result || new Vec3();
         worldPoint.vsub(this.position, result);
         this.quaternion.conjugate().vmult(result, result);
@@ -410,12 +397,8 @@ export default class Body extends EventTarget {
 
     /**
      * Convert a world vector to local body frame.
-     * @method vectorToLocalFrame
-     * @param  {Vec3} worldPoint
-     * @param  {Vec3} result
-     * @return {Vec3}
      */
-    vectorToLocalFrame(worldVector, result) {
+    vectorToLocalFrame(worldVector:Vec3, result:Vec3) {
         var result = result || new Vec3();
         this.quaternion.conjugate().vmult(worldVector, result);
         return result;
@@ -423,12 +406,8 @@ export default class Body extends EventTarget {
 
     /**
      * Convert a local body point to world frame.
-     * @method pointToWorldFrame
-     * @param  {Vec3} localPoint
-     * @param  {Vec3} result
-     * @return {Vec3}
      */
-    pointToWorldFrame(localPoint, result) {
+    pointToWorldFrame(localPoint: Vec3, result: Vec3) {
         var result = result || new Vec3();
         this.quaternion.vmult(localPoint, result);
         result.vadd(this.position, result);
@@ -437,12 +416,8 @@ export default class Body extends EventTarget {
 
     /**
      * Convert a local body point to world frame.
-     * @method vectorToWorldFrame
-     * @param  {Vec3} localVector
-     * @param  {Vec3} result
-     * @return {Vec3}
      */
-    vectorToWorldFrame(localVector, result) {
+    vectorToWorldFrame(localVector: Vec3, result: Vec3) {
         var result = result || new Vec3();
         this.quaternion.vmult(localVector, result);
         return result;
@@ -450,13 +425,9 @@ export default class Body extends EventTarget {
 
     /**
      * Add a shape to the body with a local offset and orientation.
-     * @method addShape
-     * @param {Shape} shape
-     * @param {Vec3} [_offset]
-     * @param {Quaternion} [_orientation]
-     * @return {Body} The body object, for chainability.
+     * @return The body object, for chainability.
      */
-    addShape(shape:Shape, _offset?, _orientation?) {
+    addShape(shape: Shape, _offset?: Vec3, _orientation?: Quaternion) {
         const offset = new Vec3();
         const orientation = new Quaternion();
 
@@ -482,7 +453,6 @@ export default class Body extends EventTarget {
 
     /**
      * Update the bounding radius of the body. Should be done if any of the shapes are changed.
-     * @method updateBoundingRadius
      */
     updateBoundingRadius() {
         const shapes = this.shapes;
@@ -505,7 +475,6 @@ export default class Body extends EventTarget {
 
     /**
      * Updates the .aabb
-     * @method computeAABB
      * @todo rename to updateAABB()
      */
     computeAABB() {
@@ -546,7 +515,7 @@ export default class Body extends EventTarget {
      * Update .inertiaWorld and .invInertiaWorld
      * @method updateInertiaWorld
      */
-    updateInertiaWorld(force=false) {
+    updateInertiaWorld(force = false) {
         const I = this.invInertia;
         if (I.x === I.y && I.y === I.z && !force) {
             // If inertia M = s*I, where I is identity and s a scalar, then
@@ -565,7 +534,12 @@ export default class Body extends EventTarget {
         }
     }
 
-    applyForce(force, relativePoint) {
+    /**
+     * Apply force to a world point. This could for example be a point on the Body surface. Applying force this way will add to Body.force and Body.torque.
+     * @param  force The amount of force to add.
+     * @param   relativePoint A point relative to the center of mass to apply the force on.
+     */
+    applyForce(force: Vec3, relativePoint: Vec3) {
         if (this.type !== Body.DYNAMIC) { // Needed?
             return;
         }
@@ -581,7 +555,12 @@ export default class Body extends EventTarget {
         this.torque.vadd(rotForce, this.torque);
     }
 
-    applyLocalForce(localForce, localPoint) {
+    /**
+     * Apply force to a local point in the body.
+     * @param   force The force vector to apply, defined locally in the body frame.
+     * @param   localPoint A local point in the body to apply the force on.
+     */
+    applyLocalForce(localForce: Vec3, localPoint: Vec3) {
         if (this.type !== Body.DYNAMIC) {
             return;
         }
@@ -596,7 +575,12 @@ export default class Body extends EventTarget {
         this.applyForce(worldForce, relativePointWorld);
     }
 
-    applyImpulse(impulse, relativePoint) {
+    /**
+     * Apply impulse to a world point. This could for example be a point on the Body surface. An impulse is a force added to a body during a short period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
+     * @param   impulse The amount of impulse to add.
+     * @param   relativePoint A point relative to the center of mass to apply the force on.
+     */
+    applyImpulse(impulse: Vec3, relativePoint: Vec3) {
         if (this.type !== Body.DYNAMIC) {
             return;
         }
@@ -627,7 +611,12 @@ export default class Body extends EventTarget {
         this.angularVelocity.vadd(rotVelo, this.angularVelocity);
     }
 
-    applyLocalImpulse(localImpulse, localPoint) {
+    /**
+     * Apply locally-defined impulse to a local point in the body.
+     * @param  force The force vector to apply, defined locally in the body frame.
+     * @param  localPoint A local point in the body to apply the force on.
+     */
+    applyLocalImpulse(localImpulse: Vec3, localPoint: Vec3) {
         if (this.type !== Body.DYNAMIC) {
             return;
         }
@@ -644,7 +633,6 @@ export default class Body extends EventTarget {
 
     /**
      * Should be called whenever you change the body shape or mass.
-     * @method updateMassProperties
      */
     updateMassProperties() {
         const halfExtents = Body_updateMassProperties_halfExtents;
@@ -672,12 +660,8 @@ export default class Body extends EventTarget {
 
     /**
      * Get world velocity of a point in the body.
-     * @method getVelocityAtWorldPoint
-     * @param  {Vec3} worldPoint
-     * @param  {Vec3} result
-     * @return {Vec3} The result vector.
      */
-    getVelocityAtWorldPoint(worldPoint, result) {
+    getVelocityAtWorldPoint(worldPoint: Vec3, result: Vec3) {
         const r = new Vec3();
         worldPoint.vsub(this.position, r);
         this.angularVelocity.cross(r, result);
@@ -687,11 +671,11 @@ export default class Body extends EventTarget {
 
     /**
      * Move the body forward in time.
-     * @param {number} dt Time step
-     * @param {boolean} quatNormalize Set to true to normalize the body quaternion
-     * @param {boolean} quatNormalizeFast If the quaternion should be normalized using "fast" quaternion normalization
+     * @param  dt Time step
+     * @param  quatNormalize Set to true to normalize the body quaternion
+     * @param  quatNormalizeFast If the quaternion should be normalized using "fast" quaternion normalization
      */
-    integrate(dt, quatNormalize, quatNormalizeFast) {
+    integrate(dt: number, quatNormalize: boolean, quatNormalizeFast: boolean) {
         // Save previous position
         this.previousPosition.copy(this.position);
         this.previousQuaternion.copy(this.quaternion);
@@ -756,40 +740,16 @@ var uiw_m1 = new Mat3();
 var uiw_m2 = new Mat3();
 var uiw_m3 = new Mat3();
 
-/**
- * Apply force to a world point. This could for example be a point on the Body surface. Applying force this way will add to Body.force and Body.torque.
- * @method applyForce
- * @param  {Vec3} force The amount of force to add.
- * @param  {Vec3} relativePoint A point relative to the center of mass to apply the force on.
- */
 const Body_applyForce_r = new Vec3();
 var Body_applyForce_rotForce = new Vec3();
 
-/**
- * Apply force to a local point in the body.
- * @method applyLocalForce
- * @param  {Vec3} force The force vector to apply, defined locally in the body frame.
- * @param  {Vec3} localPoint A local point in the body to apply the force on.
- */
 var Body_applyLocalForce_worldForce = new Vec3();
 var Body_applyLocalForce_relativePointWorld = new Vec3();
 
-/**
- * Apply impulse to a world point. This could for example be a point on the Body surface. An impulse is a force added to a body during a short period of time (impulse = force * time). Impulses will be added to Body.velocity and Body.angularVelocity.
- * @method applyImpulse
- * @param  {Vec3} impulse The amount of impulse to add.
- * @param  {Vec3} relativePoint A point relative to the center of mass to apply the force on.
- */
 const Body_applyImpulse_r = new Vec3();
 var Body_applyImpulse_velo = new Vec3();
 var Body_applyImpulse_rotVelo = new Vec3();
 
-/**
- * Apply locally-defined impulse to a local point in the body.
- * @method applyLocalImpulse
- * @param  {Vec3} force The force vector to apply, defined locally in the body frame.
- * @param  {Vec3} localPoint A local point in the body to apply the force on.
- */
 var Body_applyLocalImpulse_worldImpulse = new Vec3();
 var Body_applyLocalImpulse_relativePoint = new Vec3();
 
