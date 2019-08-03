@@ -208,16 +208,15 @@ export default class ConvexPolyhedron extends Shape {
 
     /**
      * Find the separating axis between this hull and another
-     * @method findSeparatingAxis
-     * @param {ConvexPolyhedron} hullB
-     * @param {Vec3} posA
-     * @param {Quaternion} quatA
-     * @param {Vec3} posB
-     * @param {Quaternion} quatB
-     * @param {Vec3} target The target vector to save the axis in
-     * @return {bool} Returns false if a separation is found, else true
+     * @param  hullB
+     * @param  posA
+     * @param  quatA
+     * @param  posB
+     * @param  quatB
+     * @param  target The target vector to save the axis in
+     * @return Returns false if a separation is found, else true
      */
-    findSeparatingAxis(hullB, posA, quatA, posB, quatB, target, faceListA, faceListB) {
+    findSeparatingAxis(hullB:ConvexPolyhedron, posA:Vec3, quatA:Quaternion, posB:Vec3, quatB:Quaternion, target:Vec3, faceListA:number[], faceListB:number[]) {
         const faceANormalWS3 = fsa_faceANormalWS3;
         const Worldnormal1 = fsa_Worldnormal1;
         const deltaC = fsa_deltaC;
@@ -348,16 +347,9 @@ export default class ConvexPolyhedron extends Shape {
 
     /**
      * Test separating axis against two hulls. Both hulls are projected onto the axis and the overlap size is returned if there is one.
-     * @method testSepAxis
-     * @param {Vec3} axis
-     * @param {ConvexPolyhedron} hullB
-     * @param {Vec3} posA
-     * @param {Quaternion} quatA
-     * @param {Vec3} posB
-     * @param {Quaternion} quatB
-     * @return {number} The overlap depth, or FALSE if no penetration.
+     * @return  The overlap depth, or FALSE if no penetration.
      */
-    testSepAxis(axis, hullB, posA, quatA, posB, quatB) {
+    testSepAxis(axis:Vec3, hullB:ConvexPolyhedron, posA:Vec3, quatA:Quaternion, posB:Vec3, quatB:Quaternion) {
         const hullA = this;
         ConvexPolyhedron.project(hullA, axis, posA, quatA, maxminA);
         ConvexPolyhedron.project(hullB, axis, posB, quatB, maxminB);
@@ -407,16 +399,15 @@ export default class ConvexPolyhedron extends Shape {
 
     /**
      * Clip a face against a hull.
-     * @method clipFaceAgainstHull
-     * @param {Vec3} separatingNormal
-     * @param {Vec3} posA
-     * @param {Quaternion} quatA
-     * @param {Array} worldVertsB1 An array of Vec3 with vertices in the world frame.
-     * @param {Number} minDist Distance clamping
-     * @param {Number} maxDist
+     * @param  separatingNormal
+     * @param  posA
+     * @param  quatA
+     * @param  worldVertsB1 An array of Vec3 with vertices in the world frame.
+     * @param  minDist Distance clamping
+     * @param  maxDist
      * @param Array result Array to store resulting contact points in. Will be objects with properties: point, depth, normal. These are represented in world coordinates.
      */
-    clipFaceAgainstHull(separatingNormal, posA, quatA, worldVertsB1, minDist, maxDist, result) {
+    clipFaceAgainstHull(separatingNormal:Vec3, posA:Vec3, quatA:Quaternion, worldVertsB1:Vec3[], minDist:number, maxDist:number, result) {
         const faceANormalWS = cfah_faceANormalWS;
         const edge0 = cfah_edge0;
         const WorldEdge0 = cfah_WorldEdge0;
