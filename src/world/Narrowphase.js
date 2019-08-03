@@ -1072,7 +1072,7 @@ Narrowphase.prototype[Shape.types.SPHERE | Shape.types.CONVEXPOLYHEDRON] =
 
             // Get a point on the sphere, closest to the face normal
             const worldSpherePointClosestToPlane = sphereConvex_worldSpherePointClosestToPlane;
-            worldNormal.mult(-R, worldSpherePointClosestToPlane);
+            worldNormal.scale(-R, worldSpherePointClosestToPlane);
             xi.vadd(worldSpherePointClosestToPlane, worldSpherePointClosestToPlane);
 
             // Vector from a face point to the closest point on the sphere
@@ -1102,13 +1102,13 @@ Narrowphase.prototype[Shape.types.SPHERE | Shape.types.CONVEXPOLYHEDRON] =
                     found = true;
                     var r = this.createContactEquation(bi, bj, si, sj, rsi, rsj);
 
-                    worldNormal.mult(-R, r.ri); // Contact offset, from sphere center to contact
+                    worldNormal.scale(-R, r.ri); // Contact offset, from sphere center to contact
                     worldNormal.negate(r.ni); // Normal pointing out of sphere
 
                     const penetrationVec2 = v3pool.get();
-                    worldNormal.mult(-penetration, penetrationVec2);
+                    worldNormal.scale(-penetration, penetrationVec2);
                     const penetrationSpherePoint = v3pool.get();
-                    worldNormal.mult(-R, penetrationSpherePoint);
+                    worldNormal.scale(-R, penetrationSpherePoint);
 
                     //xi.vsub(xj).vadd(penetrationSpherePoint).vadd(penetrationVec2 , r.rj);
                     xi.vsub(xj, r.rj);
@@ -1303,7 +1303,7 @@ Narrowphase.prototype[Shape.types.PLANE | Shape.types.CONVEXPOLYHEDRON] =
 
                 // Get vertex position projected on plane
                 const projected = planeConvex_projected;
-                worldNormal.mult(worldNormal.dot(relpos), projected);
+                worldNormal.scale(worldNormal.dot(relpos), projected);
                 worldVertex.vsub(projected, projected);
                 projected.vsub(planePosition, r.ri); // From plane to vertex projected on plane
 
