@@ -106,14 +106,14 @@ export default class Body extends EventTarget {
      * @type {Function}
      * @deprecated Use World events instead
      */
-    preStep = null;
+    preStep:()=>void = null;
 
     /**
      * Callback function that is used AFTER stepping the system. Inside the function, "this" will refer to this Body object.
      * @type {Function}
      * @deprecated Use World events instead
      */
-    postStep = null;
+    postStep:()=>void = null;
 
     vlambda = new Vec3();
 

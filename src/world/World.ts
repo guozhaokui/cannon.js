@@ -18,6 +18,7 @@ import AABB from '../collision/AABB.js';
 import Ray from '../collision/Ray.js';
 import NaiveBroadphase from '../collision/NaiveBroadphase.js';
 import Broadphase from '../collision/Broadphase.js';
+import Solver from '../solver/Solver.js';
 
 /**
  * The physics world
@@ -91,7 +92,7 @@ export default class World extends EventTarget {
      * @property solver
      * @type {Solver}
      */
-    solver = new GSSolver();
+    solver:Solver = new GSSolver();
 
     /**
      * @property constraints

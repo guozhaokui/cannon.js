@@ -1,6 +1,7 @@
 import Equation from './Equation.js';
 import Vec3 from '../math/Vec3.js';
 import Body from '../objects/Body.js';
+import Shape from '../shapes/Shape.js';
 
 /**
  * Contact/non-penetration constraint equation
@@ -29,6 +30,9 @@ export default class ContactEquation extends Equation {
      */
     ni = new Vec3();
 
+    si:Shape;
+    sj:Shape;
+    
     constructor(bodyA: Body, bodyB: Body, maxForce = 1e6) {
         super(bodyA, bodyB, 0, maxForce);
 
@@ -57,8 +61,8 @@ export default class ContactEquation extends Equation {
         const n = this.ni;
 
         // Caluclate cross products
-        ri.cross(n, rixn);
-        rj.cross(n, rjxn);
+        ri.cross(n, rixn); // rixn = ri X n
+        rj.cross(n, rjxn); // rjxn = rj X n
 
         // g = xj+rj -(xi+ri)
         // G = [ -ni  -rixn  ni  rjxn ]
@@ -68,6 +72,7 @@ export default class ContactEquation extends Equation {
         GB.rotational.copy(rjxn);
 
         // Calculate the penetration vector
+        // 计算插入深度，实际就是两个碰撞点的距离
         penetrationVec.copy(bj.position);
         penetrationVec.vadd(rj, penetrationVec);
         penetrationVec.vsub(bi.position, penetrationVec);

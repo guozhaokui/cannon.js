@@ -53,6 +53,8 @@ export default class Equation {
 
     /**
      * Computes the RHS of the SPOOK equation
+     * SPOOK式子的右半部分
+     *  Sλ = B = -aGq - bGW -hGiMf
      */
     computeB(a: number, b: number, h: number) {
         const GW = this.computeGW();

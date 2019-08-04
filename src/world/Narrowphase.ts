@@ -29,9 +29,8 @@ var shapeChecks = [];
 export default class Narrowphase {
     /**
      * Internal storage of pooled contact points.
-     * @property {Array} contactPointPool
      */
-    contactPointPool = [];
+    contactPointPool:ContactEquation[] = [];
 
     frictionEquationPool = [];
 
@@ -78,7 +77,7 @@ export default class Narrowphase {
      * Make a contact object, by using the internal pool or creating a new one.
      */
     createContactEquation(bi: Body, bj: Body, si: Shape, sj: Shape, overrideShapeA: Shape, overrideShapeB: Shape): ContactEquation {
-        let c;
+        let c:ContactEquation;
         if (this.contactPointPool.length) {
             c = this.contactPointPool.pop();
             c.bi = bi;
@@ -111,7 +110,7 @@ export default class Narrowphase {
         return c;
     }
 
-    createFrictionEquationsFromContact(contactEquation, outArray) {
+    createFrictionEquationsFromContact(contactEquation:ContactEquation, outArray:ContactEquation[]) {
         const bodyA = contactEquation.bi;
         const bodyB = contactEquation.bj;
         const shapeA = contactEquation.si;

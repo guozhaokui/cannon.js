@@ -30,7 +30,7 @@ export default class GSSolver extends Solver {
         const bodies = world.bodies;
         const Nbodies = bodies.length;
         const h = dt;
-        let q;
+        let q:number;
         let B:number;
         let invC:number;
         let deltalambda;
@@ -52,6 +52,7 @@ export default class GSSolver extends Solver {
         const lambda = GSSolver_solve_lambda;   //[]
         Bs.length = lambda.length = invCs.length = Neq;
 
+        // 在迭代期间 B和invCs是不变的，所以可以先计算出来
         for (var i = 0; i !== Neq; i++) {
             var c = equations[i];
             lambda[i] = 0.0;
@@ -61,6 +62,7 @@ export default class GSSolver extends Solver {
 
         if (Neq !== 0) {
             // Reset vlambda
+            // 把每个Body的vlambda和wlambda清零
             for (var i = 0; i !== Nbodies; i++) {
                 var b = bodies[i];
                 const vlambda = b.vlambda;
@@ -102,14 +104,19 @@ export default class GSSolver extends Solver {
             }
 
             // Add result to velocity
+            /**
+             * 已经计算出λ了，下面计算新的速度
+             */
             for (var i = 0; i !== Nbodies; i++) {
                 const b = bodies[i];
                 const v = b.velocity;
                 const w = b.angularVelocity;
 
+                // 线速度
                 b.vlambda.vmul(b.linearFactor, b.vlambda);
                 v.vadd(b.vlambda, v);
 
+                // 角速度
                 b.wlambda.vmul(b.angularFactor, b.wlambda);
                 w.vadd(b.wlambda, w);
             }
