@@ -1,6 +1,7 @@
 import Solver from './Solver.js';
 import Body from '../objects/Body.js';
 import World from '../world/World.js';
+import Equation from '../equations/Equation.js';
 
 /**
  * Splits the equations into islands and solves them independently. Can improve performance.
@@ -9,11 +10,11 @@ import World from '../world/World.js';
 export default class SplitSolver extends Solver {
     iterations = 10;
     tolerance = 1e-7;
-    subsolver:Solver;
+    subsolver:SplitSolver;
     nodes = [];
     nodePool = [];
 
-constructor(subsolver:Solver) {
+constructor(subsolver:SplitSolver) {
         super();
         this.subsolver = subsolver;
         // Create needed nodes, reuse if possible
@@ -74,7 +75,7 @@ constructor(subsolver:Solver) {
         subsolver.tolerance = this.tolerance;
         subsolver.iterations = this.iterations;
 
-        const dummyWorld = SplitSolver_solve_dummyWorld;
+        const dummyWorld = SplitSolver_solve_dummyWorld as World;
         while ((child = getUnvisitedNode(nodes))) {
             eqs.length = 0;
             dummyWorld.bodies.length = 0;
@@ -144,6 +145,6 @@ function visitFunc(node, bds, eqs) {
     }
 }
 
-function sortById({ id }, { id }) {
-    return id - id;
+function sortById(a:Equation,b:Equation) {
+    return a.id - b.id;
 }

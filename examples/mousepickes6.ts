@@ -341,5 +341,5 @@ function moveJointToPoint(x,y,z) {
 function removeJointConstraint(){
     // Remove constriant from world
     world.removeConstraint(mouseConstraint);
-    mouseConstraint = false;
+    mouseConstraint = null;
 }

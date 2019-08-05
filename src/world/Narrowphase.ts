@@ -34,7 +34,7 @@ export default class Narrowphase {
 
     frictionEquationPool = [];
 
-    result = [];
+    result:ContactEquation[] = [];
     frictionResult = [];
 
     /**
@@ -188,7 +188,7 @@ export default class Narrowphase {
         const bodyB = c.bj;
         for (let i = 0; i !== numContacts; i++) {
             c = this.result[this.result.length - 1 - i];
-            if (c.bodyA !== bodyA) {
+            if (c.bodyA !== bodyA) {//c.bi?
                 averageNormal.vadd(c.ni, averageNormal);
                 averageContactPointA.vadd(c.ri, averageContactPointA);
                 averageContactPointB.vadd(c.rj, averageContactPointB);
@@ -217,7 +217,7 @@ export default class Narrowphase {
      * @param  result Array to store generated contacts
      * @param  oldcontacts Optional. Array of reusable contact objects
      */
-    getContacts(p1: Body[], p2: Body[], world: World, result: [], oldcontacts: [], frictionResult, frictionPool) {
+    getContacts(p1: Body[], p2: Body[], world: World, result: ContactEquation[], oldcontacts: ContactEquation[], frictionResult, frictionPool) {
         // Save old contact objects
         this.contactPointPool = oldcontacts;
         this.frictionEquationPool = frictionPool;

@@ -3,6 +3,8 @@ import Vec3 from '../math/Vec3.js';
 import Shape from '../shapes/Shape.js';
 import World from '../world/World.js';
 import Body from '../objects/Body.js';
+import Sphere from '../shapes/Sphere.js';
+import Plane from '../shapes/Plane.js';
 
 
 export default class GridBroadphase extends Broadphase {
@@ -138,16 +140,16 @@ export default class GridBroadphase extends Broadphase {
 
                     const y = bi.position.y;
                     const z = bi.position.z;
-                    const r = si.radius;
+                    const r = (si as Sphere).radius;
 
                     addBoxToBins(x - r, y - r, z - r, x + r, y + r, z + r, bi);
                     break;
 
                 case PLANE:
-                    if (si.worldNormalNeedsUpdate) {
-                        si.computeWorldNormal(bi.quaternion);
+                    if ((si as Plane).worldNormalNeedsUpdate) {
+                        (si as Plane).computeWorldNormal(bi.quaternion);
                     }
-                    const planeNormal = si.worldNormal;
+                    const planeNormal = (si as Plane).worldNormal;
 
                     //Relative position from origin of plane object to the first bin
                     //Incremented as we iterate through the bins

@@ -9,24 +9,24 @@ import Box from '../shapes/Box.js';
 import World from '../world/World.js';
 
 export interface BodyInitOptions{
-    position:Vec3;
-    velocity:Vec3;
-    angularVelocity:Vec3;
-    quaternion:Quaternion;
-    mass:number;
-    material:Material;
-    type:number;
-    linearDamping:number;//0.01;
-    angularDamping:number;//0.01;
-    allowSleep:boolean;//true;
-    sleepSpeedLimit:number;//0.1
-    sleepTimeLimit:number;//1
-    collisionFilterGroup:number;//1
-    collisionFilterMask:number;//-1
-    fixedRotation:boolean;//false;
-    linearFactor:Vec3;
-    angularFactor:Vec3;
-    shape:Shape;
+    position?:Vec3;
+    velocity?:Vec3;
+    angularVelocity?:Vec3;
+    quaternion?:Quaternion;
+    mass?:number;
+    material?:Material;
+    type?:number;
+    linearDamping?:number;//0.01;
+    angularDamping?:number;//0.01;
+    allowSleep?:boolean;//true;
+    sleepSpeedLimit?:number;//0.1
+    sleepTimeLimit?:number;//1
+    collisionFilterGroup?:number;//1
+    collisionFilterMask?:number;//-1
+    fixedRotation?:boolean;//false;
+    linearFactor?:Vec3;
+    angularFactor?:Vec3;
+    shape?:Shape;
 }
 
 /**

@@ -39,11 +39,8 @@ export default class PointToPointConstraint extends Constraint {
      * 
      * 创建了xyz三个 ContactEquation 来实现的
      */
-    constructor(bodyA: Body, pivotA: Vec3, bodyB: Body, pivotB: Vec3, maxForce: number) {
+    constructor(bodyA: Body, pivotA: Vec3, bodyB: Body, pivotB: Vec3, maxForce: number=1e6) {
         super(bodyA, bodyB);
-
-        maxForce = typeof (maxForce) !== 'undefined' ? maxForce : 1e6;
-
         this.pivotA = pivotA ? pivotA.clone() : new Vec3();
         this.pivotB = pivotB ? pivotB.clone() : new Vec3();
         const x = this.equationX = new ContactEquation(bodyA, bodyB);

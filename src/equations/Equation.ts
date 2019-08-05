@@ -56,7 +56,9 @@ export default class Equation {
      * SPOOK式子的右半部分
      *  Sλ = B = -aGq - bGW -hGiMf
      */
-    computeB(a: number, b: number, h: number) {
+    computeB(h: number) {
+        let a=this.a;
+        let b=this.b;
         const GW = this.computeGW();
         const Gq = this.computeGq();
         const GiMf = this.computeGiMf();

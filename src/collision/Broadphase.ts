@@ -152,9 +152,10 @@ export default class Broadphase {
      * 检查两个body的包围球是否碰撞
      */
     static boundingSphereCheck(bodyA: Body, bodyB: Body) {
-        var dist = bsc_dist;
-        bodyA.position.vsub(bodyB.position, dist);
-        return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius, 2) > dist.lengthSquared();
+        throw 'compile err' // 编译有错误，先注掉
+        //var dist = bsc_dist;
+        //bodyA.position.vsub(bodyB.position, dist);
+        //return Math.pow(bodyA.shape.boundingSphereRadius + bodyB.shape.boundingSphereRadius, 2) > dist.lengthSquared();
     }
 }
 

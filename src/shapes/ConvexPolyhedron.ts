@@ -478,7 +478,7 @@ export default class ConvexPolyhedron extends Shape {
                 planeNormalWS.copy(localPlaneNormal);
                 quatA.vmult(planeNormalWS, planeNormalWS);
                 //posA.vadd(planeNormalWS,planeNormalWS);
-                var planeEqWS = localPlaneEq - planeNormalWS.dot(posA);
+                planeEqWS = localPlaneEq - planeNormalWS.dot(posA);
             } else {
                 planeNormalWS.copy(planeNormalWS1);
                 planeEqWS = planeEqWS1;
@@ -505,7 +505,7 @@ export default class ConvexPolyhedron extends Shape {
         planeNormalWS.copy(localPlaneNormal);
         quatA.vmult(planeNormalWS, planeNormalWS);
 
-        var planeEqWS = localPlaneEq - planeNormalWS.dot(posA);
+        planeEqWS = localPlaneEq - planeNormalWS.dot(posA);
         for (var i = 0; i < pVtxIn.length; i++) {
             let depth = planeNormalWS.dot(pVtxIn[i]) + planeEqWS; //???
             /*console.log("depth calc from normal=",planeNormalWS.toString()," and constant "+planeEqWS+" and vertex ",pVtxIn[i].toString()," gives "+depth);*/
