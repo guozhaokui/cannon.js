@@ -866,12 +866,7 @@ export default class World extends EventTarget {
 }
 
 // Temp stuff
-var tmpAABB1 = new AABB();
-var tmpArray1 = [];
 var tmpRay = new Ray();
-
-var step_tmp1 = new Vec3();
-
 
 var
     /**
@@ -888,20 +883,7 @@ var
     World_step_oldContacts:ContactEquation[] = [], // Pools for unused objects
     World_step_frictionEquationPool:FrictionEquation[] = [],
     World_step_p1 = [], // Reusable arrays for collision pairs
-    World_step_p2 = [],
-    World_step_gvec = new Vec3(), // Temporary vectors and quats
-    World_step_vi = new Vec3(),
-    World_step_vj = new Vec3(),
-    World_step_wi = new Vec3(),
-    World_step_wj = new Vec3(),
-    World_step_t1 = new Vec3(),
-    World_step_t2 = new Vec3(),
-    World_step_rixn = new Vec3(),
-    World_step_rjxn = new Vec3(),
-    World_step_step_q = new Quaternion(),
-    World_step_step_w = new Quaternion(),
-    World_step_step_wq = new Quaternion(),
-    invI_tau_dt = new Vec3();
+    World_step_p2 = [];
 
 var additions = [];
 var removals = [];

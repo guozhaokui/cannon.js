@@ -186,15 +186,9 @@ export default class Equation {
     }
 }
 
-const zero = new Vec3();
 var iMfi = new Vec3();
 var iMfj = new Vec3();
 var invIi_vmult_taui = new Vec3();
 var invIj_vmult_tauj = new Vec3();
 var tmp = new Vec3();
 var addToWlambda_temp = new Vec3();
-const addToWlambda_Gi = new Vec3();
-const addToWlambda_Gj = new Vec3();
-const addToWlambda_ri = new Vec3();
-const addToWlambda_rj = new Vec3();
-const addToWlambda_Mdiag = new Vec3();

@@ -47,9 +47,9 @@ export default class GSSolver extends Solver {
         }
 
         // Things that does not change during iteration can be computed once
-        const invCs = GSSolver_solve_invCs; //[]
-        const Bs = GSSolver_solve_Bs;       //[]
-        const lambda = GSSolver_solve_lambda;   //[]
+        const invCs = GSSolver_solve_invCs; //
+        const Bs = GSSolver_solve_Bs;       //每个式子的Bs
+        const lambda = GSSolver_solve_lambda;   //
         Bs.length = lambda.length = invCs.length = Neq;
 
         // 在迭代期间 B和invCs是不变的，所以可以先计算出来
@@ -134,6 +134,6 @@ export default class GSSolver extends Solver {
 }
 
 // Just temporary number holders that we want to reuse each solve.
-var GSSolver_solve_lambda = []; 
-var GSSolver_solve_invCs = [];
-var GSSolver_solve_Bs = [];
+var GSSolver_solve_lambda:number[] = []; 
+var GSSolver_solve_invCs:number[] = [];
+var GSSolver_solve_Bs:number[] = [];

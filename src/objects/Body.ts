@@ -513,7 +513,6 @@ export default class Body extends EventTarget {
 
     /**
      * Update .inertiaWorld and .invInertiaWorld
-     * @method updateInertiaWorld
      */
     updateInertiaWorld(force = false) {
         const I = this.invInertia;
