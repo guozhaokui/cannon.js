@@ -768,11 +768,11 @@ export default class Narrowphase {
         rj = null;
 
         // Check edges
-        const edgeTangent = v3pool.get();
-        const edgeCenter = v3pool.get();
+        const edgeTangent = v3pool.get() as Vec3;
+        const edgeCenter = v3pool.get() as Vec3;
         var r:Vec3 = v3pool.get() as Vec3; // r = edge center to sphere center
-        const orthogonal = v3pool.get();
-        var dist:Vec3 = v3pool.get();
+        const orthogonal = v3pool.get() as Vec3;
+        var dist:Vec3 = v3pool.get() as Vec3;
         const Nsides = sides.length;
         for (var j = 0; j !== Nsides && !found; j++) {
             for (var k = 0; k !== Nsides && !found; k++) {
@@ -785,7 +785,7 @@ export default class Narrowphase {
                     r.vsub(edgeCenter, r);
                     r.vsub(xj, r);
                     const orthonorm = r.dot(edgeTangent); // distance from edge center to sphere center in the tangent direction
-                    edgeTangent.mult(orthonorm, orthogonal); // Vector from edge center to sphere center in the tangent direction
+                    edgeTangent.scale(orthonorm, orthogonal); // Vector from edge center to sphere center in the tangent direction
 
                     // Find the third side orthogonal to this one
                     var l = 0;

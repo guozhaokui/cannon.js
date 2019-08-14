@@ -34,7 +34,7 @@ export default class World extends EventTarget {
     /**
      * Makes bodies go to sleep when they've been inactive
      */
-    allowSleep = false;
+    allowSleep = true;
 
     /**
      * All the current contacts (instances of ContactEquation) in the world.

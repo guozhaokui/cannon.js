@@ -257,6 +257,8 @@ function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
     var body = new Body({mass:0.5});
     var boxshape = new Box(new Vec3(sz/2,sz/2,sz/2));
     body.addShape(boxshape);
+    body.allowSleep=true;
+    body.sleepSpeedLimit=.6   // 限制设的大一点，防止抖动
     world.addBody(body);
     bodies.push(body);
     body.position.set(px,py,pz);
@@ -272,7 +274,24 @@ function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
 }
 
 function addSphere(r:number, px:number,py:number,pz:number){
+    //phy
+    var body = new Body({mass:0.5});
+    var sphShape = new Sphere(r);
+    body.addShape(sphShape);
+    body.allowSleep=true;
+    body.sleepSpeedLimit=.6   
+    world.addBody(body);
+    bodies.push(body);
+    body.position.set(px,py,pz);
+    //render
+    var phGeo = new THREE.SphereGeometry(r);
+    var phMaterial = new THREE.MeshPhongMaterial( { color: 0x888888 } );
+    var phMesh = new THREE.Mesh(phGeo, phMaterial);
+    phMesh.castShadow = true;
+    meshes.push(phMesh);
+    scene.add(phMesh);
 
+    return body;
 }
 
 function addStack(x:number,y:number,z:number){
@@ -290,7 +309,8 @@ function addStack(x:number,y:number,z:number){
     addBox(0.2,0.2,0.2,x,y,z);    y+=d;
     addBox(0.2,0.2,0.2,x,y,z);
     y+=d;
-    addBox(0.2,0.2,0.2,x,y,z);
+    //addBox(0.2,0.2,0.2,x,y,z);
+    addSphere(1,x,y,z);
 }
 
 function initCannon(){
@@ -301,6 +321,7 @@ function initCannon(){
 
     world.gravity.set(0,-10,0);
     world.broadphase = new NaiveBroadphase();
+    world.allowSleep=true;
 
     // Create boxes
     var mass = 5, radius = 1.3;

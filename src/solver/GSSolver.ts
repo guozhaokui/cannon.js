@@ -33,10 +33,10 @@ export default class GSSolver extends Solver {
         let q:number;
         let B:number;
         let invC:number;
-        let deltalambda;
-        let deltalambdaTot;
-        let GWlambda;
-        let lambdaj;
+        let deltalambda:number;
+        let deltalambdaTot:number;
+        let GWlambda:number;
+        let lambdaj:number;
 
         // Update solve mass
         if (Neq !== 0) {
@@ -128,7 +128,7 @@ export default class GSSolver extends Solver {
                 equations[l].multiplier = lambda[l] * invDt;
             }
         }
-
+        //console.log('Err=',deltalambdaTot,'iter=',iter);
         return iter;
     }
 }
