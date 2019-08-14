@@ -38,6 +38,9 @@ export default class ContactEquation extends Equation {
 
     }
 
+    private static rixn = new Vec3();
+    private static rjxn = new Vec3();
+    private static temp3 = new Vec3();
     computeB(h:number) {
         const a = this.a;
         const b = this.b;
@@ -45,17 +48,13 @@ export default class ContactEquation extends Equation {
         const bj = this.bj;
         const ri = this.ri;
         const rj = this.rj;
-        const rixn = ContactEquation_computeB_temp1;
-        const rjxn = ContactEquation_computeB_temp2;
+        const rixn = ContactEquation.rixn;
+        const rjxn = ContactEquation.rjxn;
         const vi = bi.velocity;
         const wi = bi.angularVelocity;
-        const fi = bi.force;
-        const taui = bi.torque;
         const vj = bj.velocity;
         const wj = bj.angularVelocity;
-        const fj = bj.force;
-        const tauj = bj.torque;
-        const penetrationVec = ContactEquation_computeB_temp3;
+        const penetrationVec = ContactEquation.temp3;
         const GA = this.jacobianElementA;
         const GB = this.jacobianElementB;
         const n = this.ni;
@@ -66,40 +65,44 @@ export default class ContactEquation extends Equation {
 
         // g = xj+rj -(xi+ri)
         // G = [ -ni  -rixn  ni  rjxn ]
-        n.negate(GA.spatial);
-        rixn.negate(GA.rotational);
-        GB.spatial.copy(n);
-        GB.rotational.copy(rjxn);
+        n.negate(GA.spatial);       //GA.s = -n
+        rixn.negate(GA.rotational); //GA.r = -rixn
+        GB.spatial.copy(n);         //GB.s = n
+        GB.rotational.copy(rjxn);   //GB.r = rjxn
 
         // Calculate the penetration vector
         // 计算插入深度，实际就是两个碰撞点的距离
         penetrationVec.copy(bj.position);
-        penetrationVec.vadd(rj, penetrationVec);
-        penetrationVec.vsub(bi.position, penetrationVec);
-        penetrationVec.vsub(ri, penetrationVec);
-
-        const g = n.dot(penetrationVec);
+        penetrationVec.vadd(rj, penetrationVec);            // posj+rj
+        penetrationVec.vsub(bi.position, penetrationVec);   // 
+        penetrationVec.vsub(ri, penetrationVec);            // posi+ri - (posj+rj)
+        // g 是约束函数
+        const g = n.dot(penetrationVec);                    // .n
 
         // Compute iteration
         const ePlusOne = this.restitution + 1;
         const GW = ePlusOne * vj.dot(n) - ePlusOne * vi.dot(n) + wj.dot(rjxn) - wi.dot(rixn);
         const GiMf = this.computeGiMf();
 
-        const B = - g * a - GW * b - h * GiMf;
-
+        const B = - g * a - GW * b - h * GiMf;  //? TODO 为什么是 ga, g=Gq么。 Gq的计算没有考虑旋转部分，所以确实相等，这里需要继续理解
         return B;
     }
 
+    private static _vi = new Vec3();
+    private static _vj = new Vec3();
+    private static _xi = new Vec3();
+    private static _xj = new Vec3();
+    private static _relVel=new Vec3();
     /**
      * Get the current relative velocity in the contact point.
      * 计算相撞在法线方向的速度的力量 dot(relv, normal) ,相对于i
      */
     getImpactVelocityAlongNormal() {
-        const vi = ContactEquation_getImpactVelocityAlongNormal_vi;
-        const vj = ContactEquation_getImpactVelocityAlongNormal_vj;
-        const xi = ContactEquation_getImpactVelocityAlongNormal_xi;
-        const xj = ContactEquation_getImpactVelocityAlongNormal_xj;
-        const relVel = ContactEquation_getImpactVelocityAlongNormal_relVel;
+        const vi = ContactEquation._vi;
+        const vj = ContactEquation._vj;
+        const xi = ContactEquation._xi;
+        const xj = ContactEquation._xj;
+        const relVel = ContactEquation._relVel;
 
         this.bi.position.vadd(this.ri, xi); // xi = bi.pos + this.ri
         this.bj.position.vadd(this.rj, xj); // xj = bj.pos + this.rj
@@ -113,14 +116,4 @@ export default class ContactEquation extends Equation {
         return this.ni.dot(relVel);
     }
 }
-
-var ContactEquation_computeB_temp1 = new Vec3(); // Temp vectors
-var ContactEquation_computeB_temp2 = new Vec3();
-var ContactEquation_computeB_temp3 = new Vec3();
-
-var ContactEquation_getImpactVelocityAlongNormal_vi = new Vec3();
-var ContactEquation_getImpactVelocityAlongNormal_vj = new Vec3();
-var ContactEquation_getImpactVelocityAlongNormal_xi = new Vec3();
-var ContactEquation_getImpactVelocityAlongNormal_xj = new Vec3();
-var ContactEquation_getImpactVelocityAlongNormal_relVel = new Vec3();
 

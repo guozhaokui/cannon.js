@@ -5,7 +5,6 @@ import Body from '../objects/Body.js';
 /**
  * Constrains the slipping in a contact along a tangent
  * @author schteppe
- * @extends Equation
  */
 export default class FrictionEquation extends Equation {
     ri = new Vec3();
@@ -40,7 +39,6 @@ export default class FrictionEquation extends Equation {
         // G = [-t -rixt t rjxt]
         // And remember, this is a pure velocity constraint, g is always zero!
         const GA = this.jacobianElementA;
-
         const GB = this.jacobianElementB;
         t.negate(GA.spatial);
         rixt.negate(GA.rotational);

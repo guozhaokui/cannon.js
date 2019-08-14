@@ -245,7 +245,7 @@ export default class Body extends EventTarget {
      */
     fixedRotation = false;
 
-    angularDamping = 0.01;
+    angularDamping = 0.01;  // 旋转速度的衰减，现在没有材质能提供转动摩擦
 
     /**
      * Use this property to limit the motion along any world axis. (1,1,1) will allow motion along all axes while (0,0,0) allows none.

@@ -16,7 +16,7 @@ var camera:THREE.Camera, scene:THREE.Scene, renderer:THREE.WebGLRenderer, gplane
 var geometry, material, mesh;
 var controls,time = Date.now();
 var markerMaterial;
-var jointBody, constrainedBody, mouseConstraint:PointToPointConstraint;
+var jointBody:Body, constrainedBody:Body, mouseConstraint:PointToPointConstraint;
 
 var N = 1;
 
@@ -47,7 +47,7 @@ function init() {
     scene.add(camera);
 
     // lights
-    var light, materials;
+    var light:THREE.DirectionalLight, materials:THREE.Material;
     scene.add( new THREE.AmbientLight( 0x666666 ) );
 
     light = new THREE.DirectionalLight( 0xffffff, 1.75 );
@@ -68,7 +68,7 @@ function init() {
 
     light.shadowCameraFar = 3*d;
     light.shadowCameraNear = d;
-    light.shadowDarkness = 0.5;
+    (light as any).shadowDarkness = 0.5;
 
     scene.add( light );
 
@@ -111,6 +111,7 @@ function init() {
     window.addEventListener("mouseup", onMouseUp, false );
 
     //addBox(1,1,1,0,0,0);
+    addStack(0,0,2);
 }
 
 function setClickMarker(x,y,z) {
@@ -158,7 +159,7 @@ function onMouseDown(e:MouseEvent){
 }
 
 // This function creates a virtual movement plane for the mouseJoint to move in
-function setScreenPerpCenter(point, camera) {
+function setScreenPerpCenter(point:THREE.Vector3, camera:THREE.Camera) {
     // If it does not exist, create a new one
     if(!gplane) {
         var planeGeo = new THREE.PlaneGeometry(100,100);
@@ -169,12 +170,11 @@ function setScreenPerpCenter(point, camera) {
 
     // Center at mouse position
     gplane.position.copy(point);
-
     // Make it face toward the camera
     gplane.quaternion.copy(camera.quaternion);
 }
 
-function onMouseUp(e) {
+function onMouseUp(e:MouseEvent) {
     constraintDown = false;
     // remove the marker
     removeClickMarker();
@@ -183,8 +183,8 @@ function onMouseUp(e) {
     removeJointConstraint();
 }
 
-var lastx,lasty,last;
-function projectOntoPlane(screenX:number,screenY:number,thePlane,camera) {
+var lastx:number,lasty:number,last:number;
+function projectOntoPlane(screenX:number,screenY:number,thePlane,camera:THREE.Camera) {
     var x = screenX;
     var y = screenY;
     var now = new Date().getTime();
@@ -197,6 +197,7 @@ function projectOntoPlane(screenX:number,screenY:number,thePlane,camera) {
         return hit.point;
     return false;
 }
+
 function findNearestIntersectingObject(clientX:number,clientY:number,camera:THREE.Camera,objects):{point:THREE.Vector3,object:any} {
     // Get the picking ray from the point
     var raycaster = getRayCasterFromScreenCoord(clientX, clientY, camera, projector);
@@ -253,11 +254,12 @@ function render() {
 
 function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
     //phy
-    var body = new Body({mass:5});
-    var boxshape = new Box(new Vec3(0.5,0.5,0.5));
+    var body = new Body({mass:0.5});
+    var boxshape = new Box(new Vec3(sz/2,sz/2,sz/2));
     body.addShape(boxshape);
     world.addBody(body);
     bodies.push(body);
+    body.position.set(px,py,pz);
     //render
     var cubeGeo = new THREE.BoxGeometry( sx,sy,sz, 10, 10 );
     var cubeMaterial = new THREE.MeshPhongMaterial( { color: 0x888888 } );
@@ -269,8 +271,26 @@ function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
     return body;
 }
 
-function addSphere(r, px,py,pz){
+function addSphere(r:number, px:number,py:number,pz:number){
 
+}
+
+function addStack(x:number,y:number,z:number){
+    let d=0.21;
+    addBox(0.2,0.2,0.2,x,y,z);
+    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);
+    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);
+    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);
+    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);
+    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);
+    y+=d;
+    addBox(0.2,0.2,0.2,x,y,z);
 }
 
 function initCannon(){
@@ -307,9 +327,10 @@ function initCannon(){
     jointBody.collisionFilterGroup = 0;
     jointBody.collisionFilterMask = 0;
     world.addBody(jointBody);
+
 }
 
-function addMouseConstraint(x,y,z,body) {
+function addMouseConstraint(x:number,y:number,z:number,body:Body) {
     // The cannon body constrained by the mouse joint
     constrainedBody = body;
 
@@ -332,7 +353,7 @@ function addMouseConstraint(x,y,z,body) {
 }
 
 // This functions moves the transparent joint body to a new postion in space
-function moveJointToPoint(x,y,z) {
+function moveJointToPoint(x:number,y:number,z:number) {
     // Move the joint body to a new position
     jointBody.position.set(x,y,z);
     mouseConstraint.update();

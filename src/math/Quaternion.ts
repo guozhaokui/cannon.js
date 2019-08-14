@@ -110,7 +110,7 @@ export default class Quaternion {
     /**
      * Get the inverse quaternion rotation.
      */
-    inverse(target:Quaternion) {
+    inverse(target?:Quaternion) {
         const x = this.x;
         const y = this.y;
         const z = this.z;

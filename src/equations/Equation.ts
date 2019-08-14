@@ -71,10 +71,8 @@ export default class Equation {
     computeGq() {
         const GA = this.jacobianElementA;
         const GB = this.jacobianElementB;
-        const bi = this.bi;
-        const bj = this.bj;
-        const xi = bi.position;
-        const xj = bj.position;
+        const xi = this.bi.position;
+        const xj = this.bj.position;
         return GA.spatial.dot(xi) + GB.spatial.dot(xj);
     }
 
