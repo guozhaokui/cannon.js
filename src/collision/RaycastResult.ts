@@ -62,13 +62,13 @@ export default class RaycastResult {
     }
 
     set(
-        rayFromWorld:Vec3,
-        rayToWorld:Vec3,
-        hitNormalWorld:Vec3,
-        hitPointWorld:Vec3,
-        shape:Shape,
-        body:Body,
-        distance:number
+        rayFromWorld: Vec3,
+        rayToWorld: Vec3,
+        hitNormalWorld: Vec3,
+        hitPointWorld: Vec3,
+        shape: Shape,
+        body: Body,
+        distance: number
     ) {
         this.rayFromWorld.copy(rayFromWorld);
         this.rayToWorld.copy(rayToWorld);

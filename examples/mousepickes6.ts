@@ -6,6 +6,7 @@ import Plane from "../src/shapes/Plane.js";
 import Sphere from "../src/shapes/Sphere.js";
 import PointToPointConstraint from '../src/constraints/PointToPointConstraint.js';
 import Body from "../src/objects/Body.js";
+import GSSolver from "../src/solver/GSSolver.js";
 
 
 var world:World;
@@ -84,15 +85,6 @@ function init() {
     mesh.receiveShadow = true;
     scene.add(mesh);
 
-    // cubes
-    var cubeGeo = new THREE.BoxGeometry( 1, 1, 1, 10, 10 );
-    var cubeMaterial = new THREE.MeshPhongMaterial( { color: 0x888888 } );
-    for(var i=0; i<N; i++){
-        var cubeMesh = new THREE.Mesh(cubeGeo, cubeMaterial);
-        cubeMesh.castShadow = true;
-        meshes.push(cubeMesh);
-        scene.add(cubeMesh);
-    }
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -111,7 +103,8 @@ function init() {
     window.addEventListener("mouseup", onMouseUp, false );
 
     //addBox(1,1,1,0,0,0);
-    addStack(0,0,2);
+    //addStack(0,0,2);
+    addSphere(1,0,7,0);
 }
 
 function setClickMarker(x,y,z) {
@@ -284,7 +277,7 @@ function addSphere(r:number, px:number,py:number,pz:number){
     bodies.push(body);
     body.position.set(px,py,pz);
     //render
-    var phGeo = new THREE.SphereGeometry(r);
+    var phGeo = new THREE.SphereGeometry(r,32,32);
     var phMaterial = new THREE.MeshPhongMaterial( { color: 0x888888 } );
     var phMesh = new THREE.Mesh(phGeo, phMaterial);
     phMesh.castShadow = true;
@@ -322,8 +315,11 @@ function initCannon(){
     world.gravity.set(0,-10,0);
     world.broadphase = new NaiveBroadphase();
     world.allowSleep=true;
+    world.stepnumber=1;
+    //world.gravity = new Vec3(0,0.1,0);
 
     // Create boxes
+    /*
     var mass = 5, radius = 1.3;
     var boxShape = new Box(new Vec3(0.5,0.5,0.5));
     for(var i=0; i<N; i++){
@@ -333,6 +329,16 @@ function initCannon(){
         world.addBody(boxBody);
         bodies.push(boxBody);
     }
+
+    var cubeGeo = new THREE.BoxGeometry( 1, 1, 1, 10, 10 );
+    var cubeMaterial = new THREE.MeshPhongMaterial( { color: 0x888888 } );
+    for(var i=0; i<N; i++){
+        var cubeMesh = new THREE.Mesh(cubeGeo, cubeMaterial);
+        cubeMesh.castShadow = true;
+        meshes.push(cubeMesh);
+        scene.add(cubeMesh);
+    }
+    */    
 
     // Create a plane
     var groundShape = new Plane();

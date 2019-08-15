@@ -15,6 +15,7 @@ import Box from '../shapes/Box.js';
 import Sphere from '../shapes/Sphere.js';
 import Plane from '../shapes/Plane.js';
 import Trimesh from '../shapes/Trimesh.js';
+import Particle from '../shapes/Particle.js';
 
 var shapeChecks = [];
 
@@ -590,7 +591,7 @@ export default class Narrowphase {
         triangles.length = 0;
     }
 
-    spherePlane(si:Sphere, sj:Plane, xi, xj, qi, qj, bi, bj, rsi, rsj, justTest) {
+    spherePlane(si:Sphere, sj:Plane, xi:Vec3, xj:Vec3, qi:Quaternion, qj:Quaternion, bi:Body, bj:Body, rsi:Shape, rsj:Shape, justTest:boolean) {
         // We will have one contact in this case
         const r = this.createContactEquation(bi, bj, si, sj, rsi, rsj);
 
@@ -609,7 +610,6 @@ export default class Narrowphase {
         point_on_plane_to_sphere.vsub(plane_to_sphere_ortho, r.rj); // The sphere position projected to plane
 
         if (-point_on_plane_to_sphere.dot(r.ni) <= si.radius) {
-
             if (justTest) {
                 return true;
             }
@@ -627,7 +627,7 @@ export default class Narrowphase {
         }
     }
 
-    sphereBox(si:Sphere, sj:Box, xi, xj, qi, qj, bi, bj, rsi, rsj, justTest) {
+    sphereBox(si:Sphere, sj:Box, xi:Vec3, xj:Vec3, qi:Quaternion, qj:Quaternion, bi:Body, bj:Body, rsi:Shape, rsj:Shape, justTest:boolean) {
         const v3pool = this.v3pool;
 
         // we refer to the box as body j
@@ -1052,25 +1052,19 @@ export default class Narrowphase {
         }
     }
 
-    planeBox(si, sj, xi, xj, qi, qj, bi, bj, rsi, rsj, justTest) {
+    planeBox(si:Plane, sj:Box, xi:Vec3, xj:Vec3, qi:Quaternion, qj:Quaternion, bi:Body, bj:Body, rsi:Shape, rsj:Shape, justTest:boolean) {
         sj.convexPolyhedronRepresentation.material = sj.material;
         sj.convexPolyhedronRepresentation.collisionResponse = sj.collisionResponse;
         sj.convexPolyhedronRepresentation.id = sj.id;
         return this.planeConvex(si, sj.convexPolyhedronRepresentation, xi, xj, qi, qj, bi, bj, si, sj, justTest);
     }
 
-    planeConvex(
-        planeShape,
-        convexShape,
-        planePosition,
-        convexPosition,
-        planeQuat,
-        convexQuat,
-        planeBody,
-        convexBody,
-        si,
-        sj,
-        justTest
+    planeConvex(planeShape:Plane,convexShape:ConvexPolyhedron,
+        planePosition:Vec3,  convexPosition:Vec3,
+        planeQuat:Quaternion,convexQuat:Quaternion,
+        planeBody:Body,convexBody:Body,
+        si:Shape, sj:Shape,
+        justTest:boolean
     ) {
         // Simply return the points behind the plane.
         const worldVertex = planeConvex_v;
@@ -1229,7 +1223,7 @@ export default class Narrowphase {
         }
     }
 
-    convexParticle(sj, si, xj, xi, qj, qi, bj, bi, rsi, rsj, justTest) {
+    convexParticle(sj:ConvexPolyhedron, si:Particle, xj:Vec3, xi:Vec3, qj:Quaternion, qi:Quaternion, bj:Body, bi:Body, rsi:Shape, rsj:Shape, justTest:boolean) {
         let penetratedFaceIndex = -1;
         const penetratedFaceNormal = convexParticle_penetratedFaceNormal;
         const worldPenetrationVec = convexParticle_worldPenetrationVec;
@@ -1510,20 +1504,6 @@ var tmpVec2 = new Vec3();
 var tmpQuat1 = new Quaternion();
 var tmpQuat2 = new Quaternion();
 
-let numWarnings = 0;
-const maxWarnings = 10;
-
-function warn(msg) {
-    if (numWarnings > maxWarnings) {
-        return;
-    }
-
-    numWarnings++;
-
-    console.warn(msg);
-}
-
-
 const planeTrimesh_normal = new Vec3();
 const planeTrimesh_relpos = new Vec3();
 const planeTrimesh_projected = new Vec3();
@@ -1553,7 +1533,7 @@ const plane_to_sphere_ortho = new Vec3();
 const pointInPolygon_edge = new Vec3();
 const pointInPolygon_edge_x_normal = new Vec3();
 const pointInPolygon_vtp = new Vec3();
-function pointInPolygon(verts, normal, p) {
+function pointInPolygon(verts:Vec3[], normal:Vec3, p:Vec3) {
     let positiveResult = null;
     const N = verts.length;
     for (let i = 0; i !== N; i++) {
