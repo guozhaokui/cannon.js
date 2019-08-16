@@ -104,7 +104,7 @@ function init() {
 
     //addBox(1,1,1,0,0,0);
     //addStack(0,0,2);
-    addSphere(1,0,7,0);
+    addSphere(0.1,0,7,0);
 }
 
 function setClickMarker(x,y,z) {

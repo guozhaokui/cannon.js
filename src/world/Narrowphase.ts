@@ -16,6 +16,7 @@ import Sphere from '../shapes/Sphere.js';
 import Plane from '../shapes/Plane.js';
 import Trimesh from '../shapes/Trimesh.js';
 import Particle from '../shapes/Particle.js';
+import ContactMaterial from '../material/ContactMaterial.js';
 
 var shapeChecks = [];
 
@@ -45,7 +46,7 @@ export default class Narrowphase {
     v3pool = new Vec3Pool();
 
     world: World;
-    currentContactMaterial = null;
+    currentContactMaterial:ContactMaterial = null;
 
     /**
      * @property {Boolean} enableFrictionReduction
@@ -243,11 +244,11 @@ export default class Narrowphase {
 
             const justTest = (
                 (
-                    (bi.type & Body.KINEMATIC) && (bj.type & Body.STATIC)
+                    (bi.type & Body.KINEMATIC) && (bj.type & Body.STATIC)   // Kinematic vs static
                 ) || (
-                    (bi.type & Body.STATIC) && (bj.type & Body.KINEMATIC)
+                    (bi.type & Body.STATIC) && (bj.type & Body.KINEMATIC)   // static vs kinematix
                 ) || (
-                    (bi.type & Body.KINEMATIC) && (bj.type & Body.KINEMATIC)
+                    (bi.type & Body.KINEMATIC) && (bj.type & Body.KINEMATIC)    // kinematic vs kinematic
                 )
             );
 
@@ -265,10 +266,12 @@ export default class Narrowphase {
                     xj.vadd(bj.position, xj);
                     const sj = bj.shapes[j];
 
+                    // 碰撞组判断
                     if (!((si.collisionFilterMask & sj.collisionFilterGroup) && (sj.collisionFilterMask & si.collisionFilterGroup))) {
                         continue;
                     }
 
+                    // 包围球判断
                     if (xi.distanceTo(xj) > si.boundingSphereRadius + sj.boundingSphereRadius) {
                         continue;
                     }
@@ -591,28 +594,30 @@ export default class Narrowphase {
         triangles.length = 0;
     }
 
+    private static nor1 = new Vec3();
     spherePlane(si:Sphere, sj:Plane, xi:Vec3, xj:Vec3, qi:Quaternion, qj:Quaternion, bi:Body, bj:Body, rsi:Shape, rsj:Shape, justTest:boolean) {
-        // We will have one contact in this case
-        const r = this.createContactEquation(bi, bj, si, sj, rsi, rsj);
-
-        // Contact normal
-        r.ni.set(0, 0, 1);
-        qj.vmult(r.ni, r.ni);
-        r.ni.negate(r.ni); // body i is the sphere, flip normal
-        r.ni.normalize(); // Needed?
-
-        // Vector from sphere center to contact point
-        r.ni.scale(si.radius, r.ri);
+        let ni = Narrowphase.nor1;  // 球的碰撞法线
+        // 平面的法线转换到平面的朝向上
+        ni.set(0,0,1);        
+        qj.vmult(ni, ni);
+        ni.negate(ni); // 由于是球的碰撞法线，所以颠倒一下 body i is the sphere, flip normal
+        ni.normalize(); // Needed?
 
         // Project down sphere on plane
         xi.vsub(xj, point_on_plane_to_sphere);
-        r.ni.scale(r.ni.dot(point_on_plane_to_sphere), plane_to_sphere_ortho);
-        point_on_plane_to_sphere.vsub(plane_to_sphere_ortho, r.rj); // The sphere position projected to plane
+        ni.scale(ni.dot(point_on_plane_to_sphere), plane_to_sphere_ortho);
 
-        if (-point_on_plane_to_sphere.dot(r.ni) <= si.radius) {
+        if (-point_on_plane_to_sphere.dot(ni) <= si.radius) {
             if (justTest) {
                 return true;
             }
+
+            const r = this.createContactEquation(bi, bj, si, sj, rsi, rsj);
+            r.ni.copy(ni);
+            // Vector from sphere center to contact point
+            // 球的碰撞点
+            ni.scale(si.radius, r.ri);
+            point_on_plane_to_sphere.vsub(plane_to_sphere_ortho, r.rj); // The sphere position projected to plane
 
             // Make it relative to the body
             const ri = r.ri;

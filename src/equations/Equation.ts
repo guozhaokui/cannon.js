@@ -41,6 +41,9 @@ export default class Equation {
 
     /**
      * Recalculates a,b,eps.
+     * @param stiffness 
+     * @param relaxation 
+     * @param timeStep      单位是秒
      */
     setSpookParams(stiffness: number, relaxation: number, timeStep: number) {
         const d = relaxation;

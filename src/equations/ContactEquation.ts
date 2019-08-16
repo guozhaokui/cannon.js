@@ -76,12 +76,12 @@ export default class ContactEquation extends Equation {
         penetrationVec.vadd(rj, penetrationVec);            // posj+rj
         penetrationVec.vsub(bi.position, penetrationVec);   // 
         penetrationVec.vsub(ri, penetrationVec);            // posi+ri - (posj+rj)
-        // g 是约束函数
+        // g 是约束函数.这里是约束函数的值。希望这个值>=0, <0表示插入了
         const g = n.dot(penetrationVec);                    // .n
 
         // Compute iteration
         const ePlusOne = this.restitution + 1;
-        const GW = ePlusOne * vj.dot(n) - ePlusOne * vi.dot(n) + wj.dot(rjxn) - wi.dot(rixn);
+        const GW = ePlusOne * (vj.dot(n) -  vi.dot(n)) + wj.dot(rjxn) - wi.dot(rixn); // = dg/dt 去掉第二部分，约等于这个
         const GiMf = this.computeGiMf();
 
         const B = - g * a - GW * b - h * GiMf;  //? TODO 为什么是 ga, g=Gq么。 Gq的计算没有考虑旋转部分，所以确实相等，这里需要继续理解

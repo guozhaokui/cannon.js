@@ -1,9 +1,6 @@
 
 /* global performance */
-
-
 import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
 import GSSolver from '../solver/GSSolver.js';
 import Narrowphase from './Narrowphase.js';
 import EventTarget from '../utils/EventTarget.js';
@@ -14,7 +11,6 @@ import ContactMaterial from '../material/ContactMaterial.js';
 import Body from '../objects/Body.js';
 import TupleDictionary from '../utils/TupleDictionary.js';
 import RaycastResult from '../collision/RaycastResult.js';
-import AABB from '../collision/AABB.js';
 import Ray from '../collision/Ray.js';
 import NaiveBroadphase from '../collision/NaiveBroadphase.js';
 import Broadphase from '../collision/Broadphase.js';
@@ -104,22 +100,20 @@ export default class World extends EventTarget {
     /**
      * All added materials
      */
-    materials = [];
+    materials:Material[] = [];
 
-    /**
-     * @property contactmaterials
-     */
-    contactmaterials = [];
+    contactmaterials:ContactMaterial[] = [];
 
     /**
      * Used to look up a ContactMaterial given two instances of Material.
      */
-    contactMaterialTable = new TupleDictionary();
+    contactMaterialTable = new TupleDictionary<ContactMaterial>();
 
     defaultMaterial = new Material("default");
 
     /**
      * This contact material is used if no suitable contactmaterial is found for a contact.
+     * 缺省材质
      */
     defaultContactMaterial = new ContactMaterial(this.defaultMaterial, this.defaultMaterial, { friction: 0.3, restitution: 0.0 });
 
@@ -158,7 +152,7 @@ export default class World extends EventTarget {
         body: null
     };
 
-    idToBodyMap = {};
+    idToBodyMap:{[id:string]:Body} = {};
 
     constructor(options?:any) {
         super();
