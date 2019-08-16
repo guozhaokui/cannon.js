@@ -1,20 +1,18 @@
-var Vec3 = require("../src/math/Vec3");
-var Mat3 = require("../src/math/Mat3");
-var Quaternion = require("../src/math/Quaternion");
-var Box = require('../src/shapes/Box');
-var Body = require('../src/objects/Body');
-var Sphere = require('../src/shapes/Sphere');
-var World = require('../src/world/World');
-var NaiveBroadphase = require('../src/collision/NaiveBroadphase');
-var ArrayCollisionMatrix = require('../src/collision/ArrayCollisionMatrix');
-var ObjectCollisionMatrix = require('../src/collision/ObjectCollisionMatrix');
-var RaycastResult = require('../src/collision/RaycastResult');
+import ArrayCollisionMatrix from '../src/collision/ArrayCollisionMatrix';
+import NaiveBroadphase from '../src/collision/NaiveBroadphase';
+import ObjectCollisionMatrix from '../src/collision/ObjectCollisionMatrix';
+import RaycastResult from '../src/collision/RaycastResult';
+import Vec3 from "../src/math/Vec3";
+import Body from '../src/objects/Body';
+import Box from '../src/shapes/Box';
+import Sphere from '../src/shapes/Sphere';
+import World from '../src/world/World';
 
-module.exports = {
+export default {
 
-    clearForces: function(test){
-        var world = new World();
-        var body = new Body();
+    clearForces(test) {
+        const world = new World();
+        const body = new Body();
         world.addBody(body);
         body.force.set(1,2,3);
         body.torque.set(4,5,6);
@@ -27,17 +25,17 @@ module.exports = {
         test.done();
     },
 
-    rayTestBox: function(test){
-        var world = new World();
+    rayTestBox(test) {
+        const world = new World();
 
-        var body = new Body();
+        const body = new Body();
         body.addShape(new Box(new Vec3(1, 1, 1)));
         world.addBody(body);
 
-        var from = new Vec3(-10, 0, 0);
-        var to = new Vec3(10, 0, 0);
+        const from = new Vec3(-10, 0, 0);
+        const to = new Vec3(10, 0, 0);
 
-        var result = new RaycastResult();
+        const result = new RaycastResult();
         world.rayTest(from, to, result);
 
         test.equal(result.hasHit, true);
@@ -45,17 +43,17 @@ module.exports = {
         test.done();
     },
 
-    rayTestSphere: function(test){
-        var world = new World();
+    rayTestSphere(test) {
+        const world = new World();
 
-        var body = new Body();
+        const body = new Body();
         body.addShape(new Sphere(1));
         world.addBody(body);
 
-        var from = new Vec3(-10, 0, 0);
-        var to = new Vec3(10, 0, 0);
+        const from = new Vec3(-10, 0, 0);
+        const to = new Vec3(10, 0, 0);
 
-        var result = new RaycastResult();
+        const result = new RaycastResult();
         world.rayTest(from, to, result);
 
         test.equal(result.hasHit, true);
@@ -64,17 +62,17 @@ module.exports = {
     },
 
     raycastClosest: {
-        single: function(test){
-            var world = new World();
-            var body = new Body({
+        single(test) {
+            const world = new World();
+            const body = new Body({
                 shape: new Sphere(1)
             });
             world.addBody(body);
 
-            var from = new Vec3(-10, 0, 0);
-            var to = new Vec3(10, 0, 0);
+            const from = new Vec3(-10, 0, 0);
+            const to = new Vec3(10, 0, 0);
 
-            var result = new RaycastResult();
+            const result = new RaycastResult();
             world.raycastClosest(from, to, {}, result);
 
             test.equal(result.hasHit, true);
@@ -84,17 +82,17 @@ module.exports = {
             test.done();
         },
 
-        order: function(test){
-            var world = new World();
-            var bodyA = new Body({ shape: new Sphere(1), position: new Vec3(-1,0,0) });
-            var bodyB = new Body({ shape: new Sphere(1), position: new Vec3(1,0,0) });
+        order(test) {
+            const world = new World();
+            const bodyA = new Body({ shape: new Sphere(1), position: new Vec3(-1,0,0) });
+            const bodyB = new Body({ shape: new Sphere(1), position: new Vec3(1,0,0) });
             world.addBody(bodyA);
             world.addBody(bodyB);
 
-            var from = new Vec3(-10, 0, 0);
-            var to = new Vec3(10, 0, 0);
+            const from = new Vec3(-10, 0, 0);
+            const to = new Vec3(10, 0, 0);
 
-            var result = new RaycastResult();
+            let result = new RaycastResult();
             world.raycastClosest(from, to, {}, result);
 
             test.equal(result.hasHit, true);
@@ -116,20 +114,20 @@ module.exports = {
     },
 
     raycastAll: {
-        simple: function(test){
-            var world = new World();
-            var body = new Body({ shape: new Sphere(1) });
+        simple(test) {
+            const world = new World();
+            const body = new Body({ shape: new Sphere(1) });
             world.addBody(body);
 
-            var from = new Vec3(-10, 0, 0);
-            var to = new Vec3(10, 0, 0);
+            const from = new Vec3(-10, 0, 0);
+            const to = new Vec3(10, 0, 0);
 
-            var hasHit;
-            var numResults=0;
-            var resultBody;
-            var resultShape;
+            let hasHit;
+            let numResults=0;
+            let resultBody;
+            let resultShape;
 
-            var returnVal = world.raycastAll(from, to, {}, function (result){
+            const returnVal = world.raycastAll(from, to, {}, result => {
                 hasHit = result.hasHit;
                 resultShape = result.shape;
                 resultBody = result.body;
@@ -145,24 +143,24 @@ module.exports = {
             test.done();
         },
 
-        twoSpheres: function(test){
+        twoSpheres(test) {
 
-            var world = new World();
-            var body = new Body({ shape: new Sphere(1) });
+            const world = new World();
+            const body = new Body({ shape: new Sphere(1) });
             world.addBody(body);
 
-            var body2 = new Body({ shape: new Sphere(1) });
+            const body2 = new Body({ shape: new Sphere(1) });
             world.addBody(body2);
 
-            var from = new Vec3(-10, 0, 0);
-            var to = new Vec3(10, 0, 0);
+            const from = new Vec3(-10, 0, 0);
+            const to = new Vec3(10, 0, 0);
 
-            var hasHit = false;
-            var numResults = 0;
-            var resultBody;
-            var resultShape;
+            let hasHit = false;
+            let numResults = 0;
+            let resultBody;
+            let resultShape;
 
-            world.raycastAll(from, to, {}, function (result){
+            world.raycastAll(from, to, {}, result => {
                 hasHit = result.hasHit;
                 resultShape = result.shape;
                 resultBody = result.body;
@@ -175,17 +173,17 @@ module.exports = {
             test.done();
         },
 
-        skipBackFaces: function(test){
-            var world = new World();
-            var body = new Body({ shape: new Sphere(1) });
+        skipBackFaces(test) {
+            const world = new World();
+            const body = new Body({ shape: new Sphere(1) });
             world.addBody(body);
 
-            var hasHit = false;
-            var numResults = 0;
-            var resultBody;
-            var resultShape;
+            let hasHit = false;
+            let numResults = 0;
+            let resultBody;
+            let resultShape;
 
-            world.raycastAll(new Vec3(-10, 0, 0), new Vec3(10, 0, 0), { skipBackfaces: true }, function (result){
+            world.raycastAll(new Vec3(-10, 0, 0), new Vec3(10, 0, 0), { skipBackfaces: true }, result => {
                 hasHit = result.hasHit;
                 resultShape = result.shape;
                 resultBody = result.body;
@@ -198,21 +196,21 @@ module.exports = {
             test.done();
         },
 
-        collisionFilters: function(test){
-            var world = new World();
-            var body = new Body({
+        collisionFilters(test) {
+            const world = new World();
+            const body = new Body({
                 shape: new Sphere(1)
             });
             world.addBody(body);
             body.collisionFilterGroup = 2;
             body.collisionFilterMask = 2;
 
-            var numResults = 0;
+            let numResults = 0;
 
             world.raycastAll(new Vec3(-10, 0, 0), new Vec3(10, 0, 0), {
                 collisionFilterGroup: 2,
                 collisionFilterMask: 2
-            }, function (result){
+            }, result => {
                 numResults++;
             });
 
@@ -223,7 +221,7 @@ module.exports = {
             world.raycastAll(new Vec3(-10, 0, 0), new Vec3(10, 0, 0), {
                 collisionFilterGroup: 1,
                 collisionFilterMask: 1
-            }, function (result){
+            }, result => {
                 numResults++;
             });
 
@@ -233,14 +231,14 @@ module.exports = {
         }
     },
 
-    raycastAny: function(test){
-        var world = new World();
+    raycastAny(test) {
+        const world = new World();
         world.addBody(new Body({ shape: new Sphere(1) }));
 
-        var from = new Vec3(-10, 0, 0);
-        var to = new Vec3(10, 0, 0);
+        const from = new Vec3(-10, 0, 0);
+        const to = new Vec3(10, 0, 0);
 
-        var result = new RaycastResult();
+        const result = new RaycastResult();
         world.raycastAny(from, to, {}, result);
 
         test.ok(result.hasHit);
@@ -248,9 +246,9 @@ module.exports = {
         test.done();
     },
 
-    collisionMatrix : function(test) {
+    collisionMatrix(test) {
         function testCollisionMatrix(CollisionMatrix) {
-            var test_configs = [
+            const test_configs = [
                 {
                     positions: [
                         [0,0,0],
@@ -299,41 +297,34 @@ module.exports = {
                 }
             ];
 
-            for (var config_idx = 0 ; config_idx < test_configs.length; config_idx++) {
-                var test_config = test_configs[config_idx];
+            for (let config_idx = 0 ; config_idx < test_configs.length; config_idx++) {
+                const test_config = test_configs[config_idx];
 
-                var world = new World();
+                const world = new World();
                 world.broadphase = new NaiveBroadphase();
                 world.collisionMatrix = new CollisionMatrix();
                 world.collisionMatrixPrevious = new CollisionMatrix();
 
-                for (var position_idx = 0; position_idx < test_config.positions.length; position_idx++) {
-                    var body = new Body({ mass: 1 });
+                for (let position_idx = 0; position_idx < test_config.positions.length; position_idx++) {
+                    const body = new Body({ mass: 1 });
                     body.addShape(new Sphere(1.1));
-                    body.position.set.apply(body.position, test_config.positions[position_idx]);
+                    body.position.set(...test_config.positions[position_idx]);
                     world.addBody(body);
                 }
 
-                for (var step_idx = 0; step_idx < 2; step_idx++) {
+                for (let step_idx = 0; step_idx < 2; step_idx++) {
                     world.step(0.1);
-                    var is_first_step = (step_idx === 0);
+                    const is_first_step = (step_idx === 0);
 
-                    for (var coll_i = 0; coll_i < world.bodies.length; coll_i++) {
-                        for (var coll_j = coll_i + 1; coll_j < world.bodies.length; coll_j++) {
-                            var is_colliding_pair = test_config.colliding[coll_i+'-'+coll_j] === true;
-                            var expected = is_colliding_pair;
-                            var is_colliding = is_first_step ?
+                    for (let coll_i = 0; coll_i < world.bodies.length; coll_i++) {
+                        for (let coll_j = coll_i + 1; coll_j < world.bodies.length; coll_j++) {
+                            const is_colliding_pair = test_config.colliding[`${coll_i}-${coll_j}`] === true;
+                            const expected = is_colliding_pair;
+                            const is_colliding = is_first_step ?
                                     !!world.collisionMatrix.get(world.bodies[coll_i], world.bodies[coll_j]) :
                                     !!world.collisionMatrixPrevious.get(world.bodies[coll_i], world.bodies[coll_j]);
                             test.ok(is_colliding === expected,
-                                    (expected ? "Should be colliding" : "Should not be colliding") +
-                                        ': cfg=' + config_idx +
-                                        ' is_first_step=' + is_first_step +
-                                        ' is_colliding_pair=' + is_colliding_pair +
-                                        ' expected=' + expected +
-                                        ' is_colliding=' + is_colliding +
-                                        ' i=' + coll_i +
-                                        ' j=' + coll_j);
+                                    `${expected ? "Should be colliding" : "Should not be colliding"}: cfg=${config_idx} is_first_step=${is_first_step} is_colliding_pair=${is_colliding_pair} expected=${expected} is_colliding=${is_colliding} i=${coll_i} j=${coll_j}`);
                         }
                     }
                 }

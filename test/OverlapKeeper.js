@@ -1,13 +1,13 @@
-var OverlapKeeper = require('../src/collision/OverlapKeeper');
+import OverlapKeeper from '../src/collision/OverlapKeeper';
 
-module.exports = {
-	construct: function(test){
+export default {
+	construct(test) {
 		new OverlapKeeper();
 		test.done();
 	},
 
-	set: function(test){
-		var keeper = new OverlapKeeper();
+	set(test) {
+		const keeper = new OverlapKeeper();
 
 		keeper.set(1, 2);
 		test.deepEqual(keeper.current, [keeper.getKey(1,2)]);
@@ -21,8 +21,8 @@ module.exports = {
 		test.done();
 	},
 
-	getDiff: function(test){
-		var keeper = new OverlapKeeper();
+	getDiff(test) {
+		const keeper = new OverlapKeeper();
 
 		keeper.set(1, 2);
 		keeper.set(3, 2);
@@ -34,8 +34,8 @@ module.exports = {
 		keeper.set(3, 2);
 		keeper.set(3, 1);
 
-		var additions = [];
-		var removals = [];
+		let additions = [];
+		let removals = [];
 		keeper.getDiff(additions, removals);
 
 		test.equal(additions.length, 0);

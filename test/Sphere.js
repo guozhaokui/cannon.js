@@ -1,13 +1,13 @@
-var Sphere = require('../src/shapes/Sphere');
+import Sphere from '../src/shapes/Sphere';
 
-module.exports = {
-    throwOnWrongRadius : function(test){
+export default {
+    throwOnWrongRadius(test) {
 
         // These should be all right
         new Sphere(1);
         new Sphere(0);
 
-        test.throws(function () {
+        test.throws(() => {
             new Sphere(-1);
         }, Error, 'Should throw on negative radius');
 

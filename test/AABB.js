@@ -1,28 +1,28 @@
-var AABB = require('../src/collision/AABB');
-var Vec3 = require('../src/math/Vec3');
-var Transform = require('../src/math/Transform');
+import AABB from '../src/collision/AABB';
+import Vec3 from '../src/math/Vec3';
+import Transform from '../src/math/Transform';
 
-module.exports = {
-    construct: function(test){
+export default {
+    construct(test) {
         new AABB();
         test.done();
     },
 
-    copy: function(test){
-        var a = new AABB(),
-            b = new AABB();
+    copy(test) {
+        const a = new AABB();
+        const b = new AABB();
         a.upperBound.set(1, 2, 3);
         b.copy(a);
         test.deepEqual(a, b);
         test.done();
     },
 
-    clone: function(test){
-        var a = new AABB({
+    clone(test) {
+        const a = new AABB({
             lowerBound: new Vec3(-1,-2,-3),
             upperBound: new Vec3(1,2,3)
         });
-        var b = a.clone();
+        const b = a.clone();
 
         test.deepEqual(a,b);
 
@@ -31,12 +31,12 @@ module.exports = {
         test.done();
     },
 
-    extend: function(test){
-        var a = new AABB({
+    extend(test) {
+        let a = new AABB({
             lowerBound: new Vec3(-1,-1,-1),
             upperBound: new Vec3(1,1,1)
         });
-        var b = new AABB({
+        let b = new AABB({
             lowerBound: new Vec3(-2,-2,-2),
             upperBound: new Vec3(2,2,2)
         });
@@ -70,9 +70,9 @@ module.exports = {
         test.done();
     },
 
-    overlaps: function(test){
-        var a = new AABB(),
-            b = new AABB();
+    overlaps(test) {
+        const a = new AABB();
+        const b = new AABB();
 
         // Same aabb
         a.lowerBound.set(-1, -1, 0);
@@ -106,9 +106,9 @@ module.exports = {
         test.done();
     },
 
-    contains: function(test){
-        var a = new AABB(),
-            b = new AABB();
+    contains(test) {
+        const a = new AABB();
+        const b = new AABB();
 
         a.lowerBound.set(-1, -1, -1);
         a.upperBound.set( 1,  1, 1);
@@ -137,10 +137,10 @@ module.exports = {
         test.done();
     },
 
-    toLocalFrame: function(test){
-        var worldAABB = new AABB();
-        var localAABB = new AABB();
-        var frame = new Transform();
+    toLocalFrame(test) {
+        const worldAABB = new AABB();
+        const localAABB = new AABB();
+        const frame = new Transform();
 
         worldAABB.lowerBound.set(-1, -1, -1);
         worldAABB.upperBound.set(1, 1, 1);
@@ -163,10 +163,10 @@ module.exports = {
         test.done();
     },
 
-    toWorldFrame: function(test){
-        var localAABB = new AABB();
-        var worldAABB = new AABB();
-        var frame = new Transform();
+    toWorldFrame(test) {
+        const localAABB = new AABB();
+        const worldAABB = new AABB();
+        const frame = new Transform();
 
         localAABB.lowerBound.set(-1, -1, -1);
         localAABB.upperBound.set(1, 1, 1);

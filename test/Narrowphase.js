@@ -1,24 +1,23 @@
-var Vec3 = require("../src/math/Vec3");
-var Quaternion = require("../src/math/Quaternion");
-var Box = require('../src/shapes/Box');
-var Heightfield = require('../src/shapes/heightfield');
-var Narrowphase = require('../src/world/Narrowphase');
-var Sphere = require('../src/shapes/Sphere');
-var Body = require('../src/objects/Body');
-var ContactMaterial = require('../src/material/ContactMaterial');
-var World = require('../src/world/World');
+import ContactMaterial from '../src/material/ContactMaterial';
+import Quaternion from "../src/math/Quaternion";
+import Vec3 from "../src/math/Vec3";
+import Body from '../src/objects/Body';
+import Heightfield from '../src/shapes/heightfield';
+import Sphere from '../src/shapes/Sphere';
+import Narrowphase from '../src/world/Narrowphase';
+import World from '../src/world/World';
 
-module.exports = {
+export default {
 
-    sphereSphere : function(test){
-        var world = new World();
-        var cg = new Narrowphase(world);
-        var result = [];
-        var sphereShape = new Sphere(1);
+    sphereSphere(test) {
+        const world = new World();
+        const cg = new Narrowphase(world);
+        const result = [];
+        const sphereShape = new Sphere(1);
 
-        var bodyA = new Body({ mass: 1 });
+        const bodyA = new Body({ mass: 1 });
         bodyA.addShape(sphereShape);
-        var bodyB = new Body({ mass: 1 });
+        const bodyB = new Body({ mass: 1 });
         bodyB.addShape(sphereShape);
 
         cg.currentContactMaterial = new ContactMaterial();
@@ -39,12 +38,12 @@ module.exports = {
         test.done();
     },
 
-    sphereHeightfield : function(test){
-        var world = new World();
-        var cg = new Narrowphase(world);
-        var result = [];
-        var hfShape = createHeightfield();
-        var sphereShape = new Sphere(0.1);
+    sphereHeightfield(test) {
+        const world = new World();
+        const cg = new Narrowphase(world);
+        const result = [];
+        const hfShape = createHeightfield();
+        const sphereShape = new Sphere(0.1);
         cg.currentContactMaterial = new ContactMaterial();
         cg.result = result;
         cg.sphereHeightfield(
@@ -67,15 +66,15 @@ module.exports = {
 };
 
 function createHeightfield(){
-    var matrix = [];
-    var size = 20;
-    for (var i = 0; i < size; i++) {
+    const matrix = [];
+    const size = 20;
+    for (let i = 0; i < size; i++) {
         matrix.push([]);
-        for (var j = 0; j < size; j++) {
+        for (let j = 0; j < size; j++) {
             matrix[i].push(0);
         }
     }
-    var hfShape = new Heightfield(matrix, {
+    const hfShape = new Heightfield(matrix, {
         elementSize: 1,
     });
 

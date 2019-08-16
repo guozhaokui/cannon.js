@@ -1,20 +1,18 @@
-var Vec3 =     require("../src/math/Vec3")
-,   Quaternion = require("../src/math/Quaternion")
-,   Box =      require('../src/shapes/Box')
-,   ConvexPolyhedron =      require('../src/shapes/ConvexPolyhedron')
+import Vec3 from "../src/math/Vec3";
+import Quaternion from "../src/math/Quaternion";
+import Box from '../src/shapes/Box';
+import ConvexPolyhedron from '../src/shapes/ConvexPolyhedron';
 
-function createBoxHull(size){
-    size = (size===undefined ? 0.5 : size);
-
-    var box = new Box(new Vec3(size,size,size));
+function createBoxHull(size = 0.5) {
+    const box = new Box(new Vec3(size,size,size));
     return box.convexPolyhedronRepresentation;
 }
 
-module.exports = {
-    calculateWorldAABB : function(test){
-        var poly = createPolyBox(1,1,1);
-        var min = new Vec3();
-        var max = new Vec3();
+export default {
+    calculateWorldAABB(test) {
+        const poly = createPolyBox(1,1,1);
+        const min = new Vec3();
+        const max = new Vec3();
         poly.calculateWorldAABB(new Vec3(1,0,0), // Translate 2 x in world
                                 new Quaternion(0,0,0,1),
                                 min,
@@ -26,15 +24,15 @@ module.exports = {
         test.done();
     },
 
-    clipFaceAgainstPlane : function(test){
-        var h = createBoxHull();
+    clipFaceAgainstPlane(test) {
+        const h = createBoxHull();
 
         // Four points 1 unit below the plane z=0 - we assume to get back 4
-        var inverts = [  new Vec3(-0.2,-0.2,-1),
+        let inverts = [  new Vec3(-0.2,-0.2,-1),
                          new Vec3(-0.2, 0.2,-1),
                          new Vec3( 0.2, 0.2,-1),
                          new Vec3( 0.2,-0.2,-1)];
-        var outverts=[];
+        let outverts=[];
         h.clipFaceAgainstPlane(inverts,outverts,new Vec3(0,0,1), 0.0);
         test.equal(outverts.length,4,"did not get the assumed 4 vertices");
         inverts=[];
@@ -46,28 +44,29 @@ module.exports = {
 
         // two points below, two over. We get four points back, though 2 of them are clipped to
         // the back of the  plane
-        var inverts2 = [new Vec3(-2, -2,  1),
+        const inverts2 = [new Vec3(-2, -2,  1),
                         new Vec3(-2,  2,  1),
                         new Vec3( 2,  2, -1),
                         new Vec3( 2, -2, -1)];
         outverts = [];
         h.clipFaceAgainstPlane(inverts2,outverts,new Vec3(0,0,1),0.0);
-        test.equal(outverts.length,4,"Expected 4 points back from clipping a quad with plane, got "+outverts.length);
+        test.equal(outverts.length,4,`Expected 4 points back from clipping a quad with plane, got ${outverts.length}`);
         test.done();
     },
 
-    clipFaceAgainstHull : function(test){
+    clipFaceAgainstHull(test) {
         // Create box
-        var hullA = createBoxHull(0.5);
-        var res = [];
-        var sepNormal = new Vec3(0,0,1);
+        const hullA = createBoxHull(0.5);
+        const res = [];
+        const sepNormal = new Vec3(0,0,1);
 
         // Move the box 0.45 units up - only 0.05 units of the box will be below plane z=0
-        var posA = new Vec3(0,0,0.45),
-            quatA = new Quaternion();
+        const posA = new Vec3(0,0,0.45);
+
+        const quatA = new Quaternion();
 
         // All points from B is in the plane z=0
-        var worldVertsB = [ new Vec3(-1.0,-1.0,0),
+        const worldVertsB = [ new Vec3(-1.0,-1.0,0),
                             new Vec3(-1.0, 1.0,0),
                             new Vec3( 1.0, 1.0,0),
                             new Vec3( 1.0,-1.0,0)];
@@ -80,18 +79,17 @@ module.exports = {
         test.done();
     },
 
-    clipAgainstHull : function(test){
-        var hullA = createBoxHull(0.6),
-            posA = new Vec3(-0.5,0,0),
-            quatA = new Quaternion();
+    clipAgainstHull(test) {
+        const hullA = createBoxHull(0.6);
+        const posA = new Vec3(-0.5,0,0);
+        const quatA = new Quaternion();
+        const hullB = createBoxHull(0.5);
+        const posB = new Vec3(0.5,0,0);
+        const quatB = new Quaternion();
 
-        var hullB = createBoxHull(0.5),
-            posB = new Vec3(0.5,0,0),
-            quatB = new Quaternion();
-
-        var sepaxis = new Vec3();
-        var found = hullA.findSeparatingAxis(hullB,posA,quatA,posB,quatB,sepaxis);
-        var result = [];
+        const sepaxis = new Vec3();
+        const found = hullA.findSeparatingAxis(hullB,posA,quatA,posB,quatB,sepaxis);
+        const result = [];
         //hullA.clipAgainstHull(posA,quatA,hullB,posB,quatB,sepaxis,-100,100,result);
         quatB.setFromAxisAngle(new Vec3(0,0,1),Math.PI/4);
         //console.log("clipping....");
@@ -101,61 +99,59 @@ module.exports = {
         test.done();
     },
 
-    testSepAxis : function(test){
+    testSepAxis(test) {
         test.expect(3);
-        var hullA = createBoxHull(0.5),
-        posA = new Vec3(-0.2,0,0),
-        quatA = new Quaternion();
+        const hullA = createBoxHull(0.5);
+        const posA = new Vec3(-0.2,0,0);
+        const quatA = new Quaternion();
+        const hullB = createBoxHull();
+        const posB = new Vec3(0.2,0,0);
+        const quatB = new Quaternion();
 
-        var hullB = createBoxHull(),
-        posB = new Vec3(0.2,0,0),
-        quatB = new Quaternion();
-
-        var sepAxis = new Vec3(1,0,0);
-        var found1 = hullA.testSepAxis(sepAxis,hullB,posA,quatA,posB,quatB);
+        const sepAxis = new Vec3(1,0,0);
+        const found1 = hullA.testSepAxis(sepAxis,hullB,posA,quatA,posB,quatB);
         test.equal(found1,0.6,"didnt find sep axis depth");
 
         // Move away
         posA.x = -5;
-        var found2 = hullA.testSepAxis(sepAxis,hullB,posA,quatA,posB,quatB);
+        const found2 = hullA.testSepAxis(sepAxis,hullB,posA,quatA,posB,quatB);
         test.equal(found2,false,"found separating axis though there are none");
 
         // Inclined 45 degrees, what happens then?
         posA.x = 1;
         quatB.setFromAxisAngle(new Vec3(0,0,1),Math.PI/4);
-        var found3 = hullA.testSepAxis(sepAxis,hullB,posA,quatA,posB,quatB);
+        const found3 = hullA.testSepAxis(sepAxis,hullB,posA,quatA,posB,quatB);
         test.ok(typeof(found3),"number","Did not fetch");
 
         test.done();
     },
 
-    findSepAxis : function(test){
-        var hullA = createBoxHull(),
-            posA = new Vec3(-0.2,0,0),
-            quatA = new Quaternion();
+    findSepAxis(test) {
+        const hullA = createBoxHull();
+        const posA = new Vec3(-0.2,0,0);
+        const quatA = new Quaternion();
+        const hullB = createBoxHull();
+        const posB = new Vec3(0.2,0,0);
+        const quatB = new Quaternion();
 
-        var hullB = createBoxHull(),
-            posB = new Vec3(0.2,0,0),
-            quatB = new Quaternion();
-
-        var sepaxis = new Vec3();
-        var found = hullA.findSeparatingAxis(hullB,posA,quatA,posB,quatB,sepaxis);
+        const sepaxis = new Vec3();
+        const found = hullA.findSeparatingAxis(hullB,posA,quatA,posB,quatB,sepaxis);
         //console.log("SepAxis found:",found,", the axis:",sepaxis.toString());
 
         quatB.setFromAxisAngle(new Vec3(0,0,1),Math.PI/4);
-        var found2 = hullA.findSeparatingAxis(hullB,posA,quatA,posB,quatB,sepaxis);
+        const found2 = hullA.findSeparatingAxis(hullB,posA,quatA,posB,quatB,sepaxis);
         //console.log("SepAxis found:",found2,", the axis:",sepaxis.toString());
 
         test.done();
     },
 
-    project : function(test){
-        var convex = createBoxHull(0.5),
-            pos = new Vec3(0, 0, 0),
-            quat = new Quaternion();
+    project(test) {
+        const convex = createBoxHull(0.5);
+        const pos = new Vec3(0, 0, 0);
+        const quat = new Quaternion();
 
-        var axis = new Vec3(1, 0, 0);
-        var result = [];
+        const axis = new Vec3(1, 0, 0);
+        const result = [];
 
         ConvexPolyhedron.project(convex, axis, pos, quat, result);
         test.deepEqual(result, [0.5, -0.5]);
@@ -188,7 +184,7 @@ module.exports = {
 };
 
 function createPolyBox(sx,sy,sz){
-    var v = Vec3;
-    var box = new Box(new Vec3(sx,sy,sz));
+    const v = Vec3;
+    const box = new Box(new Vec3(sx,sy,sz));
     return box.convexPolyhedronRepresentation;
 }

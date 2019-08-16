@@ -1,22 +1,20 @@
-var Vec3 = require("../src/math/Vec3");
-var Quaternion = require("../src/math/Quaternion");
-var Box = require('../src/shapes/Box');
-var Plane = require('../src/shapes/Plane');
-var Body = require('../src/objects/Body');
-var RaycastVehicle = require('../src/objects/RaycastVehicle');
-var World = require('../src/world/World');
+import Vec3 from "../src/math/Vec3";
+import Body from '../src/objects/Body';
+import RaycastVehicle from '../src/objects/RaycastVehicle';
+import Plane from '../src/shapes/Plane';
+import World from '../src/world/World';
 
-module.exports = {
+export default {
 
-    construct: function(test) {
-        var vehicle = new RaycastVehicle({
+    construct(test) {
+        const vehicle = new RaycastVehicle({
             chassisBody: new Body()
         });
         test.done();
     },
 
-    addWheel: function(test) {
-        var vehicle = new RaycastVehicle({
+    addWheel(test) {
+        const vehicle = new RaycastVehicle({
             chassisBody: new Body()
         });
         vehicle.addWheel({});
@@ -24,8 +22,8 @@ module.exports = {
         test.done();
     },
 
-    addWheel: function(test) {
-        var vehicle = new RaycastVehicle({
+    addWheel(test) {
+        const vehicle = new RaycastVehicle({
             chassisBody: new Body()
         });
         vehicle.addWheel({});
@@ -35,51 +33,51 @@ module.exports = {
         test.done();
     },
 
-    setSteeringValue: function(test){
-        var vehicle = createVehicle();
+    setSteeringValue(test) {
+        const vehicle = createVehicle();
         vehicle.setSteeringValue(Math.PI / 4, 0);
         test.done();
     },
 
-    applyEngineForce: function(test){
-        var vehicle = createVehicle();
+    applyEngineForce(test) {
+        const vehicle = createVehicle();
         vehicle.applyEngineForce(1000, 0);
         test.done();
     },
 
-    setBrake: function(test){
-        var vehicle = createVehicle();
+    setBrake(test) {
+        const vehicle = createVehicle();
         vehicle.applyEngineForce(1000, 0);
         test.done();
     },
 
-    updateSuspension: function(test){
-        var vehicle = createVehicle();
+    updateSuspension(test) {
+        const vehicle = createVehicle();
         vehicle.updateSuspension(1 / 60);
         test.done();
     },
 
-    updateFriction: function(test){
-        var vehicle = createVehicle();
+    updateFriction(test) {
+        const vehicle = createVehicle();
         vehicle.updateFriction(1 / 60);
         test.done();
     },
 
-    updateWheelTransform: function(test){
-        var vehicle = createVehicle();
+    updateWheelTransform(test) {
+        const vehicle = createVehicle();
         vehicle.updateWheelTransform(0);
         test.done();
     },
 
-    updateVehicle: function(test){
-        var vehicle = createVehicle();
+    updateVehicle(test) {
+        const vehicle = createVehicle();
         vehicle.updateVehicle(1 / 60);
         test.done();
     },
 
-    getVehicleAxisWorld: function(test){
-        var vehicle = createVehicle();
-        var v = new Vec3();
+    getVehicleAxisWorld(test) {
+        const vehicle = createVehicle();
+        const v = new Vec3();
 
         vehicle.getVehicleAxisWorld(0, v);
         test.deepEqual(v, new Vec3(1, 0, 0));
@@ -93,18 +91,18 @@ module.exports = {
         test.done();
     },
 
-    removeFromWorld: function(test){
-        var world = new World();
-        var vehicle = new RaycastVehicle({
+    removeFromWorld(test) {
+        const world = new World();
+        const vehicle = new RaycastVehicle({
             chassisBody: new Body({ mass: 1 })
         });
 
         vehicle.addToWorld(world);
-        test.ok(world.bodies.indexOf(vehicle.chassisBody) !== -1);
+        test.ok(world.bodies.includes(vehicle.chassisBody));
         test.ok(world.hasEventListener('preStep', vehicle.preStepCallback));
 
         vehicle.removeFromWorld(world);
-        test.ok(world.bodies.indexOf(vehicle.chassisBody) === -1);
+        test.ok(!world.bodies.includes(vehicle.chassisBody));
         test.ok(!world.hasEventListener('preStep', vehicle.preStepCallback));
 
         test.done();
@@ -113,13 +111,13 @@ module.exports = {
 
 
 function createVehicle(){
-    var vehicle = new RaycastVehicle({
+    const vehicle = new RaycastVehicle({
         chassisBody: new Body({
             mass: 1
         })
     });
-    var down = new Vec3(0, 0, -1);
-    var info = {
+    const down = new Vec3(0, 0, -1);
+    const info = {
         chassisConnectionPointLocal: new Vec3(-5, -1 / 2, 0),
         axleLocal: new Vec3(0, -1, 0),
         directionLocal: down,
@@ -128,8 +126,8 @@ function createVehicle(){
     };
     vehicle.addWheel(info);
 
-    var world = new World();
-    var planeBody = new Body();
+    const world = new World();
+    const planeBody = new Body();
     planeBody.position.z = -1;
     planeBody.addShape(new Plane());
     world.addBody(planeBody);

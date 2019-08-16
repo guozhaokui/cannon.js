@@ -1,7 +1,7 @@
-var TupleDictionary = require('../src/utils/TupleDictionary');
+import TupleDictionary from '../src/utils/TupleDictionary';
 
-exports.set = function(test){
-    var t = new TupleDictionary();
+export function set(test) {
+    const t = new TupleDictionary();
 
     t.set(1,2,'lol');
     test.equal(t.data['1-2'],'lol');
@@ -10,10 +10,10 @@ exports.set = function(test){
     test.equal(t.data['1-2'],'lol2');
 
     test.done();
-};
+}
 
-exports.get = function(test){
-    var t = new TupleDictionary();
+export function get(test) {
+    const t = new TupleDictionary();
 
     t.set(1,2,'1');
     t.set(3,2,'2');
@@ -25,11 +25,11 @@ exports.get = function(test){
     test.equal(t.data['2-3'],t.get(3,2));
 
     test.done();
-};
+}
 
-exports.reset = function(test){
-    var t = new TupleDictionary(),
-        empty = new TupleDictionary();
+export function reset(test) {
+    const t = new TupleDictionary();
+    const empty = new TupleDictionary();
 
     t.reset();
     t.set(1,2,'1');
@@ -37,4 +37,4 @@ exports.reset = function(test){
     test.deepEqual(t.data,empty.data);
 
     test.done();
-};
+}

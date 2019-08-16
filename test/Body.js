@@ -1,14 +1,13 @@
-var Vec3 =     require("../src/math/Vec3");
-var Mat3 =     require("../src/math/Mat3");
-var Quaternion = require("../src/math/Quaternion");
-var Box =      require('../src/shapes/Box');
-var Sphere =      require('../src/shapes/Sphere');
-var Body =      require('../src/objects/Body');
+import Quaternion from "../src/math/Quaternion";
+import Vec3 from "../src/math/Vec3";
+import Body from '../src/objects/Body';
+import Box from '../src/shapes/Box';
+import Sphere from '../src/shapes/Sphere';
 
-module.exports = {
+export default {
     computeAABB : {
-        box: function(test){
-            var body = new Body({ mass: 1 });
+        box(test) {
+            const body = new Body({ mass: 1 });
             body.addShape(new Box(new Vec3(1,1,1)));
             body.computeAABB();
             test.equal(body.aabb.lowerBound.x,-1);
@@ -26,10 +25,10 @@ module.exports = {
 
             test.done();
         },
-        boxOffset: function(test){
-            var quaternion = new Quaternion();
+        boxOffset(test) {
+            const quaternion = new Quaternion();
             quaternion.setFromAxisAngle(new Vec3(0,0,1), Math.PI / 2);
-            var body = new Body({ mass: 1 });
+            const body = new Body({ mass: 1 });
             body.addShape(new Box(new Vec3(1,1,1)), new Vec3(1,1,1));
             body.computeAABB();
             test.equal(body.aabb.lowerBound.x,0);
@@ -49,40 +48,40 @@ module.exports = {
         }
     },
 
-    updateInertiaWorld : function(test){
-        var body = new Body({ mass: 1 });
+    updateInertiaWorld(test) {
+        const body = new Body({ mass: 1 });
         body.addShape(new Box(new Vec3(1,1,1)));
         body.quaternion.setFromEuler(Math.PI/2,0,0);
         body.updateInertiaWorld();
         test.done();
     },
 
-    pointToLocalFrame : function(test){
-        var body = new Body({ mass: 1 });
+    pointToLocalFrame(test) {
+        const body = new Body({ mass: 1 });
         body.addShape(new Sphere(1));
         body.position.set(1,2,2);
-        var localPoint = body.pointToLocalFrame(new Vec3(1,2,3));
+        const localPoint = body.pointToLocalFrame(new Vec3(1,2,3));
         test.ok(localPoint.almostEquals(new Vec3(0,0,1)));
         test.done();
     },
 
-    pointToWorldFrame : function(test){
-        var body = new Body({ mass: 1 });
+    pointToWorldFrame(test) {
+        const body = new Body({ mass: 1 });
         body.addShape(new Sphere(1));
         body.position.set(1,2,2);
-        var worldPoint = body.pointToWorldFrame(new Vec3(1,0,0));
+        const worldPoint = body.pointToWorldFrame(new Vec3(1,0,0));
         test.ok(worldPoint.almostEquals(new Vec3(2,2,2)));
         test.done();
     },
 
-    addShape : function(test){
-        var sphereShape = new Sphere(1);
+    addShape(test) {
+        const sphereShape = new Sphere(1);
 
-        var bodyA = new Body({
+        const bodyA = new Body({
             mass: 1,
             shape: sphereShape
         });
-        var bodyB = new Body({
+        const bodyB = new Body({
             mass: 1
         });
         bodyB.addShape(sphereShape);
@@ -93,15 +92,15 @@ module.exports = {
         test.done();
     },
 
-    applyForce : function(test){
-        var sphereShape = new Sphere(1);
-        var body = new Body({
+    applyForce(test) {
+        const sphereShape = new Sphere(1);
+        const body = new Body({
             mass: 1,
             shape: sphereShape
         });
 
-        var worldPoint = new Vec3(1,0,0);
-        var forceVector = new Vec3(0,1,0);
+        const worldPoint = new Vec3(1,0,0);
+        const forceVector = new Vec3(0,1,0);
         body.applyForce(forceVector, worldPoint);
         test.deepEqual(body.force, forceVector);
         test.deepEqual(body.torque, new Vec3(0,0,1));
@@ -109,33 +108,33 @@ module.exports = {
         test.done();
     },
 
-    applyLocalForce : function(test){
-        var sphereShape = new Sphere(1);
-        var body = new Body({
+    applyLocalForce(test) {
+        const sphereShape = new Sphere(1);
+        const body = new Body({
             mass: 1,
             shape: sphereShape
         });
         body.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
 
-        var localPoint = new Vec3(1,0,0);
-        var localForceVector = new Vec3(0,1,0);
+        const localPoint = new Vec3(1,0,0);
+        const localForceVector = new Vec3(0,1,0);
         body.applyLocalForce(localForceVector, localPoint);
         test.ok(body.force.almostEquals(new Vec3(0,0,1))); // The force is rotated to world space
 
         test.done();
     },
 
-    applyImpulse : function(test){
-        var sphereShape = new Sphere(1);
-        var body = new Body({
+    applyImpulse(test) {
+        const sphereShape = new Sphere(1);
+        const body = new Body({
             mass: 1,
             shape: sphereShape
         });
 
-        var f = 1000;
-        var dt = 1 / 60;
-        var worldPoint = new Vec3(0,0,0);
-        var impulse = new Vec3(f*dt,0,0);
+        const f = 1000;
+        const dt = 1 / 60;
+        const worldPoint = new Vec3(0,0,0);
+        const impulse = new Vec3(f*dt,0,0);
         body.applyImpulse(impulse, worldPoint);
 
         test.ok(body.velocity.almostEquals(new Vec3(f*dt,0,0)));
@@ -143,18 +142,18 @@ module.exports = {
         test.done();
     },
 
-    applyLocalImpulse : function(test){
-        var sphereShape = new Sphere(1);
-        var body = new Body({
+    applyLocalImpulse(test) {
+        const sphereShape = new Sphere(1);
+        const body = new Body({
             mass: 1,
             shape: sphereShape
         });
         body.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
 
-        var f = 1000;
-        var dt = 1 / 60;
-        var localPoint = new Vec3(1,0,0);
-        var localImpulseVector = new Vec3(0,f*dt,0);
+        const f = 1000;
+        const dt = 1 / 60;
+        const localPoint = new Vec3(1,0,0);
+        const localImpulseVector = new Vec3(0,f*dt,0);
         body.applyLocalImpulse(localImpulseVector, localPoint);
         test.ok(body.velocity.almostEquals(new Vec3(0,0,f*dt))); // The force is rotated to world space
 

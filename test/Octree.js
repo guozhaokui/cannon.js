@@ -1,26 +1,25 @@
-var Octree = require('../src/utils/Octree');
-var AABB = require('../src/collision/AABB');
-var Vec3 = require('../src/math/Vec3');
-var Transform = require('../src/math/Transform');
+import AABB from '../src/collision/AABB';
+import Vec3 from '../src/math/Vec3';
+import Octree from '../src/utils/Octree';
 
-module.exports = {
-    construct: function(test){
-        var tree = new Octree(new AABB());
+export default {
+    construct(test) {
+        const tree = new Octree(new AABB());
         test.done();
     },
 
-    insertRoot: function(test){
-        var aabb = new AABB({
+    insertRoot(test) {
+        const aabb = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(1, 1, 1)
         });
-        var tree = new Octree(aabb);
+        const tree = new Octree(aabb);
 
-        var nodeAABB = new AABB({
+        const nodeAABB = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(1, 1, 1)
         });
-        var nodeData = 123;
+        const nodeData = 123;
         tree.insert(nodeAABB, nodeData);
 
         // Should end up in root node and not children
@@ -29,20 +28,20 @@ module.exports = {
         test.done();
     },
 
-    insertDeep: function(test){
-        var aabb = new AABB({
+    insertDeep(test) {
+        const aabb = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(1, 1, 1)
         });
-        var tree = new Octree(aabb,{
+        const tree = new Octree(aabb,{
             maxDepth: 8
         });
 
-        var nodeAABB = new AABB({
+        const nodeAABB = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(-1, -1, -1)
         });
-        var nodeData = 123;
+        const nodeData = 123;
 
         tree.insert(nodeAABB, nodeData);
 
@@ -63,32 +62,32 @@ module.exports = {
         test.done();
     },
 
-    aabbQuery: function(test){
-        var aabb = new AABB({
+    aabbQuery(test) {
+        const aabb = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(1, 1, 1)
         });
-        var tree = new Octree(aabb);
+        const tree = new Octree(aabb);
 
-        var nodeAABB = new AABB({
+        const nodeAABB = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(1, 1, 1)
         });
-        var nodeData = 123;
+        const nodeData = 123;
 
         tree.insert(nodeAABB, nodeData);
 
-        var result = [];
+        let result = [];
         tree.aabbQuery(aabb, result);
 
         test.deepEqual(result, [123]);
 
 
-        var nodeAABB2 = new AABB({
+        const nodeAABB2 = new AABB({
             lowerBound: new Vec3(-1, -1, -1),
             upperBound: new Vec3(-1, -1, -1)
         });
-        var nodeData2 = 456;
+        const nodeData2 = 456;
         tree.insert(nodeAABB2, nodeData2);
 
         result = [];

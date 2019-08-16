@@ -1,12 +1,12 @@
-var Vec3 = require('../src/math/Vec3');
-var LockConstraint = require('../src/constraints/LockConstraint');
-var Body = require('../src/objects/Body');
+import Vec3 from '../src/math/Vec3';
+import LockConstraint from '../src/constraints/LockConstraint';
+import Body from '../src/objects/Body';
 
-module.exports = {
-    construct: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new LockConstraint(bodyA, bodyB, { maxForce: 123 });
+export default {
+    construct(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new LockConstraint(bodyA, bodyB, { maxForce: 123 });
 
         test.equal(c.equations.length, 6);
 
@@ -27,10 +27,10 @@ module.exports = {
         test.done();
     },
 
-    update: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new LockConstraint(bodyA, bodyB, { maxForce: 123 });
+    update(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new LockConstraint(bodyA, bodyB, { maxForce: 123 });
 
         c.update();
 

@@ -1,12 +1,12 @@
-var Vec3 = require('../src/math/Vec3');
-var HingeConstraint = require('../src/constraints/HingeConstraint');
-var Body = require('../src/objects/Body');
+import Vec3 from '../src/math/Vec3';
+import HingeConstraint from '../src/constraints/HingeConstraint';
+import Body from '../src/objects/Body';
 
-module.exports = {
-    construct: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new HingeConstraint(bodyA, bodyB, { maxForce: 123 });
+export default {
+    construct(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new HingeConstraint(bodyA, bodyB, { maxForce: 123 });
 
         test.equal(c.equations.length, 6); // 5 actually, and 1 for the motor
 
@@ -27,20 +27,20 @@ module.exports = {
         test.done();
     },
 
-    update: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new HingeConstraint(bodyA, bodyB, { maxForce: 123 });
+    update(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new HingeConstraint(bodyA, bodyB, { maxForce: 123 });
 
         c.update();
 
         test.done();
     },
 
-    enableDisableMotor: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new HingeConstraint(bodyA, bodyB);
+    enableDisableMotor(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new HingeConstraint(bodyA, bodyB);
 
         c.enableMotor();
 
@@ -53,10 +53,10 @@ module.exports = {
         test.done();
     },
 
-    setMotorSpeed: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new HingeConstraint(bodyA, bodyB);
+    setMotorSpeed(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new HingeConstraint(bodyA, bodyB);
 
         c.setMotorSpeed(5);
         test.equal(c.motorEquation.targetVelocity, 5);
@@ -64,10 +64,10 @@ module.exports = {
         test.done();
     },
 
-    setMotorMaxForce: function(test){
-        var bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
-        var bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
-        var c = new HingeConstraint(bodyA, bodyB);
+    setMotorMaxForce(test) {
+        const bodyA = new Body({ mass: 1, position: new Vec3(1, 0, 0) });
+        const bodyB = new Body({ mass: 1, position: new Vec3(-1, 0, 0) });
+        const c = new HingeConstraint(bodyA, bodyB);
 
         c.setMotorMaxForce(100);
         test.equal(c.motorEquation.maxForce, 100);

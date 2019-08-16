@@ -1,12 +1,10 @@
-var Vec3 =     require("../src/math/Vec3")
-,   Mat3 =     require("../src/math/Mat3")
-,   Quaternion = require("../src/math/Quaternion")
+import Vec3 from "../src/math/Vec3.js";
 
-module.exports = {
-    creation : function(test) {
+export default {
+    creation(test) {
         test.expect(3);
 
-        var v = new Vec3(1, 2, 3);
+        const v = new Vec3(1, 2, 3);
         test.equal(v.x, 1, "Creating a vec3 should set the first parameter to the x value");
         test.equal(v.y, 2, "Creating a vec3 should set the second parameter to the y value");
         test.equal(v.z, 3, "Creating a vec3 should set the third parameter to the z value");
@@ -14,11 +12,11 @@ module.exports = {
         test.done();
     },
 
-    cross : function(test) {
+    cross(test) {
         test.expect(3);
 
-        var v = new Vec3(1, 2, 3);
-        var u = new Vec3(4, 5, 6);
+        let v = new Vec3(1, 2, 3);
+        const u = new Vec3(4, 5, 6);
         v = v.cross(u);
 
         test.equal(v.x, -3, "Calculating cross product x");
@@ -28,12 +26,12 @@ module.exports = {
         test.done();
     },
 
-    dot : function(test) {
+    dot(test) {
         test.expect(2);
 
-        var v = new Vec3(1, 2, 3);
-        var u = new Vec3(4, 5, 6);
-        var dot = v.dot(u);
+        let v = new Vec3(1, 2, 3);
+        let u = new Vec3(4, 5, 6);
+        let dot = v.dot(u);
 
         test.equal(dot, 4 + 10 + 18, "Calculating dot product x");
 
@@ -46,10 +44,10 @@ module.exports = {
         test.done();
     },
 
-    set : function(test) {
+    set(test) {
         test.expect(3);
 
-        var v = new Vec3(1, 2, 3);
+        const v = new Vec3(1, 2, 3);
         v.set(4, 5, 6);
 
         test.equal(v.x, 4, "Setting values from x, y, z");
@@ -59,11 +57,11 @@ module.exports = {
         test.done();
     },
 
-    vadd : function(test) {
+    vadd(test) {
         test.expect(3);
 
-        var v = new Vec3(1, 2, 3);
-        var u = new Vec3(4, 5, 6);
+        let v = new Vec3(1, 2, 3);
+        const u = new Vec3(4, 5, 6);
         v = v.vadd(u);
 
         test.equal(v.x, 5, "Adding a vector (x)");
@@ -73,12 +71,12 @@ module.exports = {
         test.done();
     },
 
-    isAntiparallelTo : function(test){
+    isAntiparallelTo(test) {
         test.ok(new Vec3(1,0,0).isAntiparallelTo(new Vec3(-1,0,0)));
         test.done();
     },
 
-    almostEquals : function(test){
+    almostEquals(test) {
         test.ok(new Vec3(1,0,0).almostEquals(new Vec3(1,0,0)));
         test.done();
     },

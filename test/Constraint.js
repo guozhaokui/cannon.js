@@ -1,20 +1,20 @@
-var Constraint = require('../src/constraints/Constraint');
-var Equation = require('../src/equations/Equation');
-var Body = require('../src/objects/Body');
+import Constraint from '../src/constraints/Constraint';
+import Equation from '../src/equations/Equation';
+import Body from '../src/objects/Body';
 
-module.exports = {
-    construct: function(test){
-        var bodyA = new Body();
-        var bodyB = new Body();
+export default {
+    construct(test) {
+        const bodyA = new Body();
+        const bodyB = new Body();
         new Constraint(bodyA, bodyB);
         test.done();
     },
 
-    enable: function(test){
-        var bodyA = new Body();
-        var bodyB = new Body();
-        var c = new Constraint(bodyA, bodyB);
-        var eq = new Equation(bodyA, bodyB);
+    enable(test) {
+        const bodyA = new Body();
+        const bodyB = new Body();
+        const c = new Constraint(bodyA, bodyB);
+        const eq = new Equation(bodyA, bodyB);
         c.equations.push(eq);
 
         c.enable();

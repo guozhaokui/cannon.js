@@ -1,12 +1,11 @@
-var Vec3 =     require("../src/math/Vec3")
-,   Mat3 =     require("../src/math/Mat3")
-,   Quaternion = require("../src/math/Quaternion")
+import Quaternion from "../src/math/Quaternion";
+import Vec3 from "../src/math/Vec3";
 
-module.exports = {
-    creation : function(test) {
+export default {
+    creation(test) {
         test.expect(4);
 
-        var q = new Quaternion(1, 2, 3, 4);
+        const q = new Quaternion(1, 2, 3, 4);
         test.equal(q.x, 1, "Creating should set the first parameter to the x value");
         test.equal(q.y, 2, "Creating should set the second parameter to the y value");
         test.equal(q.z, 3, "Creating should set the third parameter to the z value");
@@ -15,10 +14,10 @@ module.exports = {
         test.done();
     },
 
-    conjugate : function(test) {
+    conjugate(test) {
         test.expect(4);
 
-        var q = new Quaternion(1, 2, 3, 4);
+        const q = new Quaternion(1, 2, 3, 4);
         q.conjugate(q);
         test.equal(q.x, -1, ".conjugate() should negate x");
         test.equal(q.y, -2, ".conjugate() should negate y");
@@ -28,11 +27,11 @@ module.exports = {
         test.done();
     },
 
-    inverse : function(test) {
+    inverse(test) {
         test.expect(4);
 
-        var q = new Quaternion(1, 2, 3, 4);
-        var denominator = 1*1 + 2*2 + 3*3 + 4*4;
+        const q = new Quaternion(1, 2, 3, 4);
+        const denominator = 1*1 + 2*2 + 3*3 + 4*4;
         q.inverse(q);
 
         // Quaternion inverse is conj(q) / ||q||^2
@@ -44,24 +43,24 @@ module.exports = {
         test.done();
     } ,
 
-    toEuler : function(test) {
+    toEuler(test) {
         test.expect(3);
 
-        var q = new Quaternion();
+        const q = new Quaternion();
         q.setFromAxisAngle(new Vec3(0,0,1),Math.PI/4);
-        var euler = new Vec3();
+        const euler = new Vec3();
         q.toEuler(euler);
 
         // we should expect (0,0,pi/4)
-        test.equal(euler.x, 0, "euler x should be zero, got "+euler.x);
-        test.equal(euler.y, 0, "euler y should be yero, got "+euler.y);
-        test.ok(Math.abs(euler.z-Math.PI/4)<0.001, "euler z should be "+(Math.PI/4)+", got "+euler.z);
+        test.equal(euler.x, 0, `euler x should be zero, got ${euler.x}`);
+        test.equal(euler.y, 0, `euler y should be yero, got ${euler.y}`);
+        test.ok(Math.abs(euler.z-Math.PI/4)<0.001, `euler z should be ${Math.PI/4}, got ${euler.z}`);
 
         test.done();
     },
 
-    setFromVectors : function(test){
-        var q = new Quaternion();
+    setFromVectors(test) {
+        const q = new Quaternion();
         q.setFromVectors(new Vec3(1,0,0),new Vec3(-1,0,0));
         test.ok( q.vmult(new Vec3(1,0,0)).almostEquals(new Vec3(-1,0,0)) );
 
@@ -74,9 +73,9 @@ module.exports = {
         test.done();
     },
 
-    slerp: function(test){
-        var qa = new Quaternion();
-        var qb = new Quaternion();
+    slerp(test) {
+        const qa = new Quaternion();
+        const qb = new Quaternion();
         qa.slerp(qb, 0.5, qb);
         test.deepEqual(qa, qb);
 
