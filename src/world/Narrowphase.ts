@@ -305,7 +305,7 @@ export default class Narrowphase {
         }
     }
 
-    boxBox(si:Box, sj:Box, xi, xj, qi, qj, bi, bj, rsi, rsj, justTest) {
+    boxBox(si:Box, sj:Box, xi:Vec3, xj:Vec3, qi:Quaternion, qj:Quaternion, bi:Body, bj:Body, rsi:Shape, rsj:Shape, justTest:boolean) {
         si.convexPolyhedronRepresentation.material = si.material;
         sj.convexPolyhedronRepresentation.material = sj.material;
         si.convexPolyhedronRepresentation.collisionResponse = si.collisionResponse;

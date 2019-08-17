@@ -159,7 +159,7 @@ export default class Body extends EventTarget {
 
     material = null;
 
-    linearDamping = 0.01;
+    linearDamping = 0.0;
 
     /**
      * One of: Body.DYNAMIC, Body.STATIC and Body.KINEMATIC.

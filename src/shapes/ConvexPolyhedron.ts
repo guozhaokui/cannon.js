@@ -368,10 +368,10 @@ export default class ConvexPolyhedron extends Shape {
 
     /**
      * @method calculateLocalInertia
-     * @param  {Number} mass
-     * @param  {Vec3} target
+     * @param   mass
+     * @param   target
      */
-    calculateLocalInertia(mass, target) {
+    calculateLocalInertia(mass:number, target:Vec3) {
         // Approximate with box inertia
         // Exact inertia calculation is overkill, but see http://geometrictools.com/Documentation/PolyhedralMassProperties.pdf for the correct way to do it
         this.computeLocalAABB(cli_aabbmin, cli_aabbmax);

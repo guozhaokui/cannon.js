@@ -102,16 +102,14 @@ export default class RaycastVehicle {
      * @param {number} brake
      * @param {integer} wheelIndex
      */
-    setBrake(brake, wheelIndex) {
+    setBrake(brake:number, wheelIndex) {
         this.wheelInfos[wheelIndex].brake = brake;
     }
 
     /**
      * Add the vehicle including its constraints to the world.
-     * @method addToWorld
-     * @param {World} world
      */
-    addToWorld(world) {
+    addToWorld(world:World) {
         //const constraints = this.constraints;
         world.addBody(this.chassisBody);
         const that = this;
@@ -265,10 +263,8 @@ export default class RaycastVehicle {
 
     /**
      * Remove the vehicle including its constraints from the world.
-     * @method removeFromWorld
-     * @param {World} world
      */
-    removeFromWorld(world) {
+    removeFromWorld(world:World) {
         //const constraints = this.constraints;
         world.remove(this.chassisBody);
         world.removeEventListener('preStep', this.preStepCallback);
@@ -364,8 +360,7 @@ export default class RaycastVehicle {
     /**
      * Update one of the wheel transform.
      * Note when rendering wheels: during each step, wheel transforms are updated BEFORE the chassis; ie. their position becomes invalid after the step. Thus when you render wheels, you must update wheel transforms before rendering them. See raycastVehicle demo for an example.
-     * @method updateWheelTransform
-     * @param {integer} wheelIndex The wheel index to update.
+     * @param wheelIndex The wheel index to update.
      */
     updateWheelTransform(wheelIndex) {
         const up = tmpVec4;
@@ -405,15 +400,13 @@ export default class RaycastVehicle {
 
     /**
      * Get the world transform of one of the wheels
-     * @method getWheelTransformWorld
-     * @param  {integer} wheelIndex
-     * @return {Transform}
+     * @param   wheelIndex
      */
-    getWheelTransformWorld(wheelIndex) {
+    getWheelTransformWorld(wheelIndex:number) {
         return this.wheelInfos[wheelIndex].worldTransform;
     }
 
-    updateFriction(timeStep) {
+    updateFriction(timeStep:number) {
         const surfNormalWS_scaled_proj = updateFriction_surfNormalWS_scaled_proj;
 
         //calculate the impulse, so that the wheels don't move sidewards

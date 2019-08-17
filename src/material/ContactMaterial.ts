@@ -47,12 +47,12 @@ export default class ContactMaterial extends Material {
     /**
      * Stiffness of the produced contact equations
      */
-    contactEquationStiffness: number;
+    contactEquationStiffness=1e7;   // SPOOK: ε = .. k
 
     /**
      * Relaxation time of the produced contact equations
      */
-    contactEquationRelaxation: number;
+    contactEquationRelaxation=3;    // SPOOK : d
 
     /**
      * Stiffness of the produced friction equations

@@ -103,8 +103,8 @@ function init() {
     window.addEventListener("mouseup", onMouseUp, false );
 
     //addBox(1,1,1,0,0,0);
-    //addStack(0,0,2);
-    addSphere(0.1,0,7,0);
+    addStack(0,0,2);
+    //addSphere(0.1,0,2,0);
 }
 
 function setClickMarker(x,y,z) {
@@ -251,7 +251,7 @@ function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
     var boxshape = new Box(new Vec3(sz/2,sz/2,sz/2));
     body.addShape(boxshape);
     body.allowSleep=true;
-    body.sleepSpeedLimit=.6   // 限制设的大一点，防止抖动
+    body.sleepSpeedLimit=.1   // 限制设的大一点，防止抖动
     world.addBody(body);
     bodies.push(body);
     body.position.set(px,py,pz);
@@ -272,7 +272,7 @@ function addSphere(r:number, px:number,py:number,pz:number){
     var sphShape = new Sphere(r);
     body.addShape(sphShape);
     body.allowSleep=true;
-    body.sleepSpeedLimit=.6   
+    body.sleepSpeedLimit=.1   
     world.addBody(body);
     bodies.push(body);
     body.position.set(px,py,pz);
@@ -292,6 +292,7 @@ function addStack(x:number,y:number,z:number){
     addBox(0.2,0.2,0.2,x,y,z);
     y+=d;
     addBox(0.2,0.2,0.2,x,y,z);
+    return;
     y+=d;
     addBox(0.2,0.2,0.2,x,y,z);
     y+=d;
@@ -303,7 +304,7 @@ function addStack(x:number,y:number,z:number){
     addBox(0.2,0.2,0.2,x,y,z);
     y+=d;
     //addBox(0.2,0.2,0.2,x,y,z);
-    addSphere(1,x,y,z);
+    //addSphere(1,x,y,z);
 }
 
 function initCannon(){
@@ -316,6 +317,9 @@ function initCannon(){
     world.broadphase = new NaiveBroadphase();
     world.allowSleep=true;
     world.stepnumber=1;
+    let mtl = world.defaultContactMaterial;
+    mtl.contactEquationStiffness=1e128;
+    mtl.contactEquationRelaxation=3;
     //world.gravity = new Vec3(0,0.1,0);
 
     // Create boxes

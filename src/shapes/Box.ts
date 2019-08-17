@@ -11,6 +11,7 @@ export default class Box extends Shape {
 
     /**
      * Used by the contact generator to make contacts with other convex polyhedra for example
+     * 把BOX转成convex
      */
     convexPolyhedronRepresentation:ConvexPolyhedron = null;
 
