@@ -1,9 +1,9 @@
 
 
-import Vec3 from '../math/Vec3.js';
-import Body from '../objects/Body.js';
-import Material from '../material/Material.js';
-import Quaternion from '../math/Quaternion.js';
+import Vec3 from '../math/Vec3';
+import Body from '../objects/Body';
+import Material from '../material/Material';
+import Quaternion from '../math/Quaternion';
 
 /**
  * Base class for shapes

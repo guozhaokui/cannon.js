@@ -1,7 +1,7 @@
-import Constraint from './Constraint.js';
-import ContactEquation from '../equations/ContactEquation.js';
-import Vec3 from '../math/Vec3.js';
-import Body from '../objects/Body.js';
+import Constraint from './Constraint';
+import ContactEquation from '../equations/ContactEquation';
+import Vec3 from '../math/Vec3';
+import Body from '../objects/Body';
 
 /**
  * Connects two bodies at given offset points.

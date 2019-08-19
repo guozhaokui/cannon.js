@@ -1,4 +1,4 @@
-import Vec3 from './Vec3.js';
+import Vec3 from './Vec3';
 
 /**
  * An element containing 6 entries, 3 spatial and 3 rotational degrees of freedom.

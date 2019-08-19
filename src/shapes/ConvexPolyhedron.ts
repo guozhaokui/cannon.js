@@ -1,7 +1,7 @@
-import Shape from './Shape.js';
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
-import Transform from '../math/Transform.js';
+import Shape from './Shape';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
+import Transform from '../math/Transform';
 
 /**
  * A set of polygons describing a convex shape.
@@ -11,7 +11,7 @@ import Transform from '../math/Transform.js';
  * @param {array} points An array of Vec3's
  * @param {array} faces Array of integer arrays, describing which vertices that is included in each face.
  *
- * @author qiao / https://github.com/qiao (original author, see https://github.com/qiao/three.js/commit/85026f0c769e4000148a67d45a9e9b9c5108836f)
+ * @author qiao / https://github.com/qiao (original author, see https://github.com/qiao/three/commit/85026f0c769e4000148a67d45a9e9b9c5108836f)
  * @author schteppe / https://github.com/schteppe
  * @see http://www.altdevblogaday.com/2011/05/13/contact-generation-between-3d-convex-meshes/
  * @see http://bullet.googlecode.com/svn/trunk/src/BulletCollision/NarrowPhaseCollision/btPolyhedralContactClipping.cpp

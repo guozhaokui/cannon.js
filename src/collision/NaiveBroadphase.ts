@@ -1,7 +1,7 @@
-import Broadphase from './Broadphase.js';
-import AABB from './AABB.js';
-import World from '../world/World.js';
-import Body from '../objects/Body.js';
+import Broadphase from './Broadphase';
+import AABB from './AABB';
+import World from '../world/World';
+import Body from '../objects/Body';
 
 /**
  * Naive broadphase implementation, used in lack of better ones.

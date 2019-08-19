@@ -1,10 +1,10 @@
-import Constraint from './Constraint.js';
-import PointToPointConstraint from './PointToPointConstraint.js';
-import RotationalEquation from '../equations/RotationalEquation.js';
-import RotationalMotorEquation from '../equations/RotationalMotorEquation.js';
-import ContactEquation from '../equations/ContactEquation.js';
-import Vec3 from '../math/Vec3.js';
-import Body from '../objects/Body.js';
+import Constraint from './Constraint';
+import PointToPointConstraint from './PointToPointConstraint';
+import RotationalEquation from '../equations/RotationalEquation';
+import RotationalMotorEquation from '../equations/RotationalMotorEquation';
+import ContactEquation from '../equations/ContactEquation';
+import Vec3 from '../math/Vec3';
+import Body from '../objects/Body';
 
 /**
  * Hinge constraint. Think of it as a door hinge. It tries to keep the door in the correct place and with the correct orientation.

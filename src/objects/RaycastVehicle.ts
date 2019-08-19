@@ -1,10 +1,10 @@
-import Body from './Body.js';
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
-import RaycastResult from '../collision/RaycastResult.js';
-import Ray from '../collision/Ray.js';
-import WheelInfo from './WheelInfo.js';
-import World from '../world/World.js';
+import Body from './Body';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
+import RaycastResult from '../collision/RaycastResult';
+import Ray from '../collision/Ray';
+import WheelInfo from './WheelInfo';
+import World from '../world/World';
 
 /**
  * Vehicle helper class that casts rays from the wheel positions towards the ground and applies forces.

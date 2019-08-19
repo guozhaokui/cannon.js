@@ -1,8 +1,8 @@
-import Shape from './Shape.js';
-import ConvexPolyhedron from './ConvexPolyhedron.js';
-import Vec3 from '../math/Vec3.js';
-import Utils from '../utils/Utils.js';
-import Quaternion from '../math/Quaternion.js';
+import Shape from './Shape';
+import ConvexPolyhedron from './ConvexPolyhedron';
+import Vec3 from '../math/Vec3';
+import Utils from '../utils/Utils';
+import Quaternion from '../math/Quaternion';
 
 /**
  * Heightfield shape class. Height data is given as an array. These data points are spread out evenly with a given distance.

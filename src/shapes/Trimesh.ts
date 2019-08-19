@@ -1,9 +1,9 @@
-import Shape from './Shape.js';
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
-import Transform from '../math/Transform.js';
-import AABB from '../collision/AABB.js';
-import {Octree} from '../utils/Octree.js';
+import Shape from './Shape';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
+import Transform from '../math/Transform';
+import AABB from '../collision/AABB';
+import {Octree} from '../utils/Octree';
 
 /**
  * @class Trimesh

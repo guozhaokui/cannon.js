@@ -1,7 +1,7 @@
-import Shape from './Shape.js';
-import Vec3 from '../math/Vec3.js';
-import ConvexPolyhedron from './ConvexPolyhedron.js';
-import Quaternion from '../math/Quaternion.js';
+import Shape from './Shape';
+import Vec3 from '../math/Vec3';
+import ConvexPolyhedron from './ConvexPolyhedron';
+import Quaternion from '../math/Quaternion';
 
 /**
  * A 3d box shape.

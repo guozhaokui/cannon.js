@@ -1,6 +1,6 @@
-import Shape from './Shape.js';
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
+import Shape from './Shape';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
 
 /**
  * Particle shape.

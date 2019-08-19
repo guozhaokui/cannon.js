@@ -1,12 +1,12 @@
-import  World from "../src/world/World.js";
-import NaiveBroadphase from "../src/collision/NaiveBroadphase.js";
-import Box from "../src/shapes/Box.js";
-import Vec3 from "../src/math/Vec3.js";
-import Plane from "../src/shapes/Plane.js";
-import Sphere from "../src/shapes/Sphere.js";
-import PointToPointConstraint from '../src/constraints/PointToPointConstraint.js';
-import Body from "../src/objects/Body.js";
-import GSSolver from "../src/solver/GSSolver.js";
+import  World from "../src/world/World";
+import NaiveBroadphase from "../src/collision/NaiveBroadphase";
+import Box from "../src/shapes/Box";
+import Vec3 from "../src/math/Vec3";
+import Plane from "../src/shapes/Plane";
+import Sphere from "../src/shapes/Sphere";
+import PointToPointConstraint from '../src/constraints/PointToPointConstraint';
+import Body from "../src/objects/Body";
+import GSSolver from "../src/solver/GSSolver";
 
 
 var world:World;

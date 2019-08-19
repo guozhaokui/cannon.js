@@ -1,6 +1,6 @@
-import Equation from './Equation.js';
-import Vec3 from '../math/Vec3.js';
-import Body from '../objects/Body.js';
+import Equation from './Equation';
+import Vec3 from '../math/Vec3';
+import Body from '../objects/Body';
 
 /**
  * Constrains the slipping in a contact along a tangent

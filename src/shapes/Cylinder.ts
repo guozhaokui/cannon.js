@@ -1,5 +1,5 @@
-import Vec3 from '../math/Vec3.js';
-import ConvexPolyhedron from './ConvexPolyhedron.js';
+import Vec3 from '../math/Vec3';
+import ConvexPolyhedron from './ConvexPolyhedron';
 
 /**
  * @author schteppe / https://github.com/schteppe

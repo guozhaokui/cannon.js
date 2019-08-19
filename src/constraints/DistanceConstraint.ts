@@ -1,6 +1,6 @@
-import Constraint from './Constraint.js';
-import ContactEquation from '../equations/ContactEquation.js';
-import Body from '../objects/Body.js';
+import Constraint from './Constraint';
+import ContactEquation from '../equations/ContactEquation';
+import Body from '../objects/Body';
 
 /**
  * Constrains two bodies to be at a constant distance from each others center of mass.

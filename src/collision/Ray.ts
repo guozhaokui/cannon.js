@@ -1,17 +1,17 @@
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
-import Transform from '../math/Transform.js';
-import RaycastResult from './RaycastResult.js';
-import Shape from '../shapes/Shape.js';
-import AABB from './AABB.js';
-import World from '../world/World.js';
-import Body from '../objects/Body.js';
-import ConvexPolyhedron from '../shapes/ConvexPolyhedron.js';
-import Box from '../shapes/Box.js';
-import Heightfield from '../shapes/Heightfield.js';
-import Trimesh from '../shapes/Trimesh.js';
-import Sphere from '../shapes/Sphere.js';
-import Plane from '../shapes/Plane.js';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
+import Transform from '../math/Transform';
+import RaycastResult from './RaycastResult';
+import Shape from '../shapes/Shape';
+import AABB from './AABB';
+import World from '../world/World';
+import Body from '../objects/Body';
+import ConvexPolyhedron from '../shapes/ConvexPolyhedron';
+import Box from '../shapes/Box';
+import Heightfield from '../shapes/Heightfield';
+import Trimesh from '../shapes/Trimesh';
+import Sphere from '../shapes/Sphere';
+import Plane from '../shapes/Plane';
 
 /**
  * A line in 3D space that intersects bodies and return points.

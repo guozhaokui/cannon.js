@@ -1,5 +1,5 @@
-import Vec3 from './Vec3.js';
-import Quaternion from './Quaternion.js';
+import Vec3 from './Vec3';
+import Quaternion from './Quaternion';
 
 export default class Transform {
     position = new Vec3();

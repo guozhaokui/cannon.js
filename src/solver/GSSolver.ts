@@ -1,5 +1,5 @@
-import Solver from './Solver.js';
-import World from '../world/World.js';
+import Solver from './Solver';
+import World from '../world/World';
 
 /**
  * Constraint equation Gauss-Seidel solver.

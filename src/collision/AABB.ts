@@ -1,7 +1,7 @@
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
-import Transform from '../math/Transform.js';
-import Ray from './Ray.js';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
+import Transform from '../math/Transform';
+import Ray from './Ray';
 
 export default class AABB {
     lowerBound = new Vec3();

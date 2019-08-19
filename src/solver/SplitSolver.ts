@@ -1,7 +1,7 @@
-import Solver from './Solver.js';
-import Body from '../objects/Body.js';
-import World from '../world/World.js';
-import Equation from '../equations/Equation.js';
+import Solver from './Solver';
+import Body from '../objects/Body';
+import World from '../world/World';
+import Equation from '../equations/Equation';
 
 /**
  * Splits the equations into islands and solves them independently. Can improve performance.

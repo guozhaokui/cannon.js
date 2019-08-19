@@ -1,4 +1,5 @@
 {
+    "extends": "./node_modules/_assemblyscript@0.7.0@assemblyscript/std/assembly.json",
     "compilerOptions": {
         "target": "es2018",
         "module": "esnext",

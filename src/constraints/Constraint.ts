@@ -1,6 +1,6 @@
-import Utils from '../utils/Utils.js';
-import Equation from '../equations/Equation.js';
-import Body from '../objects/Body.js';
+import Utils from '../utils/Utils';
+import Equation from '../equations/Equation';
+import Body from '../objects/Body';
 
 /**
  * Constraint base class

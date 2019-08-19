@@ -1,6 +1,6 @@
-import Vec3 from '../math/Vec3.js';
-import Shape from '../shapes/Shape.js';
-import Body from '../objects/Body.js';
+import Vec3 from '../math/Vec3';
+import Shape from '../shapes/Shape';
+import Body from '../objects/Body';
 
 /**
  * Storage for Ray casting data.

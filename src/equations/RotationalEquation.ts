@@ -1,6 +1,6 @@
-import Vec3 from '../math/Vec3.js';
-import Equation from './Equation.js';
-import Body from '../objects/Body.js';
+import Vec3 from '../math/Vec3';
+import Equation from './Equation';
+import Body from '../objects/Body';
 
 /**
  * Rotational constraint. Works to keep the local vectors orthogonal to each other in world space.

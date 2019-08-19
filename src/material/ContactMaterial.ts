@@ -1,5 +1,5 @@
-import Utils from '../utils/Utils.js';
-import Material from './Material.js';
+import Utils from '../utils/Utils';
+import Material from './Material';
 
 /**
  * Defines what happens when two materials meet.

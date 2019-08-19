@@ -1,4 +1,4 @@
-import Mat3 from './Mat3.js';
+import Mat3 from './Mat3';
 
 export default class Vec3 {
     static ZERO = new Vec3(0, 0, 0);
@@ -6,10 +6,10 @@ export default class Vec3 {
     static UNIT_Y = new Vec3(0, 1, 0);
     static UNIT_Z = new Vec3(0, 0, 1);
 
-    x = 0;
-    y = 0;
-    z = 0;
-    constructor(x=0, y=0, z=0) {
+    x:f32 = 0;
+    y:f32 = 0;
+    z:f32 = 0;
+    constructor(x:f32=0, y:f32=0, z:f32=0) {
         this.x = x;
         this.y = y;
         this.z = z;

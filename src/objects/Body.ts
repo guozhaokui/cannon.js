@@ -1,12 +1,12 @@
-import EventTarget from '../utils/EventTarget.js';
-import Shape from '../shapes/Shape.js';
-import Vec3 from '../math/Vec3.js';
-import Mat3 from '../math/Mat3.js';
-import Quaternion from '../math/Quaternion.js';
-import Material from '../material/Material.js';
-import AABB from '../collision/AABB.js';
-import Box from '../shapes/Box.js';
-import World from '../world/World.js';
+import EventTarget from '../utils/EventTarget';
+import Shape from '../shapes/Shape';
+import Vec3 from '../math/Vec3';
+import Mat3 from '../math/Mat3';
+import Quaternion from '../math/Quaternion';
+import Material from '../material/Material';
+import AABB from '../collision/AABB';
+import Box from '../shapes/Box';
+import World from '../world/World';
 
 export interface BodyInitOptions{
     position?:Vec3;

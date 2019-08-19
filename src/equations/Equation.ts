@@ -1,6 +1,6 @@
-import JacobianElement from '../math/JacobianElement.js';
-import Vec3 from '../math/Vec3.js';
-import Body from '../objects/Body.js';
+import JacobianElement from '../math/JacobianElement';
+import Vec3 from '../math/Vec3';
+import Body from '../objects/Body';
 
 /**
  * Equation base class

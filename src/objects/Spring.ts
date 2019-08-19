@@ -1,5 +1,5 @@
-import Vec3 from '../math/Vec3.js';
-import Body from './Body.js';
+import Vec3 from '../math/Vec3';
+import Body from './Body';
 
 /**
  * A spring, connecting two bodies.

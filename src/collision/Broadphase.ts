@@ -1,8 +1,8 @@
-import Body from '../objects/Body.js';
-import Vec3 from '../math/Vec3.js';
-import Quaternion from '../math/Quaternion.js';
-import World from '../world/World.js';
-import AABB from './AABB.js';
+import Body from '../objects/Body';
+import Vec3 from '../math/Vec3';
+import Quaternion from '../math/Quaternion';
+import World from '../world/World';
+import AABB from './AABB';
 
 /**
  * Base class for broadphase implementations
