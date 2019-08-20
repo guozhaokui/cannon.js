@@ -1,7 +1,6 @@
 import Shape from './Shape.js';
 import ConvexPolyhedron from './ConvexPolyhedron.js';
 import Vec3 from '../math/Vec3.js';
-import Utils from '../utils/Utils.js';
 import Quaternion from '../math/Quaternion.js';
 
 /**
@@ -53,7 +52,7 @@ export default class Heightfield extends Shape {
      * The width of each element
      * @todo elementSizeX and Y
      */
-    elementSize: number;
+    elementSize: number=1;
 
     cacheEnabled = true;
 
@@ -61,24 +60,19 @@ export default class Heightfield extends Shape {
     pillarOffset = new Vec3();
 
     _cachedPillars = {};
-    constructor(data: number[][], options?: any) {
+    constructor(data: number[][], maxValue:number, minValue:number, elementSize:number) {
         super();
         this.type = Shape.types.HEIGHTFIELD;
-        options = Utils.defaults(options, {
-            maxValue: null,
-            minValue: null,
-            elementSize: 1
-        });
 
         this.data = data;
-        this.maxValue = options.maxValue;
-        this.minValue = options.minValue;
-        this.elementSize = options.elementSize;
+        this.maxValue = maxValue;
+        this.minValue = minValue;
+        this.elementSize = elementSize;
 
-        if (options.minValue === null) {
+        if (minValue === null) {
             this.updateMinValue();
         }
-        if (options.maxValue === null) {
+        if (maxValue === null) {
             this.updateMaxValue();
         }
         this.updateBoundingSphereRadius();

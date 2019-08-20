@@ -9,17 +9,17 @@ import Quaternion from './Quaternion.js';
  * @author schteppe / http://github.com/schteppe
  */
 export default class Mat3 {
-    elements:number[];
+    /*
+    m11=1;m12=0;m13=0;
+    m21=0;m22=1;m23=0;
+    m31=0;m32=0;m33=1;
+    */
+    elements=[1,0,0, 0,1,0, 0,0,1];
     constructor(elements?:number[]) {
-        /**
-         * A vector of length 9, containing all matrix elements
-         * @property {Array} elements
-         */
         if (elements) {
+            //this.m11=elements[0];
             this.elements = elements;
-        } else {
-            this.elements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        }
+        } 
     }
 
     /**
@@ -105,10 +105,8 @@ export default class Mat3 {
 
     /**
      * Matrix-scalar multiplication
-     * @method smult
-     * @param {Number} s
      */
-    smult(s) {
+    smult(s:number) {
         for (let i = 0; i < this.elements.length; i++) {
             this.elements[i] *= s;
         }
@@ -116,17 +114,17 @@ export default class Mat3 {
 
     /**
      * Matrix multiplication
-     * @method mmult
-     * @param {Mat3} m Matrix to multiply with from left side.
-     * @return {Mat3} The result.
+     * @param  m Matrix to multiply with from left side.
+     * @return  The result.
      */
-    mmult({ elements }, target) {
+    mmult( m:Mat3, target:Mat3) {
         const r = target || new Mat3();
+        let e = m.elements;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let sum = 0.0;
                 for (let k = 0; k < 3; k++) {
-                    sum += elements[i + k * 3] * this.elements[k + j * 3];
+                    sum += e[i + k * 3] * this.elements[k + j * 3];
                 }
                 r.elements[i + j * 3] = sum;
             }

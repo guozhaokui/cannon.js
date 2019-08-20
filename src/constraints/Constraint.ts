@@ -1,4 +1,3 @@
-import Utils from '../utils/Utils.js';
 import Equation from '../equations/Equation.js';
 import Body from '../objects/Body.js';
 
@@ -24,17 +23,11 @@ export default class Constraint {
     collideConnected = true;
 
 
-    constructor(bodyA: Body, bodyB: Body, options?:{collideConnected:boolean,wakeUpBodies:boolean} ) {
-        options = Utils.defaults(options, {
-            collideConnected: true,
-            wakeUpBodies: true,
-        });
-
+    constructor(bodyA: Body, bodyB: Body, wakeupBodies:boolean) {
         this.bodyA = bodyA;
         this.bodyB = bodyB;
-        this.collideConnected = options.collideConnected;
 
-        if (options.wakeUpBodies) {
+        if (wakeupBodies) {
             if (bodyA) {
                 bodyA.wakeUp();
             }

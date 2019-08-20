@@ -1,4 +1,3 @@
-import Utils from '../utils/Utils.js';
 import Material from './Material.js';
 
 /**
@@ -32,12 +31,12 @@ export default class ContactMaterial extends Material {
     /**
      * Friction coefficient
      */
-    friction: number;
+    friction: number = 0.3;
 
     /**
      * Restitution coefficient
      */
-    restitution: number;
+    restitution: number = 0.3;
 
     /**
      The stiffness approximately corresponds to the stiffness of a spring, which gives a force F=-k*x where x is the displacement of the spring. 
@@ -57,31 +56,16 @@ export default class ContactMaterial extends Material {
     /**
      * Stiffness of the produced friction equations
      */
-    frictionEquationStiffness: number;
+    frictionEquationStiffness: number = 1e7;
 
     /**
      * Relaxation time of the produced friction equations
      */
-    frictionEquationRelaxation: number;
+    frictionEquationRelaxation: number =3;
 
-    constructor(m1: Material, m2: Material, options?: any) {
-        super(options);
-        options = Utils.defaults(options, {
-            friction: 0.3,
-            restitution: 0.3,
-            contactEquationStiffness: 1e7,
-            contactEquationRelaxation: 3,
-            frictionEquationStiffness: 1e7,
-            frictionEquationRelaxation: 3
-        });
-
+    constructor(m1: Material, m2: Material, friction:number, restitution:number) {
+        super('contactMaterial', friction, restitution);
         this.materials = [m1, m2];
-        this.friction = options.friction;
-        this.restitution = options.restitution;
-        this.contactEquationStiffness = options.contactEquationStiffness;
-        this.contactEquationRelaxation = options.contactEquationRelaxation;
-        this.frictionEquationStiffness = options.frictionEquationStiffness;
-        this.frictionEquationRelaxation = options.frictionEquationRelaxation;
     }
 }
 

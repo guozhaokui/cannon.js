@@ -16,7 +16,7 @@ export default class GridBroadphase extends Broadphase {
     bins = [];
 
     // bins 数组中的每个数组的长度
-    binLengths = [];//Rather than continually resizing arrays (thrashing the memory), just record length and allow them to grow
+    binLengths:number[] = [];//Rather than continually resizing arrays (thrashing the memory), just record length and allow them to grow
 
     /**
      * Axis aligned uniform grid broadphase.
@@ -228,4 +228,3 @@ export default class GridBroadphase extends Broadphase {
 }
 
 var GridBroadphase_collisionPairs_d = new Vec3();
-const GridBroadphase_collisionPairs_binPos = new Vec3();

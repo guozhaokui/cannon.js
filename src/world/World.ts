@@ -115,7 +115,7 @@ export default class World extends EventTarget {
      * This contact material is used if no suitable contactmaterial is found for a contact.
      * 缺省材质
      */
-    defaultContactMaterial = new ContactMaterial(this.defaultMaterial, this.defaultMaterial, { friction: 0.3, restitution: 0.0 });
+    defaultContactMaterial = new ContactMaterial(this.defaultMaterial, this.defaultMaterial,  0.3, 0.0);
 
     doProfiling = false;
 

@@ -1,7 +1,6 @@
 import Vec3 from '../math/Vec3.js';
 import Transform from '../math/Transform.js';
 import RaycastResult from '../collision/RaycastResult.js';
-import Utils from '../utils/Utils.js';
 import Body from './Body.js';
 
 /**
@@ -42,41 +41,41 @@ export default class WheelInfo {
     /**
      * Max travel distance of the suspension, in meters.
      */
-    maxSuspensionTravel: number;
+    maxSuspensionTravel: number=1;
 
     /**
      * Speed to apply to the wheel rotation when the wheel is sliding.
      */
-    customSlidingRotationalSpeed: number;
+    customSlidingRotationalSpeed: number=-0.1;
 
     /**
      * If the customSlidingRotationalSpeed should be used.
      */
-    useCustomSlidingRotationalSpeed: boolean;
+    useCustomSlidingRotationalSpeed: boolean=false;
 
     sliding = false;
 
     /**
      * Connection point, defined locally in the chassis body frame.
      */
-    chassisConnectionPointLocal: Vec3;
+    chassisConnectionPointLocal: Vec3 = new Vec3();
 
-    chassisConnectionPointWorld: Vec3;
+    chassisConnectionPointWorld: Vec3 = new Vec3();
 
-    directionLocal: Vec3;
+    directionLocal: Vec3 = new Vec3();
 
-    directionWorld: Vec3;
-    axleLocal: Vec3;
+    directionWorld: Vec3 = new Vec3();
+    axleLocal: Vec3 = new Vec3();
 
-    axleWorld: Vec3;
+    axleWorld: Vec3= new Vec3();
 
-    suspensionRestLength: number;
-    suspensionMaxLength: number;
-    radius: number;
-    suspensionStiffness: number;
-    dampingCompression: number;
-    dampingRelaxation: number;
-    frictionSlip: number;
+    suspensionRestLength: number=1;
+    suspensionMaxLength: number=2;
+    radius: number=1;
+    suspensionStiffness: number=100;
+    dampingCompression: number=10;
+    dampingRelaxation: number=10;
+    frictionSlip: number=1000;
 
     steering = 0;
 
@@ -86,11 +85,11 @@ export default class WheelInfo {
     rotation = 0;
     deltaRotation = 0;
 
-    rollInfluence: number;
-    maxSuspensionForce: number;
+    rollInfluence: number = 0.01;
+    maxSuspensionForce: number = Number.MAX_VALUE;
     engineForce = 0;
     brake = 0;
-    isFrontWheel: number;
+    isFrontWheel=true;
     clippedInvContactDotSuspension = 1;
     suspensionRelativeVelocity = 0;
     suspensionForce = 0;
@@ -115,55 +114,29 @@ export default class WheelInfo {
     isInContact = false;
 
     constructor(options?: any) {
-        options = Utils.defaults(options, {
-            chassisConnectionPointLocal: new Vec3(),
-            chassisConnectionPointWorld: new Vec3(),
-            directionLocal: new Vec3(),
-            directionWorld: new Vec3(),
-            axleLocal: new Vec3(),
-            axleWorld: new Vec3(),
-            suspensionRestLength: 1,
-            suspensionMaxLength: 2,
-            radius: 1,
-            suspensionStiffness: 100,
-            dampingCompression: 10,
-            dampingRelaxation: 10,
-            frictionSlip: 10000,
-            steering: 0,
-            rotation: 0,
-            deltaRotation: 0,
-            rollInfluence: 0.01,
-            maxSuspensionForce: Number.MAX_VALUE,
-            isFrontWheel: true,
-            clippedInvContactDotSuspension: 1,
-            suspensionRelativeVelocity: 0,
-            suspensionForce: 0,
-            skidInfo: 0,
-            suspensionLength: 0,
-            maxSuspensionTravel: 1,
-            useCustomSlidingRotationalSpeed: false,
-            customSlidingRotationalSpeed: -0.1
-        });
-
-        this.maxSuspensionTravel = options.maxSuspensionTravel;
-        this.customSlidingRotationalSpeed = options.customSlidingRotationalSpeed;
-        this.useCustomSlidingRotationalSpeed = options.useCustomSlidingRotationalSpeed;
-        this.chassisConnectionPointLocal = options.chassisConnectionPointLocal.clone();
-        this.chassisConnectionPointWorld = options.chassisConnectionPointWorld.clone();
-        this.directionLocal = options.directionLocal.clone();
-        this.directionWorld = options.directionWorld.clone();
-        this.axleLocal = options.axleLocal.clone();
-        this.axleWorld = options.axleWorld.clone();
-        this.suspensionRestLength = options.suspensionRestLength;
-        this.suspensionMaxLength = options.suspensionMaxLength;
-        this.radius = options.radius;
-        this.suspensionStiffness = options.suspensionStiffness;
-        this.dampingCompression = options.dampingCompression;
-        this.dampingRelaxation = options.dampingRelaxation;
-        this.frictionSlip = options.frictionSlip;
-        this.rollInfluence = options.rollInfluence;
-        this.maxSuspensionForce = options.maxSuspensionForce;
-        this.isFrontWheel = options.isFrontWheel;
+        /*
+        if(options){
+            this.maxSuspensionTravel = options.maxSuspensionTravel;
+            this.customSlidingRotationalSpeed = options.customSlidingRotationalSpeed;
+            this.useCustomSlidingRotationalSpeed = options.useCustomSlidingRotationalSpeed;
+            this.chassisConnectionPointLocal = options.chassisConnectionPointLocal.clone();
+            this.chassisConnectionPointWorld = options.chassisConnectionPointWorld.clone();
+            this.directionLocal = options.directionLocal.clone();
+            this.directionWorld = options.directionWorld.clone();
+            this.axleLocal = options.axleLocal.clone();
+            this.axleWorld = options.axleWorld.clone();
+            this.suspensionRestLength = options.suspensionRestLength;
+            this.suspensionMaxLength = options.suspensionMaxLength;
+            this.radius = options.radius;
+            this.suspensionStiffness = options.suspensionStiffness;
+            this.dampingCompression = options.dampingCompression;
+            this.dampingRelaxation = options.dampingRelaxation;
+            this.frictionSlip = options.frictionSlip;
+            this.rollInfluence = options.rollInfluence;
+            this.maxSuspensionForce = options.maxSuspensionForce;
+            this.isFrontWheel = options.isFrontWheel;
+        }
+        */
     }
 
     updateWheel(chassis:Body) {

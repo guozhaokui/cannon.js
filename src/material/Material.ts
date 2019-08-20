@@ -19,20 +19,9 @@ export default class Material {
      */
     restitution = -1;
 
-    constructor(options?: any) {
-        let name = '';
-        options = options || {};
-
-        // Backwards compatibility fix
-        if (typeof (options) === 'string') {
-            name = options;
-            options = {};
-        } else if (typeof (options) === 'object') {
-            name = '';
-        }
-
+    constructor(name:string,friction=-1,restitution=-1) {
         this.name = name;
-        this.friction = typeof (options.friction) !== 'undefined' ? options.friction : -1;
-        this.restitution = typeof (options.restitution) !== 'undefined' ? options.restitution : -1;
+        this.friction = friction;
+        this.restitution = restitution;
     }
 }

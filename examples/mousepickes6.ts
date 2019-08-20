@@ -103,8 +103,13 @@ function init() {
     window.addEventListener("mouseup", onMouseUp, false );
 
     //addBox(1,1,1,0,0,0);
-    addStack(0,0,2);
-    //addSphere(0.1,0,2,0);
+    //addStack(0,0,2);
+    //addSphere(0.1,-13,2,0);
+
+    let r=()=>{return Math.random()*10;};
+    for(let i=0; i<1000; i++){
+        addBox(0.2,0.2,0.2,-10+r(),r()+10,r());
+    }
 }
 
 function setClickMarker(x,y,z) {
