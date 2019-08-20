@@ -8,25 +8,23 @@ import AABB from '../collision/AABB.js';
 import Box from '../shapes/Box.js';
 import World from '../world/World.js';
 
-export interface BodyInitOptions{
-    position?:Vec3;
-    velocity?:Vec3;
-    angularVelocity?:Vec3;
-    quaternion?:Quaternion;
-    mass?:number;
-    material?:Material;
-    type?:number;
-    linearDamping?:number;//0.01;
-    angularDamping?:number;//0.01;
-    allowSleep?:boolean;//true;
-    sleepSpeedLimit?:number;//0.1
-    sleepTimeLimit?:number;//1
-    collisionFilterGroup?:number;//1
-    collisionFilterMask?:number;//-1
-    fixedRotation?:boolean;//false;
-    linearFactor?:Vec3;
-    angularFactor?:Vec3;
-    shape?:Shape;
+export interface BodyInitOptions {
+    position?: Vec3;
+    velocity?: Vec3;
+    angularVelocity?: Vec3;
+    quaternion?: Quaternion;
+    material?: Material;
+    type?: number;
+    linearDamping?: number;//0.01;
+    angularDamping?: number;//0.01;
+    allowSleep?: boolean;//true;
+    sleepSpeedLimit?: number;//0.1
+    sleepTimeLimit?: number;//1
+    collisionFilterGroup?: number;//1
+    collisionFilterMask?: number;//-1
+    fixedRotation?: boolean;//false;
+    linearFactor?: Vec3;
+    angularFactor?: Vec3;
 }
 
 /**
@@ -106,14 +104,14 @@ export default class Body extends EventTarget {
      * @type {Function}
      * @deprecated Use World events instead
      */
-    preStep:()=>void = null;
+    preStep: () => void = null;
 
     /**
      * Callback function that is used AFTER stepping the system. Inside the function, "this" will refer to this Body object.
      * @type {Function}
      * @deprecated Use World events instead
      */
-    postStep:()=>void = null;
+    postStep: () => void = null;
 
     vlambda = new Vec3();
 
@@ -159,7 +157,7 @@ export default class Body extends EventTarget {
 
     material = null;
 
-    linearDamping = 0.0;
+    linearDamping = 0.01;
 
     /**
      * One of: Body.DYNAMIC, Body.STATIC and Body.KINEMATIC.
@@ -270,55 +268,57 @@ export default class Body extends EventTarget {
 
     wlambda = new Vec3();
 
-    constructor(options?:BodyInitOptions) {
+    constructor(mass: f32 = 1, shape: Shape = null, options?: BodyInitOptions) {
         super();
-        this.collisionFilterGroup = typeof (options.collisionFilterGroup) === 'number' ? options.collisionFilterGroup : 1;
-        this.collisionFilterMask = typeof (options.collisionFilterMask) === 'number' ? options.collisionFilterMask : -1;
-        if (options.position) {
-            this.position.copy(options.position);
-            this.previousPosition.copy(options.position);
-            this.interpolatedPosition.copy(options.position);
-            this.initPosition.copy(options.position);
-        }
-        if (options.velocity) {
-            this.velocity.copy(options.velocity);
-        }
-
-        const mass = typeof (options.mass) === 'number' ? options.mass : 0;
         this.mass = mass;
         this.invMass = mass > 0 ? 1.0 / mass : 0;
-        this.material = options.material || null;
-        this.linearDamping = typeof (options.linearDamping) === 'number' ? options.linearDamping : 0.01;
-
         this.type = (mass <= 0.0 ? Body.STATIC : Body.DYNAMIC);
-        if (typeof (options.type) === typeof (Body.STATIC)) {
-            this.type = options.type;
-        }
-        this.allowSleep = typeof (options.allowSleep) !== 'undefined' ? options.allowSleep : true;
-        this.sleepSpeedLimit = typeof (options.sleepSpeedLimit) !== 'undefined' ? options.sleepSpeedLimit : 0.1;
-        this.sleepTimeLimit = typeof (options.sleepTimeLimit) !== 'undefined' ? options.sleepTimeLimit : 1;
-        if (options.quaternion) {
-            this.quaternion.copy(options.quaternion);
-            this.initQuaternion.copy(options.quaternion);
-            this.previousQuaternion.copy(options.quaternion);
-            this.interpolatedQuaternion.copy(options.quaternion);
+
+        if (options) {
+            this.collisionFilterGroup = typeof (options.collisionFilterGroup) === 'number' ? options.collisionFilterGroup : 1;
+            this.collisionFilterMask = typeof (options.collisionFilterMask) === 'number' ? options.collisionFilterMask : -1;
+            this.material = options.material;
+            this.linearDamping = typeof (options.linearDamping) === 'number' ? options.linearDamping : 0.01;
+            this.allowSleep = typeof (options.allowSleep) !== 'undefined' ? options.allowSleep : true;
+            this.sleepSpeedLimit = typeof (options.sleepSpeedLimit) !== 'undefined' ? options.sleepSpeedLimit : 0.1;
+            this.sleepTimeLimit = typeof (options.sleepTimeLimit) !== 'undefined' ? options.sleepTimeLimit : 1;
+            this.fixedRotation = typeof (options.fixedRotation) !== "undefined" ? options.fixedRotation : false;
+            this.angularDamping = typeof (options.angularDamping) !== 'undefined' ? options.angularDamping : 0.01;
+            if (options.position) {
+                this.position.copy(options.position);
+                this.previousPosition.copy(options.position);
+                this.interpolatedPosition.copy(options.position);
+                this.initPosition.copy(options.position);
+            }
+            if (options.velocity) {
+                this.velocity.copy(options.velocity);
+            }
+
+            if (typeof (options.type) === typeof (Body.STATIC)) {
+                this.type = options.type;
+            }
+            if (options.quaternion) {
+                this.quaternion.copy(options.quaternion);
+                this.initQuaternion.copy(options.quaternion);
+                this.previousQuaternion.copy(options.quaternion);
+                this.interpolatedQuaternion.copy(options.quaternion);
+            }
+
+            if (options.angularVelocity) {
+                this.angularVelocity.copy(options.angularVelocity);
+            }
+
+            if (options.linearFactor) {
+                this.linearFactor.copy(options.linearFactor);
+            }
+
+            if (options.angularFactor) {
+                this.angularFactor.copy(options.angularFactor);
+            }
         }
 
-        if (options.angularVelocity) {
-            this.angularVelocity.copy(options.angularVelocity);
-        }
-        this.fixedRotation = typeof (options.fixedRotation) !== "undefined" ? options.fixedRotation : false;
-        this.angularDamping = typeof (options.angularDamping) !== 'undefined' ? options.angularDamping : 0.01;
-
-        if (options.linearFactor) {
-            this.linearFactor.copy(options.linearFactor);
-        }
-
-        if (options.angularFactor) {
-            this.angularFactor.copy(options.angularFactor);
-        }
-        if (options.shape) {
-            this.addShape(options.shape);
+        if (shape) {
+            this.addShape(shape);
         }
 
         this.updateMassProperties();
@@ -352,7 +352,7 @@ export default class Body extends EventTarget {
      * Called every timestep to update internal sleep timer and change sleep state if needed.
      * @param time The world time in seconds
      */
-    sleepTick(time:number) {
+    sleepTick(time: number) {
         if (this.allowSleep) {
             const sleepState = this.sleepState;
             const speedSquared = this.velocity.lengthSquared() + this.angularVelocity.lengthSquared();
@@ -388,7 +388,7 @@ export default class Body extends EventTarget {
     /**
      * Convert a world point to local body frame.
      */
-    pointToLocalFrame(worldPoint:Vec3, result:Vec3) {
+    pointToLocalFrame(worldPoint: Vec3, result: Vec3) {
         var result = result || new Vec3();
         worldPoint.vsub(this.position, result);
         this.quaternion.conjugate().vmult(result, result);
@@ -398,7 +398,7 @@ export default class Body extends EventTarget {
     /**
      * Convert a world vector to local body frame.
      */
-    vectorToLocalFrame(worldVector:Vec3, result:Vec3) {
+    vectorToLocalFrame(worldVector: Vec3, result?: Vec3) {
         var result = result || new Vec3();
         this.quaternion.conjugate().vmult(worldVector, result);
         return result;

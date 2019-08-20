@@ -13,7 +13,7 @@ export default class DistanceConstraint extends Constraint {
     distance = 0;
     distanceEquation: ContactEquation;
 
-    constructor(bodyA: Body, bodyB: Body, distance?: number, maxForce?: number) {
+    constructor(bodyA: Body, bodyB: Body, distance?: f32, maxForce?: f32) {
         super(bodyA, bodyB,true);
 
         if (typeof (distance) === "undefined") {

@@ -10,13 +10,12 @@ export default class RotationalEquation extends Equation {
     axisA: Vec3;
     axisB: Vec3;
     maxAngle = Math.PI / 2;
-    constructor(bodyA: Body, bodyB: Body, options: any = {}) {
+    constructor(bodyA: Body, bodyB: Body, maxForce:f32=1e6, axisA=new Vec3(1,0,0), axisB=new Vec3(0,1,0)) {
         super(bodyA, bodyB);
-        const maxForce = typeof (options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
         this.maxForce = maxForce;
         this.minForce = -maxForce;
-        this.axisA = options.axisA ? options.axisA.clone() : new Vec3(1, 0, 0);
-        this.axisB = options.axisB ? options.axisB.clone() : new Vec3(0, 1, 0);
+        this.axisA = axisA.clone() ;
+        this.axisB = axisB.clone() ;
         this.maxAngle = Math.PI / 2;
     }
 

@@ -33,24 +33,17 @@ export default class HingeConstraint extends PointToPointConstraint {
     rotationalEquation1: RotationalEquation;
     rotationalEquation2: RotationalEquation;
     motorEquation: RotationalMotorEquation;
+    motorTargetVelocity:f32=0;
 
-    constructor(bodyA: Body, bodyB: Body, options: { maxForce?: number, pivotA?: Vec3, pivotB?: Vec3,axisA?:Vec3,axisB?:Vec3 } = {}) {
-        const maxForce = typeof (options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
-        const pivotA = options.pivotA ? options.pivotA.clone() : new Vec3();
-        const pivotB = options.pivotB ? options.pivotB.clone() : new Vec3();
-
+    constructor(bodyA: Body, bodyB: Body, maxForce:f32=1e6, pivotA=new Vec3(), pivotB=new Vec3(), axisA=new Vec3(1,0,0), axisB=new Vec3(1,0,0)) {
         super(bodyA, pivotA, bodyB, pivotB, maxForce);
 
-        const axisA = this.axisA = options.axisA ? options.axisA.clone() : new Vec3(1, 0, 0);
         axisA.normalize();
-
-        const axisB = this.axisB = options.axisB ? options.axisB.clone() : new Vec3(1, 0, 0);
+        this.axisA = axisA.clone();
         axisB.normalize();
-
-        const r1 = this.rotationalEquation1 = new RotationalEquation(bodyA, bodyB, options);
-
-        const r2 = this.rotationalEquation2 = new RotationalEquation(bodyA, bodyB, options);
-
+        this.axisB = axisB.clone();
+        const r1 = this.rotationalEquation1 = new RotationalEquation(bodyA, bodyB, maxForce, axisA, axisB);
+        const r2 = this.rotationalEquation2 = new RotationalEquation(bodyA, bodyB, maxForce, axisA, axisB);
         const motor = this.motorEquation = new RotationalMotorEquation(bodyA, bodyB, maxForce);
         motor.enabled = false; // Not enabled by default
 

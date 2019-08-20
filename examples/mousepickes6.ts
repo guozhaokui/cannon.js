@@ -252,7 +252,7 @@ function render() {
 
 function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
     //phy
-    var body = new Body({mass:0.5});
+    var body = new Body(0.5);
     var boxshape = new Box(new Vec3(sz/2,sz/2,sz/2));
     body.addShape(boxshape);
     body.allowSleep=true;
@@ -273,7 +273,7 @@ function addBox(sx:number,sy:number,sz:number,px:number,py:number,pz:number){
 
 function addSphere(r:number, px:number,py:number,pz:number){
     //phy
-    var body = new Body({mass:0.5});
+    var body = new Body(0.5);
     var sphShape = new Sphere(r);
     body.addShape(sphShape);
     body.allowSleep=true;
@@ -351,14 +351,14 @@ function initCannon(){
 
     // Create a plane
     var groundShape = new Plane();
-    var groundBody = new Body({ mass: 0 });
+    var groundBody = new Body(0);
     groundBody.addShape(groundShape);
     groundBody.quaternion.setFromAxisAngle(new Vec3(1,0,0),-Math.PI/2);
     world.addBody(groundBody);
 
     // Joint body
     var shape = new Sphere(0.1);
-    jointBody = new Body({ mass: 0 });
+    jointBody = new Body(0);
     jointBody.addShape(shape);
     jointBody.collisionFilterGroup = 0;
     jointBody.collisionFilterMask = 0;

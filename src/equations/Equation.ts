@@ -9,18 +9,18 @@ import Body from '../objects/Body.js';
  * @param  maxForce Maximum (read: positive max) force to be applied by the constraint.
  */
 export default class Equation {
-    static ID = 0;
-    id = Equation.ID++;
+    static ID:u32 = 0;
+    id:u32 = Equation.ID++;
 
-    minForce = -1e6;
-    maxForce = 1e6;
+    minForce:f32 = -1e6;
+    maxForce:f32 = 1e6;
     bi: Body = null;
     bj: Body = null;
 
     //SPOOK parameter
-    a = 0;
-    b = 0;
-    eps = 0;
+    a:f32 = 0;
+    b:f32 = 0;
+    eps:f32 = 0;
 
     jacobianElementA = new JacobianElement();
     jacobianElementB = new JacobianElement();
@@ -28,9 +28,9 @@ export default class Equation {
     /**
      * A number, proportional to the force added to the bodies.
      */
-    multiplier = 0;
+    multiplier:f32 = 0;
 
-    constructor(bi: Body, bj: Body, minForce?: number, maxForce?: number) {
+    constructor(bi: Body, bj: Body, minForce?: f32, maxForce?: f32) {
         this.minForce = typeof (minForce) === "undefined" ? -1e6 : minForce;
         this.maxForce = typeof (maxForce) === "undefined" ? 1e6 : maxForce;
         this.bi = bi;
@@ -45,7 +45,7 @@ export default class Equation {
      * @param relaxation 
      * @param timeStep      单位是秒
      */
-    setSpookParams(stiffness: number, relaxation: number, timeStep: number) {
+    setSpookParams(stiffness: f32, relaxation: f32, timeStep: f32) {
         const d = relaxation;
         const k = stiffness;
         const h = timeStep;
@@ -59,7 +59,7 @@ export default class Equation {
      * SPOOK式子的右半部分
      *  Sλ = B = -aGq - bGW -hGiMf
      */
-    computeB(h: number) {
+    computeB(h: f32) {
         let a=this.a;
         let b=this.b;
         const GW = this.computeGW();
