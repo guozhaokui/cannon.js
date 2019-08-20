@@ -1,5 +1,4 @@
 import Vec3 from '../math/Vec3.js';
-
 /**
  * A spring, connecting two bodies.
  *
@@ -20,53 +19,29 @@ export default class Spring {
     constructor(bodyA, bodyB, options = {}) {
         /**
          * Rest length of the spring.
-         * @property restLength
-         * @type {number}
          */
-        this.restLength = typeof (options.restLength) === "number" ? options.restLength : 1;
-
+        this.restLength = 1;
         /**
          * Stiffness of the spring.
-         * @property stiffness
-         * @type {number}
          */
-        this.stiffness = options.stiffness || 100;
-
+        this.stiffness = 100;
         /**
          * Damping of the spring.
-         * @property damping
-         * @type {number}
          */
-        this.damping = options.damping || 1;
-
-        /**
-         * First connected body.
-         * @property bodyA
-         * @type {Body}
-         */
-        this.bodyA = bodyA;
-
-        /**
-         * Second connected body.
-         * @property bodyB
-         * @type {Body}
-         */
-        this.bodyB = bodyB;
-
+        this.damping = 1;
         /**
          * Anchor for bodyA in local bodyA coordinates.
-         * @property localAnchorA
-         * @type {Vec3}
          */
         this.localAnchorA = new Vec3();
-
         /**
          * Anchor for bodyB in local bodyB coordinates.
-         * @property localAnchorB
-         * @type {Vec3}
          */
         this.localAnchorB = new Vec3();
-
+        this.restLength = typeof (options.restLength) === "number" ? options.restLength : 1;
+        this.stiffness = options.stiffness || 100;
+        this.damping = options.damping || 1;
+        this.bodyA = bodyA;
+        this.bodyB = bodyB;
         if (options.localAnchorA) {
             this.localAnchorA.copy(options.localAnchorA);
         }
@@ -80,7 +55,6 @@ export default class Spring {
             this.setWorldAnchorB(options.worldAnchorB);
         }
     }
-
     /**
      * Set the anchor point on body A, using world coordinates.
      * @method setWorldAnchorA
@@ -89,37 +63,28 @@ export default class Spring {
     setWorldAnchorA(worldAnchorA) {
         this.bodyA.pointToLocalFrame(worldAnchorA, this.localAnchorA);
     }
-
     /**
      * Set the anchor point on body B, using world coordinates.
-     * @method setWorldAnchorB
-     * @param {Vec3} worldAnchorB
      */
     setWorldAnchorB(worldAnchorB) {
         this.bodyB.pointToLocalFrame(worldAnchorB, this.localAnchorB);
     }
-
     /**
      * Get the anchor point on body A, in world coordinates.
-     * @method getWorldAnchorA
-     * @param {Vec3} result The vector to store the result in.
+     * @param  result The vector to store the result in.
      */
     getWorldAnchorA(result) {
         this.bodyA.pointToWorldFrame(this.localAnchorA, result);
     }
-
     /**
      * Get the anchor point on body B, in world coordinates.
-     * @method getWorldAnchorB
-     * @param {Vec3} result The vector to store the result in.
+     * @param  result The vector to store the result in.
      */
     getWorldAnchorB(result) {
         this.bodyB.pointToWorldFrame(this.localAnchorB, result);
     }
-
     /**
      * Apply the spring force to the connected bodies.
-     * @method applyForce
      */
     applyForce() {
         const k = this.stiffness;
@@ -138,37 +103,29 @@ export default class Spring {
         const rj = applyForce_rj;
         const ri_x_f = applyForce_ri_x_f;
         const rj_x_f = applyForce_rj_x_f;
-
         // Get world anchors
         this.getWorldAnchorA(worldAnchorA);
         this.getWorldAnchorB(worldAnchorB);
-
         // Get offset points
         worldAnchorA.vsub(bodyA.position, ri);
         worldAnchorB.vsub(bodyB.position, rj);
-
         // Compute distance vector between world anchor points
         worldAnchorB.vsub(worldAnchorA, r);
-        const rlen = r.norm();
+        const rlen = r.length();
         r_unit.copy(r);
         r_unit.normalize();
-
         // Compute relative velocity of the anchor points, u
         bodyB.velocity.vsub(bodyA.velocity, u);
         // Add rotational velocity
-
         bodyB.angularVelocity.cross(rj, tmp);
         u.vadd(tmp, u);
         bodyA.angularVelocity.cross(ri, tmp);
         u.vsub(tmp, u);
-
         // F = - k * ( x - L ) - D * ( u )
-        r_unit.mult(-k * (rlen - l) - d * u.dot(r_unit), f);
-
+        r_unit.scale(-k * (rlen - l) - d * u.dot(r_unit), f);
         // Add forces to bodies
         bodyA.force.vsub(f, bodyA.force);
         bodyB.force.vadd(f, bodyB.force);
-
         // Angular force
         ri.cross(f, ri_x_f);
         rj.cross(f, rj_x_f);
@@ -176,7 +133,6 @@ export default class Spring {
         bodyB.torque.vadd(rj_x_f, bodyB.torque);
     }
 }
-
 var applyForce_r = new Vec3();
 var applyForce_r_unit = new Vec3();
 var applyForce_u = new Vec3();

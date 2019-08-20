@@ -1,10 +1,7 @@
-import Constraint from './Constraint.js';
 import PointToPointConstraint from './PointToPointConstraint.js';
 import RotationalEquation from '../equations/RotationalEquation.js';
 import RotationalMotorEquation from '../equations/RotationalMotorEquation.js';
-import ContactEquation from '../equations/ContactEquation.js';
 import Vec3 from '../math/Vec3.js';
-
 /**
  * Hinge constraint. Think of it as a door hinge. It tries to keep the door in the correct place and with the correct orientation.
  * @class HingeConstraint
@@ -21,65 +18,34 @@ import Vec3 from '../math/Vec3.js';
  * @extends PointToPointConstraint
  */
 export default class HingeConstraint extends PointToPointConstraint {
-    constructor(bodyA, bodyB, options = {}) {
-        const maxForce = typeof (options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
-        const pivotA = options.pivotA ? options.pivotA.clone() : new Vec3();
-        const pivotB = options.pivotB ? options.pivotB.clone() : new Vec3();
-
+    constructor(bodyA, bodyB, maxForce = 1e6, pivotA = new Vec3(), pivotB = new Vec3(), axisA = new Vec3(1, 0, 0), axisB = new Vec3(1, 0, 0)) {
         super(bodyA, pivotA, bodyB, pivotB, maxForce);
-
-        /**
-         * Rotation axis, defined locally in bodyA.
-         * @property {Vec3} axisA
-         */
-        const axisA = this.axisA = options.axisA ? options.axisA.clone() : new Vec3(1, 0, 0);
+        this.motorTargetVelocity = 0;
         axisA.normalize();
-
-        /**
-         * Rotation axis, defined locally in bodyB.
-         * @property {Vec3} axisB
-         */
-        const axisB = this.axisB = options.axisB ? options.axisB.clone() : new Vec3(1, 0, 0);
+        this.axisA = axisA.clone();
         axisB.normalize();
-
-        /**
-         * @property {RotationalEquation} rotationalEquation1
-         */
-        const r1 = this.rotationalEquation1 = new RotationalEquation(bodyA, bodyB, options);
-
-        /**
-         * @property {RotationalEquation} rotationalEquation2
-         */
-        const r2 = this.rotationalEquation2 = new RotationalEquation(bodyA, bodyB, options);
-
-        /**
-         * @property {RotationalMotorEquation} motorEquation
-         */
+        this.axisB = axisB.clone();
+        const r1 = this.rotationalEquation1 = new RotationalEquation(bodyA, bodyB, maxForce, axisA, axisB);
+        const r2 = this.rotationalEquation2 = new RotationalEquation(bodyA, bodyB, maxForce, axisA, axisB);
         const motor = this.motorEquation = new RotationalMotorEquation(bodyA, bodyB, maxForce);
         motor.enabled = false; // Not enabled by default
-
         // Equations to be fed to the solver
-        this.equations.push(
-            r1, // rotational1
-            r2, // rotational2
-            motor
-        );
+        this.equations.push(r1, // rotational1
+        r2, // rotational2
+        motor);
     }
-
     /**
      * @method enableMotor
      */
     enableMotor() {
         this.motorEquation.enabled = true;
     }
-
     /**
      * @method disableMotor
      */
     disableMotor() {
         this.motorEquation.enabled = false;
     }
-
     /**
      * @method setMotorSpeed
      * @param {number} speed
@@ -87,7 +53,6 @@ export default class HingeConstraint extends PointToPointConstraint {
     setMotorSpeed(speed) {
         this.motorEquation.targetVelocity = speed;
     }
-
     /**
      * @method setMotorMaxForce
      * @param {number} maxForce
@@ -96,7 +61,6 @@ export default class HingeConstraint extends PointToPointConstraint {
         this.motorEquation.maxForce = maxForce;
         this.motorEquation.minForce = -maxForce;
     }
-
     update() {
         const bodyA = this.bodyA;
         const bodyB = this.bodyB;
@@ -105,29 +69,21 @@ export default class HingeConstraint extends PointToPointConstraint {
         const r2 = this.rotationalEquation2;
         const worldAxisA = HingeConstraint_update_tmpVec1;
         const worldAxisB = HingeConstraint_update_tmpVec2;
-
         const axisA = this.axisA;
         const axisB = this.axisB;
-
         super.update();
-
         // Get world axes
         bodyA.quaternion.vmult(axisA, worldAxisA);
         bodyB.quaternion.vmult(axisB, worldAxisB);
-
         worldAxisA.tangents(r1.axisA, r2.axisA);
         r1.axisB.copy(worldAxisB);
         r2.axisB.copy(worldAxisB);
-
         if (this.motorEquation.enabled) {
             bodyA.quaternion.vmult(this.axisA, motor.axisA);
             bodyB.quaternion.vmult(this.axisB, motor.axisB);
         }
     }
 }
-
 HingeConstraint.constructor = HingeConstraint;
-
 var HingeConstraint_update_tmpVec1 = new Vec3();
 var HingeConstraint_update_tmpVec2 = new Vec3();
-

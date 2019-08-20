@@ -1,26 +1,24 @@
 /**
- * @class OverlapKeeper
- * @constructor
+ * 避免重复添加碰撞信息
  */
 export default class OverlapKeeper {
     constructor() {
         this.current = [];
         this.previous = [];
     }
-
     getKey(i, j) {
+        /*
         if (j < i) {
             const temp = j;
             j = i;
             i = temp;
         }
         return (i << 16) | j;
+        */
+        return (j < i) ? ((j << 16) | i) : ((i << 16) | j);
     }
-
     /**
-     * @method set
-     * @param {Number} i
-     * @param {Number} j
+     * 记录i与j相交了，把key插入current中。按照从小到大排序
      */
     set(i, j) {
         // Insertion sort. This way the diff will have linear complexity.
@@ -38,17 +36,16 @@ export default class OverlapKeeper {
         }
         current[index] = key;
     }
-
     /**
-     * @method tick
+     * 每帧执行一次交换
      */
     tick() {
+        //swap(current,previous)
         const tmp = this.current;
         this.current = this.previous;
         this.previous = tmp;
         this.current.length = 0;
     }
-
     /**
      * @method getDiff
      * @param  {array} additions
@@ -59,7 +56,6 @@ export default class OverlapKeeper {
         const b = this.previous;
         const al = a.length;
         const bl = b.length;
-
         let j = 0;
         for (var i = 0; i < al; i++) {
             var found = false;
@@ -68,7 +64,6 @@ export default class OverlapKeeper {
                 j++;
             }
             found = keyA === b[j];
-
             if (!found) {
                 unpackAndPush(additions, keyA);
             }
@@ -81,14 +76,12 @@ export default class OverlapKeeper {
                 j++;
             }
             found = a[j] === keyB;
-
             if (!found) {
                 unpackAndPush(removals, keyB);
             }
         }
     }
 }
-
 function unpackAndPush(array, key) {
     array.push((key & 0xFFFF0000) >> 16, key & 0x0000FFFF);
 }

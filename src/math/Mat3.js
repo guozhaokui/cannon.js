@@ -1,5 +1,4 @@
 import Vec3 from './Vec3.js';
-
 /**
  * A 3x3 matrix.
  * @class Mat3
@@ -9,17 +8,17 @@ import Vec3 from './Vec3.js';
  */
 export default class Mat3 {
     constructor(elements) {
-        /**
-         * A vector of length 9, containing all matrix elements
-         * @property {Array} elements
-         */
+        /*
+        m11=1;m12=0;m13=0;
+        m21=0;m22=1;m23=0;
+        m31=0;m32=0;m33=1;
+        */
+        this.elements = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         if (elements) {
+            //this.m11=elements[0];
             this.elements = elements;
-        } else {
-            this.elements = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         }
     }
-
     /**
      * Sets the matrix to identity
      * @method identity
@@ -31,16 +30,13 @@ export default class Mat3 {
         e[0] = 1;
         e[1] = 0;
         e[2] = 0;
-
         e[3] = 0;
         e[4] = 1;
         e[5] = 0;
-
         e[6] = 0;
         e[7] = 0;
         e[8] = 1;
     }
-
     /**
      * Set all elements to zero
      * @method setZero
@@ -57,7 +53,6 @@ export default class Mat3 {
         e[7] = 0;
         e[8] = 0;
     }
-
     /**
      * Sets the matrix diagonal elements from a Vec3
      * @method setTrace
@@ -69,7 +64,6 @@ export default class Mat3 {
         e[4] = y;
         e[8] = z;
     }
-
     /**
      * Gets the matrix diagonal elements
      * @method getTrace
@@ -82,7 +76,6 @@ export default class Mat3 {
         target.y = e[4];
         target.z = e[8];
     }
-
     /**
      * Matrix-Vector multiplication
      * @method vmult
@@ -97,41 +90,35 @@ export default class Mat3 {
         target.x = e[0] * x + e[1] * y + e[2] * z;
         target.y = e[3] * x + e[4] * y + e[5] * z;
         target.z = e[6] * x + e[7] * y + e[8] * z;
-
         return target;
     }
-
     /**
      * Matrix-scalar multiplication
-     * @method smult
-     * @param {Number} s
      */
     smult(s) {
         for (let i = 0; i < this.elements.length; i++) {
             this.elements[i] *= s;
         }
     }
-
     /**
      * Matrix multiplication
-     * @method mmult
-     * @param {Mat3} m Matrix to multiply with from left side.
-     * @return {Mat3} The result.
+     * @param  m Matrix to multiply with from left side.
+     * @return  The result.
      */
-    mmult({ elements }, target) {
+    mmult(m, target) {
         const r = target || new Mat3();
+        let e = m.elements;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let sum = 0.0;
                 for (let k = 0; k < 3; k++) {
-                    sum += elements[i + k * 3] * this.elements[k + j * 3];
+                    sum += e[i + k * 3] * this.elements[k + j * 3];
                 }
                 r.elements[i + j * 3] = sum;
             }
         }
         return r;
     }
-
     /**
      * Scale each column of the matrix
      * @method scale
@@ -148,24 +135,23 @@ export default class Mat3 {
         }
         return target;
     }
-
     /**
      * Solve Ax=b
      * @method solve
-     * @param {Vec3} b The right hand side
-     * @param {Vec3} target Optional. Target vector to save in.
-     * @return {Vec3} The solution x
+     * @param  b The right hand side
+     * @param  target Optional. Target vector to save in.
+     * @return The solution x
      * @todo should reuse arrays
      */
     solve(b, target = new Vec3()) {
         // Construct equations
+        let i = 0;
         const nr = 3; // num rows
         const nc = 4; // num cols
         const eqns = [];
-        for (var i = 0; i < nr * nc; i++) {
+        for (i = 0; i < nr * nc; i++) {
             eqns.push(0);
         }
-        var i;
         let j;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
@@ -175,10 +161,8 @@ export default class Mat3 {
         eqns[3 + 4 * 0] = b.x;
         eqns[3 + 4 * 1] = b.y;
         eqns[3 + 4 * 2] = b.z;
-
         // Compute right upper triangular version of the matrix - Gauss elimination
         let n = 3;
-
         const k = n;
         let np;
         const kp = 4; // num rows
@@ -191,7 +175,7 @@ export default class Mat3 {
                 for (j = i + 1; j < k; j++) {
                     if (eqns[i + nc * j] !== 0) {
                         np = kp;
-                        do {  // do ligne( i ) = ligne( i ) + ligne( k )
+                        do { // do ligne( i ) = ligne( i ) + ligne( k )
                             p = kp - np;
                             eqns[p + nc * i] += eqns[p + nc * j];
                         } while (--np);
@@ -203,56 +187,50 @@ export default class Mat3 {
                 for (j = i + 1; j < k; j++) {
                     const multiplier = eqns[i + nc * j] / eqns[i + nc * i];
                     np = kp;
-                    do {  // do ligne( k ) = ligne( k ) - multiplier * ligne( i )
+                    do { // do ligne( k ) = ligne( k ) - multiplier * ligne( i )
                         p = kp - np;
                         eqns[p + nc * j] = p <= i ? 0 : eqns[p + nc * j] - eqns[p + nc * i] * multiplier;
                     } while (--np);
                 }
             }
         } while (--n);
-
         // Get the solution
         target.z = eqns[2 * nc + 3] / eqns[2 * nc + 2];
         target.y = (eqns[1 * nc + 3] - eqns[1 * nc + 2] * target.z) / eqns[1 * nc + 1];
         target.x = (eqns[0 * nc + 3] - eqns[0 * nc + 2] * target.z - eqns[0 * nc + 1] * target.y) / eqns[0 * nc + 0];
-
         if (isNaN(target.x) || isNaN(target.y) || isNaN(target.z) || target.x === Infinity || target.y === Infinity || target.z === Infinity) {
             throw `Could not solve equation! Got x=[${target.toString()}], b=[${b.toString()}], A=[${this.toString()}]`;
         }
-
         return target;
     }
-
     /**
      * Get an element in the matrix by index. Index starts at 0, not 1!!!
      * @method e
-     * @param {Number} row
-     * @param {Number} column
-     * @param {Number} value Optional. If provided, the matrix element will be set to this value.
-     * @return {Number}
+     * @param  row
+     * @param  column
+     * @param  value Optional. If provided, the matrix element will be set to this value.
      */
     e(row, column, value) {
         if (value === undefined) {
             return this.elements[column + 3 * row];
-        } else {
+        }
+        else {
             // Set value
             this.elements[column + 3 * row] = value;
         }
     }
-
     /**
      * Copy another matrix into this matrix object.
      * @method copy
-     * @param {Mat3} source
-     * @return {Mat3} this
+     * @param  source
+     * @return  this
      */
-    copy({ elements }) {
-        for (let i = 0; i < elements.length; i++) {
-            this.elements[i] = elements[i];
+    copy(source) {
+        for (let i = 0; i < source.elements.length; i++) {
+            this.elements[i] = source.elements[i];
         }
         return this;
     }
-
     /**
      * Returns a string representation of the matrix.
      * @method toString
@@ -266,22 +244,21 @@ export default class Mat3 {
         }
         return r;
     }
-
     /**
      * reverse the matrix
      * @method reverse
-     * @param {Mat3} target Optional. Target matrix to save in.
-     * @return {Mat3} The solution x
+     * @param  target Optional. Target matrix to save in.
+     * @return  The solution x
      */
     reverse(target = new Mat3()) {
         // Construct equations
+        let i = 0;
         const nr = 3; // num rows
         const nc = 6; // num cols
         const eqns = [];
-        for (var i = 0; i < nr * nc; i++) {
+        for (i = 0; i < nr * nc; i++) {
             eqns.push(0);
         }
-        var i;
         let j;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
@@ -297,10 +274,8 @@ export default class Mat3 {
         eqns[5 + 6 * 0] = 0;
         eqns[5 + 6 * 1] = 0;
         eqns[5 + 6 * 2] = 1;
-
         // Compute right upper triangular version of the matrix - Gauss elimination
         let n = 3;
-
         const k = n;
         let np;
         const kp = nc; // num rows
@@ -331,7 +306,6 @@ export default class Mat3 {
                 }
             }
         } while (--n);
-
         // eliminate the upper left triangle of the matrix
         i = 2;
         do {
@@ -345,7 +319,6 @@ export default class Mat3 {
                 } while (--np);
             } while (j--);
         } while (--i);
-
         // operations on the diagonal
         i = 2;
         do {
@@ -356,7 +329,6 @@ export default class Mat3 {
                 eqns[p + nc * i] = eqns[p + nc * i] * multiplier;
             } while (--np);
         } while (i--);
-
         i = 2;
         do {
             j = 2;
@@ -368,14 +340,10 @@ export default class Mat3 {
                 target.e(i, j, p);
             } while (j--);
         } while (i--);
-
         return target;
     }
-
     /**
      * Set the matrix from a quaterion
-     * @method setRotationFromQuaternion
-     * @param {Quaternion} q
      */
     setRotationFromQuaternion(q) {
         const x = q.x;
@@ -395,38 +363,31 @@ export default class Mat3 {
         const wy = w * y2;
         const wz = w * z2;
         const e = this.elements;
-
         e[3 * 0 + 0] = 1 - (yy + zz);
         e[3 * 0 + 1] = xy - wz;
         e[3 * 0 + 2] = xz + wy;
-
         e[3 * 1 + 0] = xy + wz;
         e[3 * 1 + 1] = 1 - (xx + zz);
         e[3 * 1 + 2] = yz - wx;
-
         e[3 * 2 + 0] = xz - wy;
         e[3 * 2 + 1] = yz + wx;
         e[3 * 2 + 2] = 1 - (xx + yy);
-
         return this;
     }
-
     /**
      * Transpose the matrix
      * @method transpose
-     * @param  {Mat3} target Where to store the result.
-     * @return {Mat3} The target Mat3, or a new Mat3 if target was omitted.
+     * @param   target Where to store the result.
+     * @return  The target Mat3, or a new Mat3 if target was omitted.
      */
     transpose(target = new Mat3()) {
         const Mt = target.elements;
         const M = this.elements;
-
         for (let i = 0; i !== 3; i++) {
             for (let j = 0; j !== 3; j++) {
                 Mt[3 * i + j] = M[3 * j + i];
             }
         }
-
         return target;
     }
 }

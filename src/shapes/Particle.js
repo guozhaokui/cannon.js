@@ -1,39 +1,24 @@
 import Shape from './Shape.js';
 import Vec3 from '../math/Vec3.js';
-
 /**
  * Particle shape.
- * @class Particle
- * @constructor
  * @author schteppe
- * @extends Shape
  */
 export default class Particle extends Shape {
     constructor() {
-        super({
-            type: Shape.types.PARTICLE
-        });
+        super();
+        this.type = Shape.types.PARTICLE;
     }
-
-    /**
-     * @method calculateLocalInertia
-     * @param  {Number} mass
-     * @param  {Vec3} target
-     * @return {Vec3}
-     */
     calculateLocalInertia(mass, target = new Vec3()) {
         target.set(0, 0, 0);
         return target;
     }
-
     volume() {
         return 0;
     }
-
     updateBoundingSphereRadius() {
         this.boundingSphereRadius = 0;
     }
-
     calculateWorldAABB(pos, quat, min, max) {
         // Get each axis max
         min.copy(pos);

@@ -1,10 +1,7 @@
-import Constraint from './Constraint.js';
-import PointToPointConstraint from './PointToPointConstraint.js';
 import ConeEquation from '../equations/ConeEquation.js';
 import RotationalEquation from '../equations/RotationalEquation.js';
-import ContactEquation from '../equations/ContactEquation.js';
 import Vec3 from '../math/Vec3.js';
-
+import PointToPointConstraint from './PointToPointConstraint.js';
 /**
  * @class ConeTwistConstraint
  * @constructor
@@ -20,69 +17,44 @@ import Vec3 from '../math/Vec3.js';
  * @extends PointToPointConstraint
  */
 export default class ConeTwistConstraint extends PointToPointConstraint {
-    constructor(bodyA, bodyB, options = {}) {
-        const maxForce = typeof (options.maxForce) !== 'undefined' ? options.maxForce : 1e6;
-
-        // Set pivot point in between
-        const pivotA = options.pivotA ? options.pivotA.clone() : new Vec3();
-        const pivotB = options.pivotB ? options.pivotB.clone() : new Vec3();
-        this.axisA = options.axisA ? options.axisA.clone() : new Vec3();
-        this.axisB = options.axisB ? options.axisB.clone() : new Vec3();
-
+    constructor(bodyA, bodyB, maxForce = 1e6, pivotA = new Vec3(), pivotB = new Vec3(), axisA = new Vec3(), axisB = new Vec3(), angle = 0, twistAngle = 0, collideConnected = false) {
         super(bodyA, pivotA, bodyB, pivotB, maxForce);
-
-        this.collideConnected = !!options.collideConnected;
-
-        this.angle = typeof (options.angle) !== 'undefined' ? options.angle : 0;
-
-        /**
-         * @property {ConeEquation} coneEquation
-         */
-        const c = this.coneEquation = new ConeEquation(bodyA, bodyB, options);
-
-        /**
-         * @property {RotationalEquation} twistEquation
-         */
-        const t = this.twistEquation = new RotationalEquation(bodyA, bodyB, options);
-        this.twistAngle = typeof (options.twistAngle) !== 'undefined' ? options.twistAngle : 0;
-
+        this.angle = 0;
+        this.twistAngle = 0;
+        // Set pivot point in between
+        this.axisA = axisA.clone();
+        this.axisB = axisB.clone();
+        this.collideConnected = collideConnected;
+        this.angle = angle;
+        const c = this.coneEquation = new ConeEquation(bodyA, bodyB, maxForce, axisA, axisB, angle);
+        const t = this.twistEquation = new RotationalEquation(bodyA, bodyB, maxForce, axisA, axisB);
+        this.twistAngle = twistAngle;
         // Make the cone equation push the bodies toward the cone axis, not outward
         c.maxForce = 0;
         c.minForce = -maxForce;
-
         // Make the twist equation add torque toward the initial position
         t.maxForce = 0;
         t.minForce = -maxForce;
-
         this.equations.push(c, t);
     }
-
     update() {
         const bodyA = this.bodyA;
         const bodyB = this.bodyB;
         const cone = this.coneEquation;
         const twist = this.twistEquation;
-
         super.update();
-
         // Update the axes to the cone constraint
         bodyA.vectorToWorldFrame(this.axisA, cone.axisA);
         bodyB.vectorToWorldFrame(this.axisB, cone.axisB);
-
         // Update the world axes in the twist constraint
         this.axisA.tangents(twist.axisA, twist.axisA);
         bodyA.vectorToWorldFrame(twist.axisA, twist.axisA);
-
         this.axisB.tangents(twist.axisB, twist.axisB);
         bodyB.vectorToWorldFrame(twist.axisB, twist.axisB);
-
         cone.angle = this.angle;
         twist.maxAngle = this.twistAngle;
     }
 }
-
 ConeTwistConstraint.constructor = ConeTwistConstraint;
-
 const ConeTwistConstraint_update_tmpVec1 = new Vec3();
 const ConeTwistConstraint_update_tmpVec2 = new Vec3();
-

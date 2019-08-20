@@ -5,9 +5,8 @@
  */
 export default class EventTarget {
     constructor() {
-
+        this._listeners = null;
     }
-
     /**
      * Add an event listener
      * @method addEventListener
@@ -16,7 +15,9 @@ export default class EventTarget {
      * @return {EventTarget} The self object, for chainability.
      */
     addEventListener(type, listener) {
-        if (this._listeners === undefined) { this._listeners = {}; }
+        if (!this._listeners) {
+            this._listeners = {};
+        }
         const listeners = this._listeners;
         if (listeners[type] === undefined) {
             listeners[type] = [];
@@ -26,7 +27,6 @@ export default class EventTarget {
         }
         return this;
     }
-
     /**
      * Check if an event listener is added
      * @method hasEventListener
@@ -35,14 +35,15 @@ export default class EventTarget {
      * @return {Boolean}
      */
     hasEventListener(type, listener) {
-        if (this._listeners === undefined) { return false; }
+        if (!this._listeners) {
+            return false;
+        }
         const listeners = this._listeners;
         if (listeners[type] !== undefined && listeners[type].includes(listener)) {
             return true;
         }
         return false;
     }
-
     /**
      * Check if any event listener of the given type is added
      * @method hasAnyEventListener
@@ -50,11 +51,12 @@ export default class EventTarget {
      * @return {Boolean}
      */
     hasAnyEventListener(type) {
-        if (this._listeners === undefined) { return false; }
+        if (!this._listeners) {
+            return false;
+        }
         const listeners = this._listeners;
         return (listeners[type] !== undefined);
     }
-
     /**
      * Remove an event listener
      * @method removeEventListener
@@ -63,16 +65,19 @@ export default class EventTarget {
      * @return {EventTarget} The self object, for chainability.
      */
     removeEventListener(type, listener) {
-        if (this._listeners === undefined) { return this; }
+        if (!this._listeners) {
+            return this;
+        }
         const listeners = this._listeners;
-        if (listeners[type] === undefined) { return this; }
+        if (listeners[type] === undefined) {
+            return this;
+        }
         const index = listeners[type].indexOf(listener);
-        if (index !== - 1) {
+        if (index !== -1) {
             listeners[type].splice(index, 1);
         }
         return this;
     }
-
     /**
      * Emit an event.
      * @method dispatchEvent
@@ -81,7 +86,9 @@ export default class EventTarget {
      * @return {EventTarget} The self object, for chainability.
      */
     dispatchEvent(event) {
-        if (this._listeners === undefined) { return this; }
+        if (!this._listeners) {
+            return this;
+        }
         const listeners = this._listeners;
         const listenerArray = listeners[event.type];
         if (listenerArray !== undefined) {

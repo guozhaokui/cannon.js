@@ -4,21 +4,8 @@
  */
 export default class TupleDictionary {
     constructor() {
-
-        /**
-         * The data storage
-         * @property data
-         * @type {Object}
-         */
         this.data = { keys: [] };
     }
-
-    /**
-     * @method get
-     * @param  {Number} i
-     * @param  {Number} j
-     * @return {Number}
-     */
     get(i, j) {
         if (i > j) {
             // swap
@@ -28,13 +15,6 @@ export default class TupleDictionary {
         }
         return this.data[`${i}-${j}`];
     }
-
-    /**
-     * @method set
-     * @param  {Number} i
-     * @param  {Number} j
-     * @param {Number} value
-     */
     set(i, j, value) {
         if (i > j) {
             const temp = j;
@@ -42,18 +22,12 @@ export default class TupleDictionary {
             i = temp;
         }
         const key = `${i}-${j}`;
-
         // Check if key already exists
         if (!this.get(i, j)) {
             this.data.keys.push(key);
         }
-
         this.data[key] = value;
     }
-
-    /**
-     * @method reset
-     */
     reset() {
         const data = this.data;
         const keys = data.keys;

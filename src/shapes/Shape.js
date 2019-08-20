@@ -1,104 +1,55 @@
-
-
-import Vec3 from '../math/Vec3.js';
-
 /**
  * Base class for shapes
- * @class Shape
- * @constructor
- * @param {object} [options]
- * @param {number} [options.collisionFilterGroup=1]
- * @param {number} [options.collisionFilterMask=-1]
- * @param {number} [options.collisionResponse=true]
- * @param {number} [options.material=null]
- * @author schteppe
  */
 export default class Shape {
-    constructor(options = {}) {
-        /**
-         * Identifyer of the Shape.
-         * @property {number} id
-         */
+    constructor(options) {
         this.id = Shape.idCounter++;
-
-        /**
-         * The type of this shape. Must be set to an int > 0 by subclasses.
-         * @property type
-         * @type {Number}
-         * @see Shape.types
-         */
-        this.type = options.type || 0;
-
+        this.type = 0;
         /**
          * The local bounding sphere radius of this shape.
-         * @property {Number} boundingSphereRadius
          */
         this.boundingSphereRadius = 0;
-
         /**
          * Whether to produce contact forces when in contact with other bodies. Note that contacts will be generated, but they will be disabled.
-         * @property {boolean} collisionResponse
          */
-        this.collisionResponse = options.collisionResponse ? options.collisionResponse : true;
-
-        /**
-         * @property {Number} collisionFilterGroup
-         */
-        this.collisionFilterGroup = options.collisionFilterGroup !== undefined ? options.collisionFilterGroup : 1;
-
-        /**
-         * @property {Number} collisionFilterMask
-         */
-        this.collisionFilterMask = options.collisionFilterMask !== undefined ? options.collisionFilterMask : -1;
-
-        /**
-         * @property {Material} material
-         */
-        this.material = options.material ? options.material : null;
-
-        /**
-         * @property {Body} body
-         */
+        this.collisionResponse = true;
+        this.collisionFilterGroup = 1;
+        this.collisionFilterMask = -1;
+        this.material = null;
         this.body = null;
+        if (options) {
+            this.type = options.type || 0;
+            this.collisionResponse = options.collisionResponse ? options.collisionResponse : true;
+            this.collisionFilterGroup = options.collisionFilterGroup !== undefined ? options.collisionFilterGroup : 1;
+            this.collisionFilterMask = options.collisionFilterMask !== undefined ? options.collisionFilterMask : -1;
+            this.material = options.material ? options.material : null;
+        }
     }
-
     /**
      * Computes the bounding sphere radius. The result is stored in the property .boundingSphereRadius
-     * @method updateBoundingSphereRadius
      */
     updateBoundingSphereRadius() {
         throw `computeBoundingSphereRadius() not implemented for shape type ${this.type}`;
-    };
-
+    }
+    calculateWorldAABB(pos, quat, min, max) {
+    }
     /**
      * Get the volume of this shape
-     * @method volume
-     * @return {Number}
      */
     volume() {
         throw `volume() not implemented for shape type ${this.type}`;
-    };
-
+    }
     /**
      * Calculates the inertia in the local frame for this shape.
-     * @method calculateLocalInertia
-     * @param {Number} mass
-     * @param {Vec3} target
      * @see http://en.wikipedia.org/wiki/List_of_moments_of_inertia
      */
     calculateLocalInertia(mass, target) {
         throw `calculateLocalInertia() not implemented for shape type ${this.type}`;
-    };
-
+    }
 }
-
 Shape.idCounter = 0;
-
 /**
  * The available shape types.
- * @static
- * @property types
- * @type {Object}
  */
 Shape.types = {
     SPHERE: 1,
@@ -111,4 +62,3 @@ Shape.types = {
     CYLINDER: 128,
     TRIMESH: 256
 };
-

@@ -1,11 +1,7 @@
 import Solver from './Solver.js';
 import Body from '../objects/Body.js';
-
 /**
  * Splits the equations into islands and solves them independently. Can improve performance.
- * @class SplitSolver
- * @constructor
- * @extends Solver
  * @param {Solver} subsolver
  */
 export default class SplitSolver extends Solver {
@@ -13,25 +9,19 @@ export default class SplitSolver extends Solver {
         super();
         this.iterations = 10;
         this.tolerance = 1e-7;
-        this.subsolver = subsolver;
         this.nodes = [];
         this.nodePool = [];
-
+        this.subsolver = subsolver;
         // Create needed nodes, reuse if possible
         while (this.nodePool.length < 128) {
             this.nodePool.push(this.createNode());
         }
     }
-
     createNode() {
         return { body: null, children: [], eqs: [], visited: false };
     }
-
     /**
      * Solve the subsystems
-     * @method solve
-     * @param  {Number} dt
-     * @param  {World} world
      */
     solve(dt, world) {
         const nodes = SplitSolver_solve_nodes;
@@ -41,7 +31,6 @@ export default class SplitSolver extends Solver {
         const Neq = equations.length;
         const Nbodies = bodies.length;
         const subsolver = this.subsolver;
-
         // Create needed nodes, reuse if possible
         while (nodePool.length < Nbodies) {
             nodePool.push(this.createNode());
@@ -50,7 +39,6 @@ export default class SplitSolver extends Solver {
         for (var i = 0; i < Nbodies; i++) {
             nodes[i] = nodePool[i];
         }
-
         // Reset node values
         for (var i = 0; i !== Nbodies; i++) {
             const node = nodes[i];
@@ -70,44 +58,34 @@ export default class SplitSolver extends Solver {
             nj.children.push(ni);
             nj.eqs.push(eq);
         }
-
         let child;
         let n = 0;
         let eqs = SplitSolver_solve_eqs;
-
         subsolver.tolerance = this.tolerance;
         subsolver.iterations = this.iterations;
-
         const dummyWorld = SplitSolver_solve_dummyWorld;
         while ((child = getUnvisitedNode(nodes))) {
             eqs.length = 0;
             dummyWorld.bodies.length = 0;
             bfs(child, visitFunc, dummyWorld.bodies, eqs);
-
             const Neqs = eqs.length;
-
             eqs = eqs.sort(sortById);
-
             for (var i = 0; i !== Neqs; i++) {
                 subsolver.addEquation(eqs[i]);
             }
-
             const iter = subsolver.solve(dt, dummyWorld);
             subsolver.removeAllEquations();
             n++;
         }
-
         return n;
     }
 }
-
 // Returns the number of subsystems
 var SplitSolver_solve_nodes = []; // All allocated node objects
 const SplitSolver_solve_nodePool = []; // All allocated node objects
-var SplitSolver_solve_eqs = [];   // Temp array
-const SplitSolver_solve_bds = [];   // Temp array
+var SplitSolver_solve_eqs = []; // Temp array
+const SplitSolver_solve_bds = []; // Temp array
 var SplitSolver_solve_dummyWorld = { bodies: [] }; // Temp object
-
 const STATIC = Body.STATIC;
 function getUnvisitedNode(nodes) {
     const Nnodes = nodes.length;
@@ -119,7 +97,6 @@ function getUnvisitedNode(nodes) {
     }
     return false;
 }
-
 const queue = [];
 function bfs(root, visitFunc, bds, eqs) {
     queue.push(root);
@@ -136,7 +113,6 @@ function bfs(root, visitFunc, bds, eqs) {
         }
     }
 }
-
 function visitFunc(node, bds, eqs) {
     bds.push(node.body);
     const Neqs = node.eqs.length;
@@ -147,7 +123,6 @@ function visitFunc(node, bds, eqs) {
         }
     }
 }
-
-function sortById({ id }, { id }) {
-    return id - id;
+function sortById(a, b) {
+    return a.id - b.id;
 }

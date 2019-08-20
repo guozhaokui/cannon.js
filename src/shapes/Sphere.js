@@ -1,6 +1,5 @@
 import Shape from './Shape.js';
 import Vec3 from '../math/Vec3.js';
-
 /**
  * Spherical shape
  * @class Sphere
@@ -11,22 +10,15 @@ import Vec3 from '../math/Vec3.js';
  */
 export default class Sphere extends Shape {
     constructor(radius) {
-        super({
-            type: Shape.types.SPHERE
-        });
-
-        /**
-         * @property {Number} radius
-         */
+        super();
+        this.radius = 1;
+        this.type = Shape.types.SPHERE;
         this.radius = radius !== undefined ? radius : 1.0;
-
         if (this.radius < 0) {
             throw new Error('The sphere radius cannot be negative.');
         }
-
         this.updateBoundingSphereRadius();
     }
-
     calculateLocalInertia(mass, target = new Vec3()) {
         const I = 2.0 * mass * this.radius * this.radius / 5.0;
         target.x = I;
@@ -34,15 +26,12 @@ export default class Sphere extends Shape {
         target.z = I;
         return target;
     }
-
     volume() {
         return 4.0 * Math.PI * this.radius / 3.0;
     }
-
     updateBoundingSphereRadius() {
         this.boundingSphereRadius = this.radius;
     }
-
     calculateWorldAABB(pos, quat, min, max) {
         const r = this.radius;
         const axes = ['x', 'y', 'z'];
